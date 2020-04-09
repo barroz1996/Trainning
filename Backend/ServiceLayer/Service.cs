@@ -31,28 +31,61 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             throw new NotImplementedException();
         }
 
-
-        /// <summary>
-        /// Registers a new user
-        /// </summary>
-        /// <param name="email">The email address of the user to register</param>
-        /// <param name="password">The password of the user to register</param>
-        /// <param name="nickname">The nickname of the user to register</param>
-        /// <returns>A response object. The response should contain a error message in case of an error<returns>
-        public Response Register(string email, string password, string nickname)
+        public bool PasswordVerify(bool flag)
         {
-            throw new NotImplementedException();
+            if (pass.Length < 4 || pass.Length > 20)
+                return false;
+            if (pass.Contains(" "))
+                return false;
+            if (!pass.Any(char.IsUpper))
+                return false;
+            if (!pass.Any(char.IsLower))
+                return false;
+            string specialCharacters = @"%!@#$%^&*()?/>.<,:;'\|}]{[_~`+=-" + "\"";
+            char[] specialCharactersArray = specialCharacters.ToCharArray();
+            foreach (char c in specialCharactersArray)
+            {
+                if (pass.Contains(c))
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Registers a new user
+    /// </summary>
+    /// <param name="email">The email address of the user to register</param>
+    /// <param name="password">The password of the user to register</param>
+    /// <param name="nickname">The nickname of the user to register</param>
+    /// <returns>A response object. The response should contain a error message in case of an error<returns>
+    public Response Register(string email, string password, string nickname)
+        {
+            try
+            {
+                string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
+                if (Regex.IsMatch(email, pattern))
+                    Console.WriteLine("success");
+                
+            }
+       
+        
+            catch (Exception e)
+            {
+                throw new Exception("please enter valid email");
+            }
         }
 
-        /// <summary>
-        /// Log in an existing user
-        /// </summary>
-        /// <param name="email">The email address of the user to login</param>
-        /// <param name="password">The password of the user to login</param>
-        /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
-        public Response<User> Login(string email, string password)
+        
+    /// <summary>
+    /// Log in an existing user
+    /// </summary>
+    /// <param name="email">The email address of the user to login</param>
+    /// <param name="password">The password of the user to login</param>
+    /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
+    public Response<User> Login(string email, string password)
         {
-            throw new NotImplementedException();
+    
         }
 
         /// <summary>        

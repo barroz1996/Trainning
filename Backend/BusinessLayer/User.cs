@@ -10,9 +10,9 @@ public class User
     public string NickName { get => nickName; set => nickName = value; }
     public string Password { get => password; set => password = value; }
 
-    public void Login(string email, string password)
+    public void Login(string password)
     {
-        if (this.Password.Equals(password) && this.Email.Equals(email))//verify if the email and password match
+        if (this.Password.Equals(password))//verify if the password match
         {
             Console.WriteLine("login was successfull");
             this.Login = true;
