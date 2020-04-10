@@ -14,13 +14,13 @@ public class UserController
     public void Register(string email, string password, string nickname)
     {
         var user = new Users(email, password, nickname);
-        Users.Add(email);
+        Users.Add(user);
 
     }
     public bool IsLogged(string email)
 
     {
-        if (email.Equals(Users.getEmail))
+        //if () ;
             return true;
         return false;
 
