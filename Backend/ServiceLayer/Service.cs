@@ -30,8 +30,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             throw new NotImplementedException();
         }
-
-        public bool PasswordVerify(bool flag)
+        private bool EmailVerify(bool flag)
+        { 
+                string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
+                if (Regex.IsMatch(email, pattern))
+                    Console.WriteLine("success");
+            else 
+                throw new Exception("please enter valid email");
+            
+        }
+        private bool PasswordVerify(bool flag)
         {
             if (pass.Length < 4 || pass.Length > 20)
                 return false;
@@ -61,19 +69,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     /// <returns>A response object. The response should contain a error message in case of an error<returns>
     public Response Register(string email, string password, string nickname)
         {
-            try
-            {
-                string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
-                if (Regex.IsMatch(email, pattern))
-                    Console.WriteLine("success");
-                
-            }
-       
-        
-            catch (Exception e)
-            {
-                throw new Exception("please enter valid email");
-            }
         }
 
         

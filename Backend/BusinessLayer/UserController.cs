@@ -9,11 +9,12 @@ using System.Collections.Generic;
 {
                public void Register(string email , string password , string nickname)
     {
-                   //code
+        var user = new User(email, password, nickname);
+        this.user.Add(email, user);
     }
-               public User GetUser(string email)
+               public User GetUser(string email)//check if list or dic
     {
-                return User.getUser;
+                return User.getEmail;
     }
                 public bool IsLogged(string email)
                    

@@ -5,6 +5,8 @@ public class User
     private string email;
     private string nickName;
     private string password;
+    private bool loggedIn;
+    private bool login;
 
     public string Email { get => email; set => email = value; }
     public string NickName { get => nickName; set => nickName = value; }
@@ -19,6 +21,10 @@ public class User
         }
         else
             throw new Exception("incorrect login information , please enter again");
+    }
+    public bool getLoggedIn(bool LoggedIn)
+    {
+        return this.loggedIn;
     }
     public void Logout() //updated the user status
     {
