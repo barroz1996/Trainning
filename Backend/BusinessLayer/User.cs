@@ -6,7 +6,7 @@ public class User
     private string nickName;
     private string password;
     private bool loggedIn;
-    private bool login;
+    
 
     public string Email { get => email; set => email = value; }
     public string NickName { get => nickName; set => nickName = value; }
@@ -17,7 +17,7 @@ public class User
         if (this.Password.Equals(password))//verify if the password match
         {
             Console.WriteLine("login was successfull");
-            this.Login = true;
+            this.loggedIn = true;
         }
         else
             throw new Exception("incorrect login information , please enter again");
