@@ -47,7 +47,7 @@ namespace WpfApp2
         {  
             foreach(Task task in tasks)
             {
-                if (task.GetTaskId() == taskId) 
+                if (task.GetTaskID() == taskId) 
                     return tasks.Remove(task);     // we return if the task removed from the column
             }
             throw new Exception("the task not found"); // if the task not in the column
