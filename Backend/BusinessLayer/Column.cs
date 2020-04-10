@@ -28,9 +28,9 @@ namespace WpfApp2
         public void LimitColumnTasks(int limit)
         {
             if (limit < 1)
-                throw new Exception("limit not possible");  // it cant be under 1
+                throw new Exception("Limit not possible");  // it cant be under 1
             if(limit<tasks.Count)
-                throw new Exception("to much tasks");      // if in the column right now more tasks then the new limit
+                throw new Exception("To much tasks");      // if in the column right now more tasks then the new limit
             this.limit = limit;
         }
         public List<Task> GetTasks() { return this.tasks; }
@@ -44,13 +44,26 @@ namespace WpfApp2
         }
 
         public Boolean RemoveTask(int taskId)
-        {  
-            foreach(Task task in tasks)
+        {
+            try
             {
-                if (task.GetTaskID() == taskId) 
-                    return tasks.Remove(task);     // we return if the task removed from the column
+                return tasks.Remove(GetTask(taskId)); // return true if the occurance delete, exeception if not found
             }
-            throw new Exception("the task not found"); // if the task not in the column
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public Task GetTask(taskId)
+        {
+            foreach (Task task in tasks)
+            {
+                if (task.GetTaskID()== taskId)
+                    return task;     // we return if the task removed from the column
+            }
+            throw new Exception("The task not found"); // if the task not in the column
+
         }
         
     }
