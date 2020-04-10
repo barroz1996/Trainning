@@ -5,23 +5,27 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-        public class UserController
+
+public class UserController
 {
-               public void Register(string email , string password , string nickname)
+    public string email;
+    Dictionary<string, email > Users = new Dictionary<string, email>();
+
+    public void Register(string email, string password, string nickname)
     {
-        var user = new User(email, password, nickname);
-        this.user.Add(email, user);
+        var user = new Users(email, password, nickname);
+        Users.Add(email);
+
     }
-               public User GetUser(string email)//check if list or dic
+    public bool IsLogged(string email)
+
     {
-                return User.getEmail;
+        if (email.Equals(Users.getEmail))
+            return true;
+        return false;
+
     }
-                public bool IsLogged(string email)
-                   
-    {
-                return User.getEmail.Equals(email);
-    }
-  
-   
+
+
 
 }

@@ -22,7 +22,7 @@ public class User
         else
             throw new Exception("incorrect login information , please enter again");
     }
-    public bool getLoggedIn(bool LoggedIn)
+    public bool getLoggedIn()
     {
         return this.loggedIn;
     }
