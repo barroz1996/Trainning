@@ -56,7 +56,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void AdvanceTask(string email,int columnOrdinal, int taskId)
         {
-            GetColumn(email, (columnOrdinal+1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));
+            if(GetColumn(email, (columnOrdinal + 1)).GetLimit()>GetColumn(email, (columnOrdinal + 1)).GetTasks().count)
+                GetColumn(email, (columnOrdinal+1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));
+            else
+                throw new Exception("The next column is full.");
         }
     }
 }
