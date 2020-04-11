@@ -8,8 +8,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
     class BoardController
     {
-        Dictionary<string, Board> Boards;
-        int totalTasks;
+        private Dictionary<string, Board> Boards;
+        private int totalTasks;
         public BoardController()
         {
             this.Boards = new Dictionary<string, Board>();
@@ -34,7 +34,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void AddTask(string email, string title, string description, DateTime dueDate)
         {
-            var newTask = new Task(this.totalTasks, email, title, description, dueDate);
+            var newTask = new Task(this.totalTasks, title, description, dueDate);
             this.totalTasks++;
             GetColumn(email, 0).addTask(newTask);
         }
