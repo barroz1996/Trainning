@@ -5,32 +5,38 @@ public class User
     private string email;
     private string nickname;
     private string password;
-    private bool loggedIn;
+
+    private bool LoggedIn;
     var serPass = new Service();
-    public string getEmail(string email)
+
+    public string GetEmail()
     {
-        this.email = email;
+        return this.email;
     }
-    public string getNickname(string nickname)
+    public string GetNickname()
+    {
+        return this.nickname;
+    }
+    public string GetPassword()
+    {
+        return this.password;
+    }
+    public void SetNickname(string nickname)
     {
         this.nickname = nickname;
-    }
-    public string getPassword(string password)
-    {
-        this.password = password;
     }
 
     public void Login(string password)
     {
-        //if (password.Equals(serPass.login)  //verify if the password match
+        if (this.password.Equals(password))  //verify if the password match
         {
             Console.WriteLine("login was successfull");
-            this.loggedIn = true;
+            this.LoggedIn = true;
         }
         else
             throw new Exception("incorrect login information , please enter again");
     }
-    public bool getLoggedIn()
+    public bool GetLoggedIn()
     {
         return this.loggedIn;
     }
