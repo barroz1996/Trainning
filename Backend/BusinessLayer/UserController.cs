@@ -12,7 +12,7 @@ using System.Collections.Generic;
 public class UserController
 {
         //need to add constractor for creating new users with json
-    public string email;
+    private string email;
     Dictionary<string, User> Users = new Dictionary<string, User>();
     
         public User GetUser(string email)
@@ -29,12 +29,10 @@ public class UserController
     public bool IsLogged(string email)
 
     {
-        User user;
+
         if (Users.ContainsKey(email))
-             return Users.TryGetValue(email,user).IsLogged();
+             return Users[email].IsLogged();
         return false;
-
-
     }
 
 
