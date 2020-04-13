@@ -13,7 +13,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private string description;
         private DateTime creationDate;
         private DateTime dueDate;
-        public Task(int taskID,string title, string description, DateTime dueDate)
+        public Task(int taskID, string title, string description, DateTime dueDate)
         {
             this.taskID = taskId;
             this.title = title;
@@ -29,6 +29,5 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public string GetTitle() { return this.title; }
         public string GetDescription() { return this.description; }
         public DateTime GetDueDate() { return this.dueDate; }
-
     }
 }
