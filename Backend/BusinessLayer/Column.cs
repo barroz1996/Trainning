@@ -16,7 +16,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
-            this.limit = Int32.MaxValue;
+            this.limit = -1;
             this.tasks = new List<Task>();
 
         }
@@ -27,14 +27,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public int GetLimit() { return this.limit; }
         public void LimitColumnTasks(int limit)
         {
-            if (limit < 1)
+            if (limit < -1)
                 throw new Exception("Limit not possible");  // it cant be under 1
-            if (limit < tasks.Count)
+            if ((limit < tasks.Count)&&(limit>-1))
                 throw new Exception("To much tasks");      // if in the column right now more tasks then the new limit
             this.limit = limit;
         }
         public List<Task> GetTasks() { return this.tasks; }
-
+        
+    
         public void AddTask(Task newTask)
         {
             if (tasks.Count < limit)  // we check if there to much tasks
@@ -45,8 +46,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public Task RemoveTask(int taskId)
         {
-                Task getTask = GetTask(taskId);
-                tasks.Remove(getTask); // return true if the occurance delete, exeception if not found
+            Task getTask = GetTask(taskId);
+            tasks.Remove(getTask); // return true if the occurance delete, exeception if not found
             return getTask;
            
         }
