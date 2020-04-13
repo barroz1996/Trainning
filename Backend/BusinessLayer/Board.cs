@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Column in_progress = new Column(1, "In Progress");
             Column done = new Column(2, "Done");
             columns.Add(backlog);
-            columns.Add(in_prograss);
+            columns.Add(in_progress);
             columns.Add(done);
 
         }
