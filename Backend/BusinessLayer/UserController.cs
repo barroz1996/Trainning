@@ -7,14 +7,20 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 
-namespace IntroSE.Kanban.Backend.BusinessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
 
     public class UserController
     {
+        private bool HasLogged;
         //need to add constractor for creating new users with json
-        private string email;
-        Dictionary<string, User> Users = new Dictionary<string, User>();
+        private Dictionary<string, User> Users;
+        public UserController()
+        {
+            this.HasLogged = false;
+            this.Users = new Dictionary<string, User>();
+        }
+        
 
         public User GetUser(string email)
         {
@@ -35,7 +41,30 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return Users[email].IsLogged();
             return false;
         }
-
+        public void Login(string email , string password)
+        {
+            if(HasLogged == false)
+            {
+                Users[email].Login(password);
+                HasLogged = true;
+            }
+            else
+            {
+                throw new Exception("someone is already logged in");
+            }
+        }
+        public void logout(string email)
+        {
+            if (Users[email].GetLoggedIn)
+            {
+                Users[email].Logout;
+                HasLogged = false;
+            }
+            else
+            {
+                throw new Exception("user is not logged in");
+            }
+        }
 
 
     }
