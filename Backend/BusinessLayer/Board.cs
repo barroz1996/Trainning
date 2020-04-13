@@ -14,10 +14,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             this.email = email;
             Column backlog = new Column(0, "BackLog");
-            Column in_prograss = new Column(1, "In_Prograss");
+            Column in_progress = new Column(1, "In Prograss");
             Column done = new Column(2, "Done");
             columns.Add(backlog);
-            columns.Add(in_prograss;
+            columns.Add(in_prograss);
             columns.Add(done);
 
         }
