@@ -57,7 +57,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
         }
 
-        public Task GetTask(taskId)
+        public Task GetTask(int taskId)
         {
             foreach (Task task in tasks)
             {
