@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 
-namespace IntroSE.Kanban.Backend.BusinessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
 
     public class UserController

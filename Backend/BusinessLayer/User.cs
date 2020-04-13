@@ -1,5 +1,5 @@
 ﻿using System;
-namespace IntroSE.Kanban.Backend.BusinessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
     public class User
     {
