@@ -21,17 +21,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns.Add(done);
 
         }
-       
-       
+
+
         public List<Column> GetColumns() { return columns; }
         public Column GetColumn(int columnOrdinal) // we get the key of the column and we return the column with this key
         {
-            foreach(Column col in columns)
+            foreach (Column col in columns)
             {
                 if (col.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
                     return col;
             }
-            throw new Exception ("There mistake in colukmnOrdinal");
+            throw new Exception("There mistake in colukmnOrdinal");
         }
 
         public Column GetColumn(string columnName) // we get the name of the column and we return the column with this name
@@ -41,10 +41,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (col.GetColumnName().Equals(columnName))  // we check the columnName
                     return col;
             }
-            throw new Exception ("There mistake in the columnName");
+            throw new Exception("There mistake in the columnName");
         }
-
-       
-    
     }
 }
