@@ -70,6 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessLayer\Board.cs" />
+    <Compile Include="BusinessLayer\BoardController.cs" />
+    <Compile Include="BusinessLayer\Column.cs" />
+    <Compile Include="BusinessLayer\Task.cs" />
+    <Compile Include="BusinessLayer\User.cs" />
+    <Compile Include="BusinessLayer\UserController.cs" />
     <Compile Include="ServiceLayer\Response.cs" />
     <Compile Include="ServiceLayer\ResponseT.cs" />
     <Compile Include="ServiceLayer\IService.cs" />
@@ -87,7 +93,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BusinessLayer\" />
     <Folder Include="DataAccessLayer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,15 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
     public class User
     {
+
         private string email;
         private string nickname;
         private string password;
-
         private bool LoggedIn;
-        var serPass = new Service();
 
+        public User(string email, string password, string nickname)
+        {
+            this.email = email;
+            this.password = password;
+            this.nickname = nickname;
+            this.LoggedIn = false;
+        }
         public string GetEmail()
         {
             return this.email;
@@ -39,11 +50,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public bool GetLoggedIn()
         {
-            return this.loggedIn;
+            return this.LoggedIn;
         }
         public void Logout() //updated the user status
         {
-            this.loggedIn = false;
+            this.LoggedIn = false;
         }
     }
 }

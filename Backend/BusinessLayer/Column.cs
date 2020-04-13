@@ -45,16 +45,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public Task RemoveTask(int taskId)
         {
-            try
-            {
                 Task getTask = GetTask(taskId);
                 tasks.Remove(getTask); // return true if the occurance delete, exeception if not found
-                return getTask;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            return getTask;
+           
         }
 
         public Task GetTask(int taskId)

@@ -8,6 +8,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
     class Board
     {
+        
         private string email;
         private List<Column> columns;
         public Board(string email)

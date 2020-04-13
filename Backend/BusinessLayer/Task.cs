@@ -13,9 +13,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private string description;
         private DateTime creationDate;
         private DateTime dueDate;
-        public Task(int taskID, string title, string description, DateTime dueDate)
+        public Task(int taskId, string title, string description, DateTime dueDate)
         {
-            this.taskID = taskId;
+            this.taskId = taskId;
             this.title = title;
             this.description = description;
             this.creationDate = DateTime.Now;

@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 
@@ -29,16 +27,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public void Register(string email, string password, string nickname)
         {
-            var user = new Users(email, password, nickname);
+            var user = new User(email, password, nickname);
             Users.Add(email, user);
 
         }
         public bool IsLogged(string email)
-
         {
-
             if (Users.ContainsKey(email))
-                return Users[email].IsLogged();
+                return Users[email].GetLoggedIn();
             return false;
         }
         public void Login(string email , string password)
@@ -55,9 +51,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public void logout(string email)
         {
-            if (Users[email].GetLoggedIn)
+            if (Users[email].GetLoggedIn())
             {
-                Users[email].Logout;
+                Users[email].Logout();
                 HasLogged = false;
             }
             else

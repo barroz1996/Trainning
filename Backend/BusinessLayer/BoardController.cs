@@ -36,7 +36,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             {
                 var newTask = new Task(this.totalTasks, title, description, dueDate);
                 this.totalTasks++;
-                GetColumn(email, 0).addTask(newTask);
+                GetColumn(email, 0).AddTask(newTask);
             }
             public void LimitColumnTasks(string email, int columnOrdinal, int limit)
             {
@@ -56,7 +56,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             public void AdvanceTask(string email, int columnOrdinal, int taskId)
             {
-                if (GetColumn(email, (columnOrdinal + 1)).GetLimit() > GetColumn(email, (columnOrdinal + 1)).GetTasks().count)
+                if (GetColumn(email, (columnOrdinal + 1)).GetLimit() > GetColumn(email, (columnOrdinal + 1)).GetTasks().Count)
                     GetColumn(email, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));
                 else
                     throw new Exception("The next column is full.");
