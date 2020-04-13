@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -13,13 +14,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     /// </summary>
     public class Service : IService
     {
-
+        private BusinessLayer.UserPackage.UserController UserController;
+        private BusinessLayer.BoardPackage.BoardController BoardController;
         /// <summary>
         /// Simple public constructor.
         /// </summary>
         public Service()
         {
-            throw new NotImplementedException();
+            this.UserController = new BusinessLayer.UserPackage.UserController();
+            this.BoardController = new BusinessLayer.BoardPackage.BoardController();
         }
                
         /// <summary>        
@@ -30,36 +33,52 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             throw new NotImplementedException();
         }
-        private bool EmailVerify(bool flag)
+        private bool EmailVerify(string email)
         { 
                 string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
-                if (Regex.IsMatch(email, pattern))
-                    Console.WriteLine("success");
-            else 
+            if (Regex.IsMatch(email, pattern))
+                return true;
+            else
                 throw new Exception("please enter valid email");
             
         }
-        private bool PasswordVerify(bool flag)
+        private bool VerifyPassword(string password)
         {
-            if (pass.Length < 4 || pass.Length > 20)
-                return false;
-            if (pass.Contains(" "))
-                return false;
-            if (!pass.Any(char.IsUpper))
-                return false;
-            if (!pass.Any(char.IsLower))
-                return false;
-            string specialCharacters = @"%!@#$%^&*()?/>.<,:;'\|}]{[_~`+=-" + "\"";
-            char[] specialCharactersArray = specialCharacters.ToCharArray();
-            foreach (char c in specialCharactersArray)
+            if (string.IsNullOrWhiteSpace(password))
             {
-                if (pass.Contains(c))
-                    return true;
+                throw new Exception("Password should not be empty");
             }
-            return false;
-        }
-    }
+            var hasNumber = new Regex(@"[0-9]+");
+            var hasUpperChar = new Regex(@"[A-Z]+");
+            var hasMiniMaxChars = new Regex(@".{4,20}");
+            var hasLowerChar = new Regex(@"[a-z]+");
+            
 
+            if (!hasLowerChar.IsMatch(password))
+            {
+                Console.WriteLine("Password should contain at least one lower case letter.");
+                return false;
+            }
+            else if (!hasUpperChar.IsMatch(password))
+            {
+                Console.WriteLine("Password should contain at least one upper case letter.");
+                return false;
+            }
+            else if (!hasMiniMaxChars.IsMatch(password))
+            {
+                Console.WriteLine("Password should not be lesser than 4 or greater than 20 characters.");
+                return false;
+            }
+            else if (!hasNumber.IsMatch(password))
+            {
+                Console.WriteLine("Password should contain at least one numeric value.");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     /// <summary>
     /// Registers a new user
     /// </summary>
