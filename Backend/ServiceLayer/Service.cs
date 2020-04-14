@@ -44,6 +44,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error<returns>
         public Response Register(string email, string password, string nickname)
         {
+            try
+            {
+                User newUser = new User(email, nickname);
+                newUser.EmailVerify(email);
+                newUser.PasswordVerify(password);
+                UserController.Register(email, password, nickname);
+                BoardController.Register(email);
+                return new Response();
+            }
+            catch (Exception ex)
+            {
+                return new Response<Object>(ex.Message);
+            }
+            
         }
 
 

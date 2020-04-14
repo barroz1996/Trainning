@@ -21,6 +21,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.creationDate = DateTime.Now;
             this.dueDate = dueDate;
         }
+        //getters and setters.
         public void EditTaskTitle(string title) { this.title = title; }
         public void EditTaskDescription(string description) { this.description = description; }
         public void EditTaskDueDate(DateTime dueDate) { this.dueDate = dueDate; }
