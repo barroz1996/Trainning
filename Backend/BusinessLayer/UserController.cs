@@ -49,7 +49,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 throw new Exception("Someone is already logged in.");
             }
         }
-        public void logout(string email)
+        public void Logout(string email)
         {
             if (GetUser(email).GetLoggedIn())
             {

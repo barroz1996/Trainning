@@ -69,9 +69,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
-            var user = new User();
-
-
+            try
+            {
+                UserController.Login(email, password);
+                var user = new User(email, UserController.GetUser(email).GetNickname());
+                return new Response<User>(user);
+            }
+            catch(Exception ex)
+            {
+                return new Response<User>(ex.Message);
+            }
         }
 
         /// <summary>        
@@ -81,7 +88,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            throw new NotImplementedException();
+            try
+            {
+                UserController.Logout(email);
+                return new Response();
+            }
+            catch (Exception ex)
+            {
+                return new Response<Object>(ex.Message);
+            }
         }
 
         /// <summary>
