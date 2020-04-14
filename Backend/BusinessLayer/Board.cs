@@ -11,6 +11,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         
         private string email;
         private List<Column> columns;
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public Board(string email)
         {
             this.email = email;
@@ -32,6 +33,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (col.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
                     return col;
             }
+            log.Info("Tried getting an illegal column ordinal.");
             throw new Exception("Column ordinal is illegal.");
         }
 
@@ -42,6 +44,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (col.GetColumnName().Equals(columnName))  // we check the columnName
                     return col;
             }
+            log.Info("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
         }
     }

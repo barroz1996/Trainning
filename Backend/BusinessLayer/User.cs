@@ -13,6 +13,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private string nickname;
         private string password;
         private bool LoggedIn;
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public User(string email, string password, string nickname)
         {
@@ -35,18 +36,30 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public void SetNickname(string nickname)
         {
-            this.nickname = nickname;
+            if (nickname == null)
+            {
+                log.Info("User " + this.email + " tried setting a null nickname.");
+                throw new Exception("Nickname cannot be null.");
+            }
+            else {
+                this.nickname = nickname;
+                log.Info("User " + this.email + " changed his nickname to "+this.nickname+".");
+            }
+            
         }
 
         public void Login(string password)
         {
             if (this.password.Equals(password))  //verify if the password match
             {
-                Console.WriteLine("login was successfull");
                 this.LoggedIn = true;
             }
             else
-                throw new Exception("incorrect login information , please enter again");
+            {
+                log.Info("User " + this.email + " tried logging in with an incorrect password.");
+                throw new Exception("email and password does not match.");
+            }
+                
         }
         public bool GetLoggedIn()
         {
