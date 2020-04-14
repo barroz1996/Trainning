@@ -22,26 +22,26 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public User GetUser(string email)
         {
-            return Users[email];
+            if (this.Users.ContainsKey(email))
+                return Users[email];
+            else
+                throw new Exception("This email is not registered.");
         }
 
         public void Register(string email, string password, string nickname)
         {
             var user = new User(email, password, nickname);
             Users.Add(email, user);
-
         }
         public bool IsLogged(string email)
         {
-            if (Users.ContainsKey(email))
-                return Users[email].GetLoggedIn();
-            return false;
+                return GetUser(email).GetLoggedIn();
         }
         public void Login(string email , string password)
         {
             if(HasLogged == false)
             {
-                Users[email].Login(password);
+                GetUser(email).Login(password);
                 HasLogged = true;
             }
             else
@@ -58,7 +58,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
             else
             {
-                throw new Exception("user is not logged in");
+                throw new Exception("User is not logged in");
             }
         }
 

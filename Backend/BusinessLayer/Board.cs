@@ -32,7 +32,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (col.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
                     return col;
             }
-            throw new Exception("There mistake in colukmnOrdinal");
+            throw new Exception("Column ordinal is illegal.");
         }
 
         public Column GetColumn(string columnName) // we get the name of the column and we return the column with this name
@@ -42,7 +42,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (col.GetColumnName().Equals(columnName))  // we check the columnName
                     return col;
             }
-            throw new Exception("There mistake in the columnName");
+            throw new Exception("Column Name is illegal");
         }
     }
 }

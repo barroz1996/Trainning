@@ -28,20 +28,20 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void LimitColumnTasks(int limit)
         {
             if (limit < -1)
-                throw new Exception("Limit not possible");  // it cant be under 1
+                throw new Exception("Illegal limit.");  // it cant be under 1
             if ((limit < tasks.Count)&&(limit>-1))
-                throw new Exception("To much tasks");      // if in the column right now more tasks then the new limit
+                throw new Exception("This column currently holds more tasks than the limit.");      // if in the column right now more tasks then the new limit
             this.limit = limit;
         }
         public List<Task> GetTasks() { return this.tasks; }
-        
-    
+
+
         public void AddTask(Task newTask)
         {
-            if (tasks.Count < limit)  // we check if there to much tasks
+            if (tasks.Count < limit || limit == -1)  // we check if there to much tasks
                 tasks.Add(newTask);
             else
-                throw new Exception("There is no room for new task");
+                throw new Exception("The " + this.columnName + " column is aleady full.");
         }
 
         public Task RemoveTask(int taskId)
@@ -59,7 +59,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (task.GetTaskID() == taskId)
                     return task;     // we return if the task removed from the column
             }
-            throw new Exception("The task not found"); // if the task not in the column
+            throw new Exception("The task doesn't exist in this column."); // if the task not in the column
 
         }
     }
