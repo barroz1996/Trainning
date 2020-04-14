@@ -46,20 +46,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
             else
             {
-                throw new Exception("someone is already logged in");
+                throw new Exception("Someone is already logged in.");
             }
         }
         public void logout(string email)
         {
-            if (Users[email].GetLoggedIn())
+            if (GetUser(email).GetLoggedIn())
             {
-                Users[email].Logout();
+                GetUser(email).Logout();
                 HasLogged = false;
             }
             else
-            {
-                throw new Exception("User is not logged in");
-            }
+                throw new Exception("This user is not logged in");
         }
 
 
