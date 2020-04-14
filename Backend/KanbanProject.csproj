@@ -76,13 +76,11 @@
     <Compile Include="BusinessLayer\Task.cs" />
     <Compile Include="BusinessLayer\User.cs" />
     <Compile Include="BusinessLayer\UserController.cs" />
-<<<<<<< HEAD
     <Compile Include="DataAccessLayer\Task.cs" />
     <Compile Include="DataAccessLayer\Column.cs" />
     <Compile Include="DataAccessLayer\User.cs" />
-=======
     <Compile Include="DataAccessLayer\Board.cs" />
->>>>>>> a308f0b95e1ef0b6fea3515fc9dffce3c7f32226
+
     <Compile Include="ServiceLayer\Response.cs" />
     <Compile Include="ServiceLayer\ResponseT.cs" />
     <Compile Include="ServiceLayer\IService.cs" />

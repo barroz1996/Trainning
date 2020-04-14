@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class User:DalObject
+    class User
     {
         private string email;
         private string nickname;
