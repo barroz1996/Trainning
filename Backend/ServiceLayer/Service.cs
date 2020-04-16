@@ -46,9 +46,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                User newUser = new User(email, nickname);
-                newUser.EmailVerify(email);
-                newUser.PasswordVerify(password);
+                UserController.EmailVerify(email);
+                UserController.PasswordVerify(password);
                 UserController.Register(email, password, nickname);
                 BoardController.Register(email);
                 return new Response();
@@ -349,5 +348,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             else
                 return new Response<Column>("This user is not logged in");
         }
+
     }
 }

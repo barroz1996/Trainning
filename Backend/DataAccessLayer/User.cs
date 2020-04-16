@@ -13,12 +13,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         private string password;
         private bool LoggedIn;
 
-        public User(string email, string password, string nickname)
+        public User(string email, string password, string nickname, bool LoggedIn)
         {
             this.email = email;
             this.password = password;
             this.nickname = nickname;
-            this.LoggedIn = false;
+            this.LoggedIn = LoggedIn;
         }
     }
 }

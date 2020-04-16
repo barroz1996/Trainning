@@ -69,5 +69,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             this.LoggedIn = false;
         }
+        protected abstract void Save()
+        {
+
+        }
+        protected T ToDalObject<T>()
+        {
+            return new DataAccessLayer.DalObject<User>//(email, password, nickname, LoggedIn);
+        }
+
+
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Column
+    class Column 
     {
         private int columnOrdinal;
         private string columnName;
@@ -71,5 +71,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             log.Info("Task "+taskId+" does not exist in the current column.");
             throw new Exception("The task doesn't exist in this column.");
         }
+        
     }
 }

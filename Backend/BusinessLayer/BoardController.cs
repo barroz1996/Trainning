@@ -64,7 +64,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 var newTask = new Task(this.totalTasks, title, description, dueDate); //After checking input legitimacy, creates a new task.
                 this.totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
                 GetColumn(email, 0).AddTask(newTask);
-                log.Info("Task "+this.totalTasks+" was created by user "+email+".");
+                log.Info("Task "+(this.totalTasks-1)+" was created by user "+email+".");
             }
             public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
             {

@@ -10,15 +10,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         private string email;
         private List<Column> columns;
-        public Board(string email)
+        public Board(string email, List<Column> columns)
         {
             this.email = email;
-            Column backlog = new Column(0, "BackLog");
-            Column in_progress = new Column(1, "In Progress");
-            Column done = new Column(2, "Done");
-            columns.Add(backlog);
-            columns.Add(in_progress);
-            columns.Add(done);
+            this.columns = columns;
         }
     }
 }

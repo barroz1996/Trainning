@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Task
+    class Task : PersistedObject<Dal.Task>
     {
         private int taskId;
         private string title;
@@ -30,5 +30,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public string GetTitle() { return this.title; }
         public string GetDescription() { return this.description; }
         public DateTime GetDueDate() { return this.dueDate; }
+        public 
     }
 }
