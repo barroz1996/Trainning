@@ -97,7 +97,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
             var hasNumber = new Regex(@"[0-9]+");
             var hasUpperChar = new Regex(@"[A-Z]+");
-            var hasMiniMaxChars = new Regex(@".{4,20}");
             var hasLowerChar = new Regex(@"[a-z]+");
 
             if (!hasLowerChar.IsMatch(password))
@@ -105,20 +104,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 log.Info("Register password without lower case letter");
                 throw new Exception("Password should contain at least one lower case letter.");
             }
-            else if (!hasUpperChar.IsMatch(password))
+            else
             {
-                log.Info("Register password without upper case letter");
-                throw new Exception("Password should contain at least one upper case letter.");
-            }
-            else if (!hasMiniMaxChars.IsMatch(password))
-            {
-                log.Info("Register password out of bounds");
-                throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");
-            }
-            else if (!hasNumber.IsMatch(password))
-            {
-                log.Info("Register password without a number");
-                throw new Exception("Password should contain at least one numeric value.");
+                if (!hasUpperChar.IsMatch(password))
+                {
+                    log.Info("Register password without upper case letter");
+                    throw new Exception("Password should contain at least one upper case letter.");
+                }
+                else
+                {
+                    if (password.Length<4||password.Length>20)
+                    {
+                        log.Info("Register password out of bounds");
+                        throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");
+                    }
+                    else
+                    {
+                        if (!hasNumber.IsMatch(password))
+                        {
+                            log.Info("Register password without a number");
+                            throw new Exception("Password should contain at least one numeric value.");
+                        }
+                    }
+                }
             }
         }
     }
