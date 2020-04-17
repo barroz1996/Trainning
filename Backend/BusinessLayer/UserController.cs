@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
 
-    public class UserController
+     class UserController
     {
         private bool HasLogged;
         //need to add constractor for creating new users with json
@@ -19,8 +19,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             this.HasLogged = false;
             this.Users = new Dictionary<string, User>();
         }
-        
-
+        public void LoadData()
+        {
+            DataAccessLayer.User us = new DataAccessLayer.User(null,null,null,false);
+            List<DataAccessLayer.User> dalus = us.FromJson();
+            foreach(DataAccessLayer.User dal in dalus)
+            {
+                Users.Add(dal.GetEmail(), new User(dal.GetEmail(), dal.GetPassword(), dal.GetNickname(), dal.GetLoggedIn()));
+            }
+        }
         public User GetUser(string email)
         {
             if (this.Users.ContainsKey(email))
@@ -29,12 +36,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             {
                 log.Info("Tried getting unregistered user " + email);
                 throw new Exception("This email is not registered.");
+                
             }
         }
 
         public void Register(string email, string password, string nickname)
         {
-            var user = new User(email, password, nickname);
+            var user = new User(email, password, nickname,false);
             Users.Add(email, user);
             log.Info("User "+email+" was created.");
         }

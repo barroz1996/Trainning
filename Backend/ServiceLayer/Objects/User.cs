@@ -7,10 +7,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         public readonly string Email;
         public readonly string Nickname;
-        internal User(string email, string nickname)
+        //public readonly bool LoggenIn;
+        internal User(string email, string nickname) //, bool LoggenIn)
         {
             this.Email = email;
             this.Nickname = nickname;
+            //this.LoggenIn = LoggenIn;
         }
         public bool EmailVerify(string email)
         {

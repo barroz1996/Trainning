@@ -10,25 +10,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class DalObject<T>
     {
-        public string ToJson()
-        {
-            var json = new JsonSerializerOptions
+        protected DalController controller;
+        public DalObject()
             {
-                WriteIndented = true
-            };
-            
-
-
-        }
-
-        public T FromJson<T>(string json)
-        {
-            return JsonSerializer.Deserialize<T>(json);
-        }
-        public void Save(string toSave)
-        {
-            Console.WriteLine("h");
-            
-        }
-    }
+            this.controller=new DalController();
+            }
+   }
 }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IntroSE.Kanban.Backend.DataAccessLayer;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Task : PersistedObject<Dal.Task>
+    class Task : IPersistedObject<DataAccessLayer.Task>
     {
         private int taskId;
         private string title;
@@ -21,6 +22,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.creationDate = DateTime.Now;
             this.dueDate = dueDate;
         }
+        public Task(int taskId, string title, string description, DateTime dueDate, DateTime creationDate)
+        {
+            this.taskId = taskId;
+            this.title = title;
+            this.description = description;
+            this.creationDate = creationDate;
+            this.dueDate = dueDate;    
+        }
         //getters and setters.
         public void EditTaskTitle(string title) { this.title = title; }
         public void EditTaskDescription(string description) { this.description = description; }
@@ -30,6 +39,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public string GetTitle() { return this.title; }
         public string GetDescription() { return this.description; }
         public DateTime GetDueDate() { return this.dueDate; }
-        public 
+       
+  
+
+        public  DataAccessLayer.Task ToDalObject()
+        {
+            return new DataAccessLayer.Task(this.taskId, this.title, this.description, this.dueDate);
+        }
+        
     }
+   
 }

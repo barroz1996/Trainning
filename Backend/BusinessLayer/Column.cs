@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Column 
+    class Column : IPersistedObject<DataAccessLayer.Column>
     {
         private int columnOrdinal;
         private string columnName;
@@ -37,7 +37,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Info("Tried setting a limit lower than the current number of tasks to the current column.");
                 throw new Exception("This column currently holds more tasks than the limit.");// if in the column right now more tasks then the new limit
             }
-                this.limit = limit;
+            this.limit = limit;
         }
         public List<Task> GetTasks() { return this.tasks; } //Gets the list of tasks in the current column.
 
@@ -56,9 +56,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task RemoveTask(int taskId) //Removes task from the current column.
         {
             Task getTask = GetTask(taskId);
-            tasks.Remove(getTask); 
+            tasks.Remove(getTask);
             return getTask;
-           
+
         }
 
         public Task GetTask(int taskId) //Task getter, throws exception if not found.
@@ -66,11 +66,28 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             foreach (Task task in tasks)
             {
                 if (task.GetTaskID() == taskId)
-                    return task;   
+                    return task;
             }
-            log.Info("Task "+taskId+" does not exist in the current column.");
+            log.Info("Task " + taskId + " does not exist in the current column.");
             throw new Exception("The task doesn't exist in this column.");
         }
-        
+        public DataAccessLayer.Column ToDalObject()
+        {
+            List<DataAccessLayer.Task> Ta = new List<DataAccessLayer.Task>();
+            foreach (Task aTask in this.tasks)
+            {
+                Ta.Add(aTask.ToDalObject());
+            }
+            return new DataAccessLayer.Column(this.columnOrdinal, this.columnName, this.limit, Ta);
+        }
+        public void SetTasks(List<Task> tas)
+        {
+            foreach(Task newTask in tas)
+            {
+                AddTask(newTask);
+            }
+        }
+      
     }
 }
+

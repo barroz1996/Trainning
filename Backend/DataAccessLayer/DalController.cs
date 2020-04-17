@@ -8,24 +8,55 @@ using System.Text.Json;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class DalController
+     class DalController
     {
-        private string BasePath = @"C:\Users\Lenovo\milestones-2-asdf\files";
+        private string BaseUser;
+        private string BaseBoard;
         protected readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public DalController()
+        {
+            BaseUser = Directory.GetCurrentDirectory() + @"\files\Users\";
+            BaseBoard = Directory.GetCurrentDirectory() + @"\files\Board\";
+            if(!(new DirectoryInfo(BaseUser).Exists))
+            {
+                Directory.CreateDirectory(BaseUser);
+            }
+            if (!(new DirectoryInfo(BaseBoard).Exists))
+            {
+                Directory.CreateDirectory(BaseBoard);
+            }
+        }
         public void WriteUser(string fileName,string content)
         {
-            File.WriteAllText(fileName + ".txt,", content);
+            File.WriteAllText(BaseUser+fileName + ".json", content);
             log.Info("The new data saved");   
         }
         public void WriteBoard(string fileName, string content)
         {
-            File.WriteAllText(+fileName + ".txt,", content);
+            File.WriteAllText(BaseBoard + fileName + ".json", content);
             log.Info("The new data saved");
         }
-        public 
-        public string ReadFromFile(string fileName)
+         
+        public List<string> ReadFromBoardFile()
         {
-               return File.ReadAllText(fileName);
+            string[] fileName = Directory.GetFiles(BaseBoard);
+            List<string> jsons = new List<string>();
+            foreach (string file in fileName)
+            {
+                jsons.Add(File.ReadAllText(file));
+            }
+            return jsons;
+        }
+
+        public List<string> ReadFromUserFile()
+        {
+            string[] fileName = Directory.GetFiles(BaseUser);
+            List<string> jsons = new List<string>();
+            foreach (string file in fileName)
+            {
+                jsons.Add(File.ReadAllText(file));
+            }
+            return jsons;
         }
     }
 }

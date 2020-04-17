@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class Task
+    class Task : DalObject<Task>
     {
         private int taskId;
         private string title;
@@ -21,5 +21,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.creationDate = DateTime.Now;
             this.dueDate = dueDate;
         }
+        public int GetTaskID() { return this.taskId; }
+        public DateTime GetCreationDate() { return this.creationDate; }
+        public string GetTitle() { return this.title; }
+        public string GetDescription() { return this.description; }
+        public DateTime GetDueDate() { return this.dueDate; }
     }
 }

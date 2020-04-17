@@ -76,7 +76,7 @@
     <Compile Include="BusinessLayer\Board.cs" />
     <Compile Include="BusinessLayer\BoardController.cs" />
     <Compile Include="BusinessLayer\Column.cs" />
-    <Compile Include="BusinessLayer\PersistedObject.cs" />
+    <Compile Include="BusinessLayer\IPersistedObject.cs" />
     <Compile Include="BusinessLayer\Task.cs" />
     <Compile Include="BusinessLayer\User.cs" />
     <Compile Include="BusinessLayer\UserController.cs" />

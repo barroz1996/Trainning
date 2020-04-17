@@ -16,6 +16,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 this.Boards = new Dictionary<string, Board>();
                 this.totalTasks = 0;
             }
+       
             public void Register(string email)  //Creates a new board in the dictionary
             {
                 var newBoard = new Board(email);
@@ -143,5 +144,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             {
                 return this.totalTasks;
             }
+        public void LoadData()
+        {
+            DataAccessLayer.Board us = new DataAccessLayer.Board(null, null);
+            List<DataAccessLayer.Board> dalus = us.FromJson();
+            foreach (DataAccessLayer.Board dal in dalus)
+            {
+                Board newBoard = new Board(dal.GetEmail());
+                foreach (DataAccessLayer.Column cdal in dal.GetColumns())
+                {
+                    Column newCol = new Column(cdal.GetColumnOrdinal(), cdal.GetColumnName());
+                    foreach (DataAccessLayer.Task tdal in cdal.GetTasks())
+                    {
+                        newCol.AddTask(new Task(tdal.GetTaskID(), tdal.GetTitle(), tdal.GetDescription(), tdal.GetDueDate(), tdal.GetCreationDate()));
+                    }
+                    newBoard.GetColumn(cdal.GetColumnOrdinal()).SetTasks(newCol.GetTasks());
+                }
+                Boards.Add(dal.GetEmail(), new Board(dal.GetEmail(),newBoard.GetColumns()));
+            }
+        }
     }
 }

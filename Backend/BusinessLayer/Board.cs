@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Board
+    class Board: IPersistedObject<DataAccessLayer.Board>
     {
         
         private string email;
@@ -18,13 +18,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Column backlog = new Column(0, "BackLog");
             Column in_progress = new Column(1, "In Progress");
             Column done = new Column(2, "Done");
+            this.columns = new List<Column>();
             columns.Add(backlog);
             columns.Add(in_progress);
             columns.Add(done);
-
         }
-
-
+        public Board() { }
+        public Board(string email,List<Column> columns)
+        {
+            this.email = email;
+            this.columns = columns;
+        }
+        public String GetEmail() { return email; }
         public List<Column> GetColumns() { return columns; }
         public Column GetColumn(int columnOrdinal) // we get the key of the column and we return the column with this key
         {
@@ -46,6 +51,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             log.Info("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
+        }
+       
+        public DataAccessLayer.Board ToDalObject()
+        {
+            List<DataAccessLayer.Column> col = new List<DataAccessLayer.Column>();
+            foreach(Column c in this.columns ){
+                col.Add(c.ToDalObject());
+            }
+            return new DataAccessLayer.Board(this.email,col);
+        }
+        public void Save()
+        {
+            ToDalObject().Save();
         }
     }
 }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
-    public class User
+     class User : IPersistedObject<DataAccessLayer.User>
     {
 
         private string email;
@@ -21,6 +22,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             this.password = password;
             this.nickname = nickname;
             this.LoggedIn = false;
+        }
+        public User(string email, string password, string nickname,bool LoggedIn) {
+            this.email = email;
+            this.password = password;
+            this.nickname = nickname;
+            this.LoggedIn = LoggedIn;
         }
         public string GetEmail()
         {
@@ -69,16 +76,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             this.LoggedIn = false;
         }
-        protected abstract void Save()
+        
+        public DataAccessLayer.User ToDalObject()
         {
-
+            return new DataAccessLayer.User(this.email, this.password, this.nickname,this.LoggedIn);
         }
-        protected T ToDalObject<T>()
+        public void Save()
         {
-            return new DataAccessLayer.DalObject<User>//(email, password, nickname, LoggedIn);
+            ToDalObject().Save();
         }
-
-
-
+       
     }
 }
