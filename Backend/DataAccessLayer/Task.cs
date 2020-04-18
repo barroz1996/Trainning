@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class Task :DalObject<Task>
+    class Task : DalObject<Task>
     {
         private int taskId;
         private string title;
