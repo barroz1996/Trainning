@@ -13,11 +13,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private string email;
         private List<Column> columns;
+        public Board() { }
         public Board(string email, List<Column> columns)
         {
-            this.email = email;
-            this.columns = columns;
+            this.Email = email;
+            this.Columns = columns;
         }
+        public string Email { get => email; set => email = value; }
+        internal List<Column> Columns { get => columns; set => columns = value; }
 
 
         public string ToJson()
@@ -26,12 +29,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 WriteIndented = true
             };
-            log.Info("Board of user " + this.email + " saved");
+            log.Info("Board of user " + this.Email + " saved");
             return JsonSerializer.Serialize(this, json);
         }
         public void Save()
         {
-            base.controller.WriteBoard(this.email, ToJson());
+            base.controller.WriteBoard(this.Email, ToJson());
         }
         public List<Board> FromJson()
         {
@@ -48,8 +51,5 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             log.Info("All board data loaded");
             return reBoard;
         }
-        public String GetEmail() { return email; }
-        public List<Column> GetColumns() { return columns; }
-
     }
 }

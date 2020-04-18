@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             List<DataAccessLayer.User> dalus = us.FromJson();
             foreach(DataAccessLayer.User dal in dalus)
             {
-                Users.Add(dal.GetEmail(), new User(dal.GetEmail(), dal.GetPassword(), dal.GetNickname(), dal.GetLoggedIn()));
+                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));
             }
         }
         public User GetUser(string email)

@@ -13,6 +13,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private int limit;
         private List<Task> tasks;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public Column() { }
         public Column(int columnOrdinal, string columnName)
         {
             this.columnOrdinal = columnOrdinal;

@@ -17,6 +17,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         private BusinessLayer.UserPackage.UserController UserController;
         private BusinessLayer.BoardPackage.BoardController BoardController;
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// Simple public constructor.
         /// </summary>
@@ -56,6 +57,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception ex)
             {
+                log.Info(ex.Message);
                 return new Response<Object>(ex.Message);
             }
             

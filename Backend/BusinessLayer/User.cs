@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private string password;
         private bool LoggedIn;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        public User() { }
         public User(string email, string password, string nickname)
         {
             this.email = email;

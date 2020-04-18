@@ -21,6 +21,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             {
                 var newBoard = new Board(email);
                 this.Boards.Add(email, newBoard);
+                GetBoard(email).Save();
             }
             public Board GetBoard(string email) //Returns the board of the current user
             {
@@ -65,6 +66,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 var newTask = new Task(this.totalTasks, title, description, dueDate); //After checking input legitimacy, creates a new task.
                 this.totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
                 GetColumn(email, 0).AddTask(newTask);
+                GetBoard(email).Save();
                 log.Info("Task "+(this.totalTasks-1)+" was created by user "+email+".");
             }
             public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
@@ -74,6 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     log.Info("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
                 else
                     log.Info("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName()+" to "+limit+".");
+                GetBoard(email).Save();
             }
             public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
             {
@@ -146,21 +149,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
         public void LoadData()
         {
-            DataAccessLayer.Board us = new DataAccessLayer.Board(null, null);
+            DataAccessLayer.Board us = new DataAccessLayer.Board();
             List<DataAccessLayer.Board> dalus = us.FromJson();
             foreach (DataAccessLayer.Board dal in dalus)
             {
-                Board newBoard = new Board(dal.GetEmail());
-                foreach (DataAccessLayer.Column cdal in dal.GetColumns())
+                Board newBoard = new Board(dal.Email);
+                foreach (DataAccessLayer.Column cdal in dal.Columns)
                 {
-                    Column newCol = new Column(cdal.GetColumnOrdinal(), cdal.GetColumnName());
-                    foreach (DataAccessLayer.Task tdal in cdal.GetTasks())
+                    Column newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName);
+                    foreach (DataAccessLayer.Task tdal in cdal.Tasks)
                     {
-                        newCol.AddTask(new Task(tdal.GetTaskID(), tdal.GetTitle(), tdal.GetDescription(), tdal.GetDueDate(), tdal.GetCreationDate()));
+                        newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationDate));
                     }
-                    newBoard.GetColumn(cdal.GetColumnOrdinal()).SetTasks(newCol.GetTasks());
+                    newBoard.GetColumn(cdal.ColumnOrdinal).SetTasks(newCol.GetTasks());
                 }
-                Boards.Add(dal.GetEmail(), new Board(dal.GetEmail(),newBoard.GetColumns()));
+                Boards.Add(dal.Email, new Board(dal.Email,newBoard.GetColumns()));
             }
         }
     }

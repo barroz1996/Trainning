@@ -14,6 +14,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private string description;
         private DateTime creationDate;
         private DateTime dueDate;
+        public Task() { }
         public Task(int taskId, string title, string description, DateTime dueDate)
         {
             this.taskId = taskId;
@@ -44,7 +45,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public  DataAccessLayer.Task ToDalObject()
         {
-            return new DataAccessLayer.Task(this.taskId, this.title, this.description, this.dueDate);
+            return new DataAccessLayer.Task(this.taskId, this.title, this.description, this.dueDate,this.creationDate);
         }
         
     }

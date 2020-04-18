@@ -13,18 +13,21 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         private string description;
         private DateTime creationDate;
         private DateTime dueDate;
-        public Task(int taskId, string title, string description, DateTime dueDate)
+
+        public Task() { }
+
+        public Task(int taskId, string title, string description, DateTime dueDate, DateTime creationDate)
         {
-            this.taskId = taskId;
-            this.title = title;
-            this.description = description;
-            this.creationDate = DateTime.Now;
-            this.dueDate = dueDate;
+            this.TaskId = taskId;
+            this.Title = title;
+            this.Description = description;
+            this.CreationDate = creationDate;
+            this.DueDate = dueDate;
         }
-        public int GetTaskID() { return this.taskId; }
-        public DateTime GetCreationDate() { return this.creationDate; }
-        public string GetTitle() { return this.title; }
-        public string GetDescription() { return this.description; }
-        public DateTime GetDueDate() { return this.dueDate; }
+        public int TaskId { get => taskId; set => taskId = value; }
+        public string Title { get => title; set => title = value; }
+        public string Description { get => description; set => description = value; }
+        public DateTime CreationDate { get => creationDate; set => creationDate = value; }
+        public DateTime DueDate { get => dueDate; set => dueDate = value; }
     }
 }

@@ -13,15 +13,22 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         private string email;
         private string nickname;
         private string password;
-        private bool LoggedIn;
+        private bool loggedIn;
+
+        public User() { }
 
         public User(string email, string password, string nickname, bool LoggedIn)
         {
-            this.email = email;
-            this.password = password;
-            this.nickname = nickname;
+            this.Email = email;
+            this.Password = password;
+            this.Nickname = nickname;
             this.LoggedIn = LoggedIn;
         }
+
+        public string Email { get => email; set => email = value; }
+        public string Nickname { get => nickname; set => nickname = value; }
+        public string Password { get => password; set => password = value; }
+        public bool LoggedIn { get => loggedIn; set => loggedIn = value; }
 
         public string ToJson()
         {
@@ -29,17 +36,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 WriteIndented = true
             };
-            log.Debug("User" + this.email + " saved");
-            return JsonSerializer.Serialize(this, json);
+            log.Debug("User " + this.Email + " saved");
+            return JsonSerializer.Serialize(this,json);
         }
         public void Save()
         {
-            base.controller.WriteUser(this.email, ToJson());
+            base.controller.WriteUser(this.Email, ToJson());
+            Console.WriteLine("hi");
         }
         public List<User> FromJson()
         {
             List<User> reUser = new List<User>();
-            List<string> jsons = base.controller.ReadFromBoardFile();
+            List<string> jsons = base.controller.ReadFromUserFile();
             var json = new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -50,23 +58,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             log.Info("All User data loaded");
             return reUser;
-        }
-        public string GetEmail()
-        {
-            return this.email;
-        }
-        public string GetNickname()
-        {
-            return this.nickname;
-        }
-        public string GetPassword()
-        {
-            return this.password;
-        }
-
-        public bool GetLoggedIn()
-        {
-            return this.LoggedIn;
         }
     }
 }

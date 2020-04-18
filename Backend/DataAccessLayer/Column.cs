@@ -12,18 +12,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         private string columnName;
         private int limit;
         private List<Task> tasks;
+        public Column() { }
         public Column(int columnOrdinal, string columnName, int limit, List<Task> tasks)
         {
-            this.columnOrdinal = columnOrdinal;
-            this.columnName = columnName;
-            this.limit = limit;
-            this.tasks = tasks;
-
+            this.ColumnOrdinal = columnOrdinal;
+            this.ColumnName = columnName;
+            this.Limit = limit;
+            this.Tasks = tasks;
         }
 
-        public int GetColumnOrdinal() { return this.columnOrdinal; }
-        public string GetColumnName() { return this.columnName; }
-        public int GetLimit() { return this.limit; }
-        public List<Task> GetTasks() { return this.tasks; }
+        public int ColumnOrdinal { get => columnOrdinal; set => columnOrdinal = value; }
+        public string ColumnName { get => columnName; set => columnName = value; }
+        public int Limit { get => limit; set => limit = value; }
+        internal List<Task> Tasks { get => tasks; set => tasks = value; }
     }
 }
