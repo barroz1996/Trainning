@@ -29,7 +29,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 WriteIndented = true
             };
-            log.Info("User" + this.email + " saved");
+            log.Debug("User" + this.email + " saved");
             return JsonSerializer.Serialize(this, json);
         }
         public void Save()

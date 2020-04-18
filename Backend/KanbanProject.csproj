@@ -86,7 +86,6 @@
     <Compile Include="DataAccessLayer\Column.cs" />
     <Compile Include="DataAccessLayer\User.cs" />
     <Compile Include="DataAccessLayer\Board.cs" />
-    <Compile Include="Main.cs" />
     <Compile Include="ServiceLayer\Response.cs" />
     <Compile Include="ServiceLayer\ResponseT.cs" />
     <Compile Include="ServiceLayer\IService.cs" />

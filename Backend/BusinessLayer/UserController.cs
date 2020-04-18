@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Text.Json;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
@@ -44,6 +45,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             var user = new User(email, password, nickname,false);
             Users.Add(email, user);
+            GetUser(email).Save();
             log.Info("User "+email+" was created.");
         }
         public bool IsLogged(string email)
@@ -86,6 +88,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 log.Info("illegal email");
                 throw new Exception("please enter valid email");
             }
+            if(Users.ContainsKey(email))
+            {
+                log.Info("Tried registering with an existing email.");
+                throw new Exception("email already in use.");
+            }
         }
 
         public void PasswordVerify(string password)
@@ -115,7 +122,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 {
                     if (password.Length<4||password.Length>20)
                     {
-                        log.Info("Register password out of bounds");
+                        log.Info("Register password out of bounds.");
                         throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");
                     }
                     else

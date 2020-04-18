@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class DalObject<T>
     {
-        protected DalController controller;
+        public DalController controller;
         public DalObject()
             {
             this.controller=new DalController();
