@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class Column : DalObject<Column>
+    class Column :DalObject<Column>
     {
         private int columnOrdinal;
         private string columnName;
