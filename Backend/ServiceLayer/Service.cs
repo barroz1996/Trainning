@@ -35,6 +35,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             UserController.LoadData();
             BoardController.LoadData();
+            
             return new Response();
         }
 
@@ -341,7 +342,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                         Task newtask = new Task(task.GetTaskID(), task.GetCreationDate(), task.GetTitle(), task.GetDescription());
                         Tasks.Add(newtask);
                     }
-                    Column column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email,columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
+                   Column column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
+                   
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -350,7 +352,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
+            
                 return new Response<Column>("This user is not logged in");
+            
         }
 
     }

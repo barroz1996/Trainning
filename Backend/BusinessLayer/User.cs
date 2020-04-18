@@ -57,16 +57,26 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public void Login(string password)
         {
-            if (this.password.Equals(password))  //verify if the password match
+            if (!(this.LoggedIn))
             {
-                this.LoggedIn = true;
+
+
+                if (this.password.Equals(password))  //verify if the password match
+                {   
+                    this.LoggedIn = true;
+                }
+                else
+                {
+                    log.Info("User " + this.email + " tried logging in with an incorrect password.");
+                    throw new Exception("email and password does not match.");
+                }
+
             }
             else
             {
-                log.Info("User " + this.email + " tried logging in with an incorrect password.");
-                throw new Exception("email and password does not match.");
+                log.Info("User " + this.email + " already is logged in");
+                throw new Exception("user is already logged in");
             }
-                
         }
         public bool GetLoggedIn()
         {

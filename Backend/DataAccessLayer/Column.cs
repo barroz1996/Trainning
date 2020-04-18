@@ -24,6 +24,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public int ColumnOrdinal { get => columnOrdinal; set => columnOrdinal = value; }
         public string ColumnName { get => columnName; set => columnName = value; }
         public int Limit { get => limit; set => limit = value; }
-        internal List<Task> Tasks { get => tasks; set => tasks = value; }
+        public List<Task> Tasks { get => tasks; set => tasks = value; }
     }
 }

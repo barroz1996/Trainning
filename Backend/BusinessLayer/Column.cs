@@ -22,6 +22,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.tasks = new List<Task>();
 
         }
+        public Column(int columnOrdinal, string columnName,int limit)
+        {
+            this.columnOrdinal = columnOrdinal;
+            this.columnName = columnName;
+            this.limit = limit;
+            this.tasks = new List<Task>();
+            
+
+        }
+        
+        
 
         public int GetColumnOrdinal() { return this.columnOrdinal; }
         public string GetColumnName() { return this.columnName; }

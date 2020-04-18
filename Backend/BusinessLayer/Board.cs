@@ -65,5 +65,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             ToDalObject().Save();
         }
+        public int TotalTask()
+        {
+            return GetColumn(0).GetTasks().Count + GetColumn(1).GetTasks().Count + GetColumn(2).GetTasks().Count;
+        }
     }
 }

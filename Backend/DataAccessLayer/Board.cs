@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.Columns = columns;
         }
         public string Email { get => email; set => email = value; }
-        internal List<Column> Columns { get => columns; set => columns = value; }
+        public List<Column> Columns { get => columns; set => columns = value; }
 
 
         public string ToJson()

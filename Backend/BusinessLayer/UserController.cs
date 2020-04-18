@@ -19,6 +19,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             this.HasLogged = false;
             this.Users = new Dictionary<string, User>();
+           
         }
         public void LoadData()
         {
@@ -27,6 +28,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             foreach(DataAccessLayer.User dal in dalus)
             {
                 Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));
+            }
+            foreach (KeyValuePair<string, User> entry in Users)
+            {
+                if (entry.Value.GetLoggedIn())
+                    HasLogged = true;
             }
         }
         public User GetUser(string email)
@@ -58,6 +64,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             {
                 GetUser(email).Login(password);
                 HasLogged = true;
+                GetUser(email).Save();
                 log.Info("User " + email + " has logged in.");
             }
             else
@@ -72,7 +79,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             {
                 GetUser(email).Logout();
                 HasLogged = false;
+                GetUser(email).Save();
                 log.Info("User " + email + " has logged out.");
+
             }
             else
             {

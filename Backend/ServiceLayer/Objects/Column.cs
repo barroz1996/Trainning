@@ -17,6 +17,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.Name = name;
             this.Limit = limit;
         }
-        // You can add code here
+        public int GetLimit() { return this.Limit; }
     }
 }

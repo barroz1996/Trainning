@@ -15,9 +15,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             {
                 this.Boards = new Dictionary<string, Board>();
                 this.totalTasks = 0;
-            }
-       
-            public void Register(string email)  //Creates a new board in the dictionary
+
+           
+
+
+        }
+
+        public void Register(string email)  //Creates a new board in the dictionary
             {
                 var newBoard = new Board(email);
                 this.Boards.Add(email, newBoard);
@@ -88,7 +92,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 else
                 {
                     GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
-                    log.Info("Updated the due date of task "+taskId+".");
+                GetBoard(email).Save();
+                log.Info("Updated the due date of task "+taskId+".");
                 }
             }
             public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)//Update a specific task's description.
@@ -101,7 +106,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 else
                 {
                     GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
-                    log.Info("Updated the description of task " + taskId + ".");
+                GetBoard(email).Save();
+                log.Info("Updated the description of task " + taskId + ".");
                 }
             }
             public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
@@ -121,7 +127,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     else
                     {
                         GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskTitle(title);
-                        log.Info("Updated the description of task " + taskId + ".");
+                    GetBoard(email).Save();
+                    log.Info("Updated the description of task " + taskId + ".");
                     }
                 }
             }
@@ -134,8 +141,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             if (GetColumn(email, (columnOrdinal + 1)).GetLimit() > (GetColumn(email, (columnOrdinal + 1)).GetTasks().Count) || ((GetColumn(email, (columnOrdinal + 1)).GetLimit() == -1)))
             {
-                GetColumn(email, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
+
+               GetColumn(email, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
                 log.Info("Task " + taskId + " was advanced from the " + GetColumn(email, columnOrdinal).GetColumnName() + " column to the " + GetColumn(email, columnOrdinal + 1).GetColumnName() + " column.");
+                GetBoard(email).Save();
             }
             else //the condition makes sure that the next column has not reached it's limit.
                 {
@@ -153,17 +162,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             List<DataAccessLayer.Board> dalus = us.FromJson();
             foreach (DataAccessLayer.Board dal in dalus)
             {
-                Board newBoard = new Board(dal.Email);
+                var newBoard = new Board(dal.Email);
                 foreach (DataAccessLayer.Column cdal in dal.Columns)
                 {
-                    Column newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName);
+                    var newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName,cdal.Limit);
+
                     foreach (DataAccessLayer.Task tdal in cdal.Tasks)
                     {
                         newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationDate));
                     }
                     newBoard.GetColumn(cdal.ColumnOrdinal).SetTasks(newCol.GetTasks());
+                    newBoard.GetColumn(cdal.ColumnOrdinal).LimitColumnTasks(cdal.Limit);
                 }
                 Boards.Add(dal.Email, new Board(dal.Email,newBoard.GetColumns()));
+            }
+            foreach (KeyValuePair<string, Board> entry in Boards)
+            {
+                this.totalTasks = this.totalTasks + entry.Value.TotalTask();
             }
         }
     }
