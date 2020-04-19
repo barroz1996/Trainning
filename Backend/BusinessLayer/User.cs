@@ -29,69 +29,67 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             this.nickname = nickname;
             this.LoggedIn = LoggedIn;
         }
-        public string GetEmail()
-        {
-            return this.email;
-        }
-        public string GetNickname()
-        {
-            return this.nickname;
-        }
-        public string GetPassword()
-        {
-            return this.password;
-        }
+        public string GetEmail(){ return this.email; }
+        public string GetNickname() { return this.nickname; }
+        public string GetPassword(){ return this.password; }
+        public bool GetLoggedIn() { return this.LoggedIn; }
         public void SetNickname(string nickname)
         {
             if (nickname == null)
             {
-                log.Info("User " + this.email + " tried setting a null nickname.");
+                log.Debug("User " + this.email + " tried setting a null nickname.");
                 throw new Exception("Nickname cannot be null.");
             }
             else {
                 this.nickname = nickname;
-                log.Info("User " + this.email + " changed his nickname to "+this.nickname+".");
+                log.Debug("User " + this.email + " changed his nickname to "+this.nickname+".");
             }
             
         }
 
-        public void Login(string password)
+        public void Login(string password) //tries logging in the user.
         {
-            if (!(this.LoggedIn))
+            if (!(this.LoggedIn)) //checks if the user is already logged in.
             {
-
-
-                if (this.password.Equals(password))  //verify if the password match
+                if (this.password.Equals(password))  //verify if the password matches the user's.
                 {   
                     this.LoggedIn = true;
+                    Save();                     //Saves in the json file that the user is logged in.
+                    log.Debug("User " + email + " has logged in.");
                 }
                 else
                 {
-                    log.Info("User " + this.email + " tried logging in with an incorrect password.");
+                    log.Debug("User " + this.email + " tried logging in with an incorrect password.");
                     throw new Exception("email and password does not match.");
                 }
 
             }
             else
             {
-                log.Info("User " + this.email + " already is logged in");
+                log.Debug("User " + this.email + " already is logged in");
                 throw new Exception("user is already logged in");
             }
         }
-        public bool GetLoggedIn()
-        {
-            return this.LoggedIn;
-        }
         public void Logout() //updated the user status
         {
-            this.LoggedIn = false;
+            if (GetLoggedIn()) //checks if the user is logged in, else throws an exception.
+            {
+                this.LoggedIn = false;
+                Save();
+                log.Debug("User " + email + " has logged out.");
+            }
+            else
+            {
+                log.Debug("Error: User " + email + " tried logging out while being logged out.");
+                throw new Exception("This user is not logged in");
+            }
         }
         
-        public DataAccessLayer.User ToDalObject()
+        public DataAccessLayer.User ToDalObject() //returns a DataAccessLayer version of the current user.
         {
             return new DataAccessLayer.User(this.email, this.password, this.nickname,this.LoggedIn);
         }
-        public void Save()
+        public void Save() //saves changes.
         {
             ToDalObject().Save();
         }

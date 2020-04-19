@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (col.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
                     return col;
             }
-            log.Info("Tried getting an illegal column ordinal.");
+            log.Debug("Tried getting an illegal column ordinal.");
             throw new Exception("Column ordinal is illegal.");
         }
 
@@ -49,8 +49,34 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (col.GetColumnName().Equals(columnName))  // we check the columnName
                     return col;
             }
-            log.Info("Tried getting an illegal column name.");
+            log.Debug("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
+        }
+        public void AddTask(int taskId,String title, String description, DateTime dueDate)
+        {
+            if (title.Length == 0)
+            {
+                log.Debug("Tried adding new task with an empty title");
+                throw new Exception("Title can't be empty.");
+            }
+            if (title.Length > 50)
+            {
+                log.Debug("Tried adding new task with an title longer than 50 characters.");
+                throw new Exception("Title can't be longer than 50 characters.");
+            }
+            if (description.Length > 300)
+            {
+                log.Debug("Tried adding new task with an description longer than 300 characters.");
+                throw new Exception("Description can't be longer than 300 characters.");
+            }
+            if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
+            {
+                log.Debug("Tried adding new task with a non futuristic due date.");
+                throw new Exception("Due date is required to be a futuristic date.");
+            }
+            GetColumn(0).AddTask(new Task(taskId, title, description, dueDate));
+            Save();
+            log.Debug("Task " + (taskId) + " was created by user " + email + ".");
         }
        
         public DataAccessLayer.Board ToDalObject()

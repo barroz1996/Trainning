@@ -41,12 +41,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             if (limit < -1)
             {
-                log.Info("Tried setting an illegal limit");
+                log.Debug("Tried setting an illegal limit");
                 throw new Exception("Illegal limit.");  //legal limit values are >=-1.
             }
             if ((limit < tasks.Count) && (limit > -1))
             {
-                log.Info("Tried setting a limit lower than the current number of tasks to the current column.");
+                log.Debug("Tried setting a limit lower than the current number of tasks to the current column.");
                 throw new Exception("This column currently holds more tasks than the limit.");// if in the column right now more tasks then the new limit
             }
             this.limit = limit;
@@ -60,7 +60,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 tasks.Add(newTask);
             else
             {
-                log.Info("Tried adding a task to a full column.");
+                log.Debug("Tried adding a task to a full column.");
                 throw new Exception("The " + this.columnName + " column is aleady full.");
             }
         }
@@ -80,7 +80,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (task.GetTaskID() == taskId)
                     return task;
             }
-            log.Info("Task " + taskId + " does not exist in the current column.");
+            log.Debug("Task " + taskId + " does not exist in the current column.");
             throw new Exception("The task doesn't exist in this column.");
         }
         public DataAccessLayer.Column ToDalObject()

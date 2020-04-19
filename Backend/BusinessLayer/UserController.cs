@@ -10,9 +10,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
 
      class UserController
-    {
+     {
         private bool HasLogged;
-        //need to add constractor for creating new users with json
         private Dictionary<string, User> Users;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public UserController()
@@ -21,124 +20,110 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             this.Users = new Dictionary<string, User>();
            
         }
-        public void LoadData()
+        public void LoadData() //Loads all the data while starting the program.
         {
-            DataAccessLayer.User us = new DataAccessLayer.User(null,null,null,false);
-            List<DataAccessLayer.User> dalus = us.FromJson();
+            DataAccessLayer.User us = new DataAccessLayer.User();
+            List<DataAccessLayer.User> dalus = us.FromJson(); //Gets a list of all DataAcessLayer users from the json file.
             foreach(DataAccessLayer.User dal in dalus)
             {
-                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));
+                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all the users to the users dictionary.
             }
-            foreach (KeyValuePair<string, User> entry in Users)
+            foreach (KeyValuePair<string, User> entry in Users) //Checks if any of the users is logged in.
             {
                 if (entry.Value.GetLoggedIn())
                     HasLogged = true;
             }
         }
-        public User GetUser(string email)
+        public User GetUser(string email) //Gets a specific user from the dictionary.
         {
             if (this.Users.ContainsKey(email))
                 return Users[email];
             else
             {
-                log.Info("Tried getting unregistered user " + email);
+                log.Debug("Tried getting unregistered user " + email);
                 throw new Exception("This email is not registered.");
                 
             }
         }
 
-        public void Register(string email, string password, string nickname)
+        public void Register(string email, string password, string nickname) //Adds a new user to the dictionary and creates a new json file for it.
         {
-            var user = new User(email, password, nickname,false);
-            Users.Add(email, user);
+            Users.Add(email, new User(email, password, nickname));
             GetUser(email).Save();
-            log.Info("User "+email+" was created.");
+            log.Debug("User "+email+" was created.");
         }
-        public bool IsLogged(string email)
+        public bool IsLogged(string email) //Checks if a specific user is logged in.
         {
                 return GetUser(email).GetLoggedIn();
         }
-        public void Login(string email , string password)
+        public void Login(string email , string password) //Tries logging in a user.
         {
-            if(HasLogged == false)
+            if(HasLogged == false) //User can only log in if everybody else is logged out.
             {
-                GetUser(email).Login(password);
+                GetUser(email).Login(password); //Throws exception if password doesn't match.
                 HasLogged = true;
-                GetUser(email).Save();
-                log.Info("User " + email + " has logged in.");
             }
             else
             {
-                log.Info("Error: User " + email + " tried logging in while another user was already logged in.");
+                log.Debug("Error: User " + email + " tried logging in while another user was already logged in.");
                 throw new Exception("Someone is already logged in.");
             }
         }
-        public void Logout(string email)
+        public void Logout(string email) //Logs a user out.
         {
-            if (GetUser(email).GetLoggedIn())
-            {
                 GetUser(email).Logout();
                 HasLogged = false;
-                GetUser(email).Save();
-                log.Info("User " + email + " has logged out.");
-
-            }
-            else
-            {
-                log.Info("Error: User " + email + " tried logging out while being logged out.");
-                throw new Exception("This user is not logged in");
-            }
         }
-        public void EmailVerify(string email)
+        public void EmailVerify(string email) //Makes sure that the input email is valid.
         {
             string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
-            if (!Regex.IsMatch(email, pattern))
+            if (!Regex.IsMatch(email, pattern)) //Checks that the email fits in the pattern.
             {
-                log.Info("illegal email");
+                log.Debug("illegal email");
                 throw new Exception("please enter valid email");
             }
-            if(Users.ContainsKey(email))
+            if(Users.ContainsKey(email)) //Checks if this email is unused by another user.
             {
-                log.Info("Tried registering with an existing email.");
+                log.Debug("Tried registering with an existing email.");
                 throw new Exception("email already in use.");
             }
         }
 
-        public void PasswordVerify(string password)
+        public void PasswordVerify(string password) //akes sure the input password is valid.
         {
-            if (string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(password)) //checks if the password is null.
             {
-                log.Info("empty password");
+                log.Debug("empty password");
                 throw new Exception("Password should not be empty");
             }
             var hasNumber = new Regex(@"[0-9]+");
             var hasUpperChar = new Regex(@"[A-Z]+");
             var hasLowerChar = new Regex(@"[a-z]+");
 
-            if (!hasLowerChar.IsMatch(password))
+            if (!hasLowerChar.IsMatch(password)) //checks if it contains a lowercase letter.
             {
-                log.Info("Register password without lower case letter");
+                log.Debug("Register password without lower case letter");
                 throw new Exception("Password should contain at least one lower case letter.");
             }
             else
             {
-                if (!hasUpperChar.IsMatch(password))
+                if (!hasUpperChar.IsMatch(password)) //checks if it contains an uppercase letter.
                 {
-                    log.Info("Register password without upper case letter");
+                    log.Debug("Register password without upper case letter");
                     throw new Exception("Password should contain at least one upper case letter.");
                 }
                 else
                 {
-                    if (password.Length<4||password.Length>20)
+                    if (password.Length<4||password.Length>20) //checks if it fits the required length.
                     {
-                        log.Info("Register password out of bounds.");
+                        log.Debug("Register password out of bounds.");
                         throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");
                     }
                     else
                     {
-                        if (!hasNumber.IsMatch(password))
+                        if (!hasNumber.IsMatch(password)) //checks contains it has a number.
                         {
-                            log.Info("Register password without a number");
+                            log.Debug("Register password without a number");
                             throw new Exception("Password should contain at least one numeric value.");
                         }
                     }

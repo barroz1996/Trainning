@@ -29,7 +29,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 WriteIndented = true
             };
-            log.Info("Board of user " + this.Email + " saved");
+            log.Debug("Board of user " + this.Email + " saved");
             return JsonSerializer.Serialize(this, json);
         }
         public void Save()
@@ -48,7 +48,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 reBoard.Add(JsonSerializer.Deserialize<Board>(fromjs, json));
             }
-            log.Info("All board data loaded");
+            log.Debug("All board data loaded");
             return reBoard;
         }
     }

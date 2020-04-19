@@ -12,12 +12,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         private string BaseUser;
         private string BaseBoard;
-        protected readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string BaseLogs;
         public DalController()
         {
             BaseUser = Directory.GetCurrentDirectory() + @"\files\Users\";
             BaseBoard = Directory.GetCurrentDirectory() + @"\files\Board\";
-            if(!(new DirectoryInfo(BaseUser).Exists))
+            BaseLogs = Directory.GetCurrentDirectory() + @"\files\Logs\";
+            if (!(new DirectoryInfo(BaseUser).Exists))
             {
                 Directory.CreateDirectory(BaseUser);
             }
@@ -25,18 +26,24 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 Directory.CreateDirectory(BaseBoard);
             }
+            if (!(new DirectoryInfo(BaseLogs).Exists))
+            {
+                Directory.CreateDirectory(BaseLogs);
+            }
         }
         public void WriteUser(string fileName,string content)
         {
             File.WriteAllText(BaseUser+fileName + ".json", content);
-            log.Info("The new data saved");   
         }
         public void WriteBoard(string fileName, string content)
         {
             File.WriteAllText(BaseBoard + fileName + ".json", content);
-            log.Info("The new data saved");
         }
-         
+        public void WriteLogs(string fileName, string content)
+        {
+            File.WriteAllText(BaseLogs + fileName + ".json", content);
+        }
+
         public List<string> ReadFromBoardFile()
         {
             string[] fileName = Directory.GetFiles(BaseBoard);

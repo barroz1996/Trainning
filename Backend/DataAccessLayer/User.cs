@@ -42,7 +42,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public void Save()
         {
             base.controller.WriteUser(this.Email, ToJson());
-            Console.WriteLine("hi");
         }
         public List<User> FromJson()
         {
@@ -56,7 +55,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 reUser.Add(JsonSerializer.Deserialize<User>(fromjs, json));
             }
-            log.Info("All User data loaded");
+            log.Debug("All User data loaded");
             return reUser;
         }
     }

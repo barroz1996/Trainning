@@ -2,8 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
+// General Debugrmation about an assembly is controlled through the following
+// set of attributes. Change these attribute values to modify the Debugrmation
 // associated with an assembly.
 [assembly: AssemblyTitle("Test")]
 [assembly: AssemblyDescription("")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("fb26b951-777d-42a4-8cec-3fca36e63c3d")]
 
-// Version information for an assembly consists of the following four values:
+// Version Debugrmation for an assembly consists of the following four values:
 //
 //      Major Version
 //      Minor Version

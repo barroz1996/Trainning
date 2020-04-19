@@ -58,7 +58,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception ex)
             {
-                log.Info(ex.Message);
+                log.Debug(ex.Message);
                 return new Response<Object>(ex.Message);
             }
             

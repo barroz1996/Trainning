@@ -12,7 +12,7 @@ namespace Test
         {
             var service = new Service();
             service.LoadData();
-            
+            service.Register("asdf@gmail.com", "Aa1234", "asdf");
             Console.ReadKey();
         }
     }
