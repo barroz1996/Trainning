@@ -50,7 +50,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                UserController.EmailVerify(email);
                 UserController.PasswordVerify(password);
                 UserController.Register(email, password, nickname);
                 BoardController.Register(email);

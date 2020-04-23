@@ -15,9 +15,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Board(string email)
         {
             this.email = email;
-            Column backlog = new Column(0, "BackLog");
-            Column in_progress = new Column(1, "In Progress");
-            Column done = new Column(2, "Done");
+            Column backlog = new Column(0, "backlog");
+            Column in_progress = new Column(1, "in progress");
+            Column done = new Column(2, "done");
             this.columns = new List<Column>();
             columns.Add(backlog);
             columns.Add(in_progress);
@@ -64,10 +64,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried adding new task with an title longer than 50 characters.");
                 throw new Exception("Title can't be longer than 50 characters.");
             }
-            if (description.Length > 300)
+            if (description!=null)
             {
-                log.Debug("Tried adding new task with an description longer than 300 characters.");
-                throw new Exception("Description can't be longer than 300 characters.");
+                if (description.Length > 300)
+                {
+                    log.Debug("Tried adding new task with an description longer than 300 characters.");
+                    throw new Exception("Description can't be longer than 300 characters.");
+                }
             }
             if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
             {

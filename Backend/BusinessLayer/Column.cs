@@ -39,17 +39,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public int GetLimit() { return this.limit; }
         public void LimitColumnTasks(int limit) //Sets a limit to the current column.
         {
-            if (limit < -1)
+            //if (this.columnOrdinal == 1)
+           // {
+                if (limit < -1)
+                {
+                    log.Debug("Tried setting an illegal limit");
+                    throw new Exception("Illegal limit.");  //legal limit values are >=-1.
+                }
+                if ((limit < tasks.Count) && (limit > -1))
+                {
+                    log.Debug("Tried setting a limit lower than the current number of tasks to the current column.");
+                    throw new Exception("This column currently holds more tasks than the limit.");// if in the column right now more tasks then the new limit
+                }
+                this.limit = limit;
+           // }
+            /*else
             {
-                log.Debug("Tried setting an illegal limit");
-                throw new Exception("Illegal limit.");  //legal limit values are >=-1.
-            }
-            if ((limit < tasks.Count) && (limit > -1))
-            {
-                log.Debug("Tried setting a limit lower than the current number of tasks to the current column.");
-                throw new Exception("This column currently holds more tasks than the limit.");// if in the column right now more tasks then the new limit
-            }
-            this.limit = limit;
+                log.Debug("tried limiting a column other than the in progress column.");
+                throw new Exception("can only limit of the in progress column.");
+            }*/
         }
         public List<Task> GetTasks() { return this.tasks; } //Gets the list of tasks in the current column.
 

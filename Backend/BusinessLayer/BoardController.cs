@@ -48,16 +48,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
             {
-                GetColumn(email, columnOrdinal).LimitColumnTasks(limit);
-                if (limit == -1)
-                    log.Debug("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
-                else
-                    log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName()+" to "+limit+".");
+                if (columnOrdinal == 1)
+                {
+                    GetColumn(email, columnOrdinal).LimitColumnTasks(limit);
+                    if (limit == -1)
+                        log.Debug("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
+                    else
+                        log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName() + " to " + limit + ".");
                     GetBoard(email).Save();
+                }
+                else
+                {
+                    log.Debug("tried limiting a column other than the in progress column.");
+                    throw new Exception("can only limit of the in progress column.");
+                }
             }
             public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
             {
-                if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
+            if (columnOrdinal == 2)
+            {
+                log.Debug("Tried update task a task from the done column.");
+                throw new Exception("Cannot update a task in the done column.");
+            }
+            if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
                 {
                     log.Debug("Tried setting the due date of task "+taskId+" to a non futuristic due date.");
                     throw new Exception("Due date is required to be a futuristic date.");
@@ -71,11 +84,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)//Update a specific task's description.
             {
+            if (columnOrdinal == 2)
+            {
+                log.Debug("Tried update task a task from the done column.");
+                throw new Exception("Cannot update a task in the done column.");
+            }
+            if (description!=null)
+            {
                 if (description.Length > 300)
                 {
                     log.Debug("Tried setting the description of task " + taskId + " to a description longer than 300 characters.");
                     throw new Exception("Description can't be longer than 300 characters.");
                 }
+            }
                 else
                 {
                     GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
@@ -85,6 +106,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
             {
+            if (columnOrdinal == 2)
+            {
+                log.Debug("Tried update task a task from the done column.");
+                throw new Exception("Cannot update a task in the done column.");
+            }
             if (string.IsNullOrWhiteSpace(title))
             {
                 log.Debug("Tried setting the title of task " + taskId + " to an empty title");

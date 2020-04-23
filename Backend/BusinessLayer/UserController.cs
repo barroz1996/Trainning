@@ -48,9 +48,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public void Register(string email, string password, string nickname) //Adds a new user to the dictionary and creates a new json file for it.
         {
+
+            if (Users.ContainsKey(email)) //Checks if this email is unused by another user.
+            {
+                log.Debug("Tried registering with an existing email.");
+                throw new Exception("email already in use.");
+            }
             if (!string.IsNullOrWhiteSpace(nickname))
             {
-                Console.WriteLine("vsvs");
                 foreach(KeyValuePair <string,User> nUser in Users)
                 {
                     if (nUser.Value.GetNickname().Equals(nickname))
@@ -59,9 +64,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                         throw new Exception("nickName allready used!");
                     }
                 }
-                Users.Add(email, new User(email, password, nickname));
-                GetUser(email).Save();
-                log.Debug("User " + email + " was created.");
+                if (EmailVerify(email)){
+                    Users.Add(email, new User(email, password, nickname));
+                    GetUser(email).Save();
+                    log.Debug("User " + email + " was created.");
+                }
+                else
+                {
+                    log.Debug("Invalid email");
+                    throw new Exception("Invalid Email");
+                }
             }
             else
             {
@@ -97,18 +109,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 GetUser(email).Logout();
                 HasLogged = false;
         }
-        public void EmailVerify(string email) //Makes sure that the input email is valid.
+        public bool EmailVerify(string email) //Makes sure that the input email is valid.
         {
-            string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{3,9})$";
-            if (!Regex.IsMatch(email, pattern)) //Checks that the email fits in the pattern.
+            try
             {
-                log.Debug("illegal email");
-                throw new Exception("please enter valid email");
+                var newEmail = new System.Net.Mail.MailAddress(email);
+                return newEmail.Address == email;
             }
-            if(Users.ContainsKey(email)) //Checks if this email is unused by another user.
+            catch
             {
-                log.Debug("Tried registering with an existing email.");
-                throw new Exception("email already in use.");
+                return false;
             }
         }
 
