@@ -49,10 +49,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public void Login(string password) //tries logging in the user.
         {
-            if (!(this.LoggedIn)) //checks if the user is already logged in.
-            {
                 if (this.password.Equals(password))  //verify if the password matches the user's.
-                {   
+                {    
                     this.LoggedIn = true;
                     Save();                     //Saves in the json file that the user is logged in.
                     log.Debug("User " + email + " has logged in.");
@@ -61,14 +59,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 {
                     log.Debug("User " + this.email + " tried logging in with an incorrect password.");
                     throw new Exception("email and password does not match.");
-                }
-
-            }
-            else
-            {
-                log.Debug("User " + this.email + " already is logged in");
-                throw new Exception("user is already logged in");
-            }
+                }   
         }
         public void Logout() //updated the user status
         {

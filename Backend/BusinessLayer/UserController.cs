@@ -48,26 +48,49 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public void Register(string email, string password, string nickname) //Adds a new user to the dictionary and creates a new json file for it.
         {
-            Users.Add(email, new User(email, password, nickname));
-            GetUser(email).Save();
-            log.Debug("User "+email+" was created.");
+            if (!string.IsNullOrWhiteSpace(nickname))
+            {
+                Console.WriteLine("vsvs");
+                foreach(KeyValuePair <string,User> nUser in Users)
+                {
+                    if (nUser.Value.GetNickname().Equals(nickname))
+                    {
+                        log.Debug("Error: nickName allready used!");
+                        throw new Exception("nickName allready used!");
+                    }
+                }
+                Users.Add(email, new User(email, password, nickname));
+                GetUser(email).Save();
+                log.Debug("User " + email + " was created.");
+            }
+            else
+            {
+                log.Debug("Error: nickName cant be empty");
+                throw new Exception("nickName cant be empty");
+            }
         }
         public bool IsLogged(string email) //Checks if a specific user is logged in.
         {
                 return GetUser(email).GetLoggedIn();
         }
         public void Login(string email , string password) //Tries logging in a user.
-        {
-            if(HasLogged == false) //User can only log in if everybody else is logged out.
+        {if(!IsLogged(email))
+                if(HasLogged == false) //User can only log in if everybody else is logged out.
+                {
+                    GetUser(email).Login(password); //Throws exception if password doesn't match.
+                    HasLogged = true;
+                }
+                else
+                {
+                    log.Debug("Error: User " + email + " tried logging in while another user was already logged in.");
+                    throw new Exception("Someone is already logged in.");
+                }
+           else
             {
-                GetUser(email).Login(password); //Throws exception if password doesn't match.
-                HasLogged = true;
+                log.Debug("User " + email + " already is logged in");
+                throw new Exception("user is already logged in");
             }
-            else
-            {
-                log.Debug("Error: User " + email + " tried logging in while another user was already logged in.");
-                throw new Exception("Someone is already logged in.");
-            }
+            
         }
         public void Logout(string email) //Logs a user out.
         {
@@ -76,7 +99,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public void EmailVerify(string email) //Makes sure that the input email is valid.
         {
-            string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{2,9})$";
+            string pattern = "^([0-9a-zA-Z]([-\\.\\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\\w]*[0-9a-zA-Z]\\.)+[a-zA-Z]{3,9})$";
             if (!Regex.IsMatch(email, pattern)) //Checks that the email fits in the pattern.
             {
                 log.Debug("illegal email");

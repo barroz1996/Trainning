@@ -53,7 +53,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     log.Debug("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
                 else
                     log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName()+" to "+limit+".");
-                GetBoard(email).Save();
+                    GetBoard(email).Save();
             }
             public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
             {
@@ -79,13 +79,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 else
                 {
                     GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
-                GetBoard(email).Save();
-                log.Debug("Updated the description of task " + taskId + ".");
+                    GetBoard(email).Save();
+                    log.Debug("Updated the description of task " + taskId + ".");
                 }
             }
             public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
             {
-            if (title.Length == 0)
+            if (string.IsNullOrWhiteSpace(title))
             {
                 log.Debug("Tried setting the title of task " + taskId + " to an empty title");
                 throw new Exception("Title can't be empty.");
@@ -100,8 +100,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     else
                     {
                         GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskTitle(title);
-                    GetBoard(email).Save();
-                    log.Debug("Updated the description of task " + taskId + ".");
+                        GetBoard(email).Save();
+                        log.Debug("Updated the description of task " + taskId + ".");
                     }
                 }
             }

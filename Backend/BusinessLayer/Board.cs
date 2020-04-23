@@ -54,7 +54,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void AddTask(int taskId,String title, String description, DateTime dueDate)
         {
-            if (title.Length == 0)
+            if (string.IsNullOrWhiteSpace(title))
             {
                 log.Debug("Tried adding new task with an empty title");
                 throw new Exception("Title can't be empty.");
