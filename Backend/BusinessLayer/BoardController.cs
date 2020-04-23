@@ -43,8 +43,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             public void AddTask(string email, string title, string description, DateTime dueDate) //adds a new task to the first column.
             {
-                this.totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
                 GetBoard(email).AddTask(this.totalTasks, title, description, dueDate); //After checking input legitimacy, creates a new task.);
+                this.totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
             }
             public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
             {
@@ -70,7 +70,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried update task a task from the done column.");
                 throw new Exception("Cannot update a task in the done column.");
             }
-            if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
+                if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
                 {
                     log.Debug("Tried setting the due date of task "+taskId+" to a non futuristic due date.");
                     throw new Exception("Due date is required to be a futuristic date.");
