@@ -172,8 +172,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 try
                 {
                     BoardController.AddTask(email, title, description, dueDate);
-                    Task NewTask = new Task(BoardController.GetTotalTasks() - 1, DateTime.Now, title, description);
-                    return new Response<Task>(NewTask);
+                    return new Response<Task>(new Task(BoardController.GetTotalTasks() - 1, DateTime.Now, dueDate, title, description));
                 }
                 catch (Exception ex)
                 {
@@ -307,8 +306,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     List<Task> Tasks = new List<Task>();
                     foreach (BusinessLayer.BoardPackage.Task task in BoardController.GetColumn(email, columnName).GetTasks())
                     {
-                        Task newtask = new Task(task.GetTaskID(), task.GetCreationDate(), task.GetTitle(), task.GetDescription());
-                        Tasks.Add(newtask);
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
                     Column column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(email, columnName).GetLimit());
                     return new Response<Column>(column);
@@ -339,8 +337,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     List<Task> Tasks = new List<Task>();
                     foreach (BusinessLayer.BoardPackage.Task task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
                     {
-                        Task newtask = new Task(task.GetTaskID(), task.GetCreationDate(), task.GetTitle(), task.GetDescription());
-                        Tasks.Add(newtask);
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
                    Column column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
                    
