@@ -97,12 +97,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("Description can't be longer than 300 characters.");
                 }
             }
-                else
-                {
+                
+          
                     GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
                     GetBoard(email).Save();
                     log.Debug("Updated the description of task " + taskId + ".");
-                }
+                
             }
             public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
             {

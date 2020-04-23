@@ -5,6 +5,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text.Json;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
@@ -56,14 +58,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
             if (!string.IsNullOrWhiteSpace(nickname))
             {
-                foreach(KeyValuePair <string,User> nUser in Users)
-                {
-                    if (nUser.Value.GetNickname().Equals(nickname))
-                    {
-                        log.Debug("Error: nickName allready used!");
-                        throw new Exception("nickName allready used!");
-                    }
-                }
                 if (EmailVerify(email)){
                     Users.Add(email, new User(email, password, nickname));
                     GetUser(email).Save();
@@ -111,16 +105,51 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public bool EmailVerify(string email) //Makes sure that the input email is valid.
         {
+
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
             try
             {
-                var newEmail = new System.Net.Mail.MailAddress(email);
-                return newEmail.Address == email;
+                // Normalize the domain
+                email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
+                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
+
+                // Examines the domain part of the email and normalizes it.
+                string DomainMapper(Match match)
+                {
+                    // Use IdnMapping class to convert Unicode domain names.
+                    var idn = new IdnMapping();
+
+                    // Pull out and process domain name (throws ArgumentException on invalid)
+                    var domainName = idn.GetAscii(match.Groups[2].Value);
+
+                    return match.Groups[1].Value + domainName;
+                }
             }
-            catch
+            catch (RegexMatchTimeoutException e)
+            {
+                return false;
+            }
+            catch (ArgumentException e)
+            {
+                return false;
+            }
+
+            try
+            {
+                return Regex.IsMatch(email,
+                    @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                    @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
             {
                 return false;
             }
         }
+    
+
 
         public void PasswordVerify(string password) //akes sure the input password is valid.
         {
@@ -129,18 +158,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 log.Debug("empty password");
                 throw new Exception("Password should not be empty");
             }
-            var hasNumber = new Regex(@"[0-9]+");
-            var hasUpperChar = new Regex(@"[A-Z]+");
-            var hasLowerChar = new Regex(@"[a-z]+");
+         
 
-            if (!hasLowerChar.IsMatch(password)) //checks if it contains a lowercase letter.
+            if (!password.Any(char.IsLower)) //checks if it contains a lowercase letter.
             {
                 log.Debug("Register password without lower case letter");
                 throw new Exception("Password should contain at least one lower case letter.");
             }
             else
             {
-                if (!hasUpperChar.IsMatch(password)) //checks if it contains an uppercase letter.
+                if (!password.Any(char.IsUpper)) //checks if it contains an uppercase letter.
                 {
                     log.Debug("Register password without upper case letter");
                     throw new Exception("Password should contain at least one upper case letter.");
@@ -154,7 +181,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     }
                     else
                     {
-                        if (!hasNumber.IsMatch(password)) //checks contains it has a number.
+                        if (!password.Any(char.IsDigit)) //checks contains it has a number.
                         {
                             log.Debug("Register password without a number");
                             throw new Exception("Password should contain at least one numeric value.");
