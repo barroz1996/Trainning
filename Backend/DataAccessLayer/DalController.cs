@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-     class DalController
+    class DalController
     {
         private string BaseUser;
         private string BaseBoard;
@@ -31,9 +31,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 Directory.CreateDirectory(BaseLogs);
             }
         }
-        public void WriteUser(string fileName,string content)
+        public void WriteUser(string fileName, string content)
         {
-            File.WriteAllText(BaseUser+fileName + ".json", content);
+            File.WriteAllText(BaseUser + fileName + ".json", content);
         }
         public void WriteBoard(string fileName, string content)
         {
@@ -46,9 +46,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public List<string> ReadFromBoardFile()
         {
-            string[] fileName = Directory.GetFiles(BaseBoard);
-            List<string> jsons = new List<string>();
-            foreach (string file in fileName)
+            var fileName = Directory.GetFiles(BaseBoard);
+            var jsons = new List<string>();
+            foreach (var file in fileName)
             {
                 jsons.Add(File.ReadAllText(file));
             }
@@ -57,9 +57,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public List<string> ReadFromUserFile()
         {
-            string[] fileName = Directory.GetFiles(BaseUser);
-            List<string> jsons = new List<string>();
-            foreach (string file in fileName)
+            var fileName = Directory.GetFiles(BaseUser);
+            var jsons = new List<string>();
+            foreach (var file in fileName)
             {
                 jsons.Add(File.ReadAllText(file));
             }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-    interface IPersistedObject<T> where T: DataAccessLayer.DalObject<T>
+    interface IPersistedObject<T> where T : DataAccessLayer.DalObject<T>
     {
         T ToDalObject();
     }

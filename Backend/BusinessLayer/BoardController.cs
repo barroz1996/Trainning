@@ -8,88 +8,88 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
     class BoardController
     {
-            private Dictionary<string, Board> Boards;
-            private int totalTasks;
-            private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            public BoardController()
-            {
-                this.Boards = new Dictionary<string, Board>();
-                this.totalTasks = 0;
-            }
+        private Dictionary<string, Board> Boards;
+        private int totalTasks;
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public BoardController()
+        {
+            this.Boards = new Dictionary<string, Board>();
+            this.totalTasks = 0;
+        }
 
-            public void Register(string email)  //Creates a new board in the dictionary.
+        public void Register(string email)  //Creates a new board in the dictionary.
+        {
+            var newBoard = new Board(email);
+            this.Boards.Add(email, newBoard);
+            GetBoard(email).Save();
+        }
+        public Board GetBoard(string email) //Returns the board of the current user.
+        {
+            if (this.Boards.ContainsKey(email))
+                return this.Boards[email];
+            else
             {
-                var newBoard = new Board(email);
-                this.Boards.Add(email, newBoard);
+                log.Debug("Tried getting board for unregistered user " + email);
+                throw new Exception("This email is not registered.");
+            }
+        }
+        public Column GetColumn(string email, string columnName) //Returns a specific column based on it's name.
+        {
+            return GetBoard(email).GetColumn(columnName);
+        }
+        public Column GetColumn(string email, int columnOrdinal)//Returns a specific column based on it's ordinal.
+        {
+            return GetBoard(email).GetColumn(columnOrdinal);
+        }
+        public void AddTask(string email, string title, string description, DateTime dueDate) //adds a new task to the first column.
+        {
+            GetBoard(email).AddTask(this.totalTasks, title, description, dueDate); //After checking input legitimacy, creates a new task.);
+            this.totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
+        }
+        public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
+        {
+            if (columnOrdinal == 1)
+            {
+                GetColumn(email, columnOrdinal).LimitColumnTasks(limit);
+                if (limit == -1)
+                    log.Debug("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
+                else
+                    log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName() + " to " + limit + ".");
                 GetBoard(email).Save();
             }
-            public Board GetBoard(string email) //Returns the board of the current user.
+            else
             {
-                if (this.Boards.ContainsKey(email))
-                    return this.Boards[email];
-                else
-                {
-                    log.Debug("Tried getting board for unregistered user " + email);
-                    throw new Exception("This email is not registered.");
-                }
+                log.Debug("tried limiting a column other than the in progress column.");
+                throw new Exception("can only limit of the in progress column.");
             }
-            public Column GetColumn(string email, string columnName) //Returns a specific column based on it's name.
-            {
-                return GetBoard(email).GetColumn(columnName);
-            }
-            public Column GetColumn(string email, int columnOrdinal)//Returns a specific column based on it's ordinal.
-            {
-                return GetBoard(email).GetColumn(columnOrdinal);
-            }
-            public void AddTask(string email, string title, string description, DateTime dueDate) //adds a new task to the first column.
-            {
-                GetBoard(email).AddTask(this.totalTasks, title, description, dueDate); //After checking input legitimacy, creates a new task.);
-                this.totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
-            }
-            public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
-            {
-                if (columnOrdinal == 1)
-                {
-                    GetColumn(email, columnOrdinal).LimitColumnTasks(limit);
-                    if (limit == -1)
-                        log.Debug("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
-                    else
-                        log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName() + " to " + limit + ".");
-                    GetBoard(email).Save();
-                }
-                else
-                {
-                    log.Debug("tried limiting a column other than the in progress column.");
-                    throw new Exception("can only limit of the in progress column.");
-                }
-            }
-            public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
-            {
+        }
+        public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
+        {
             if (columnOrdinal == 2)
             {
                 log.Debug("Tried update task a task from the done column.");
                 throw new Exception("Cannot update a task in the done column.");
             }
-                if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
-                {
-                    log.Debug("Tried setting the due date of task "+taskId+" to a non futuristic due date.");
-                    throw new Exception("Due date is required to be a futuristic date.");
-                }
-                else
-                {
-                    GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
-                    GetBoard(email).Save();
-                    log.Debug("Updated the due date of task "+taskId+".");
-                }
-            }
-            public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)//Update a specific task's description.
+            if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
             {
+                log.Debug("Tried setting the due date of task " + taskId + " to a non futuristic due date.");
+                throw new Exception("Due date is required to be a futuristic date.");
+            }
+            else
+            {
+                GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
+                GetBoard(email).Save();
+                log.Debug("Updated the due date of task " + taskId + ".");
+            }
+        }
+        public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)//Update a specific task's description.
+        {
             if (columnOrdinal == 2)
             {
                 log.Debug("Tried update task a task from the done column.");
                 throw new Exception("Cannot update a task in the done column.");
             }
-            if (description!=null)
+            if (description != null)
             {
                 if (description.Length > 300)
                 {
@@ -97,15 +97,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("Description can't be longer than 300 characters.");
                 }
             }
-                
-          
-                    GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
-                    GetBoard(email).Save();
-                    log.Debug("Updated the description of task " + taskId + ".");
-                
-            }
-            public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
-            {
+            GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
+            GetBoard(email).Save();
+            log.Debug("Updated the description of task " + taskId + ".");
+        }
+        public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
+        {
             if (columnOrdinal == 2)
             {
                 log.Debug("Tried update task a task from the done column.");
@@ -116,23 +113,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried setting the title of task " + taskId + " to an empty title");
                 throw new Exception("Title can't be empty.");
             }
+            else
+            {
+                if (title.Length > 50)
+                {
+                    log.Debug("Tried setting the title of task " + taskId + " to a title longer than 50 characters.");
+                    throw new Exception("Title can't be longer than 50 characters.");
+                }
                 else
                 {
-                    if (title.Length > 50)
-                    {
-                        log.Debug("Tried setting the title of task " + taskId + " to a title longer than 50 characters.");
-                        throw new Exception("Title can't be longer than 50 characters.");
-                    }
-                    else
-                    {
-                        GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskTitle(title);
-                        GetBoard(email).Save();
-                        log.Debug("Updated the description of task " + taskId + ".");
-                    }
+                    GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskTitle(title);
+                    GetBoard(email).Save();
+                    log.Debug("Updated the description of task " + taskId + ".");
                 }
             }
-            public void AdvanceTask(string email, int columnOrdinal, int taskId) //advances a task to the next column.
-            {
+        }
+        public void AdvanceTask(string email, int columnOrdinal, int taskId) //advances a task to the next column.
+        {
             if (columnOrdinal == 2)
             {
                 log.Debug("Tried advancing task " + taskId + " from the done column.");
@@ -141,44 +138,44 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (GetColumn(email, (columnOrdinal + 1)).GetLimit() > (GetColumn(email, (columnOrdinal + 1)).GetTasks().Count) || ((GetColumn(email, (columnOrdinal + 1)).GetLimit() == -1)))
             {
 
-               GetColumn(email, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
+                GetColumn(email, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
                 log.Debug("Task " + taskId + " was advanced from the " + GetColumn(email, columnOrdinal).GetColumnName() + " column to the " + GetColumn(email, columnOrdinal + 1).GetColumnName() + " column.");
                 GetBoard(email).Save();
             }
             else //the condition makes sure that the next column has not reached it's limit.
-                {
+            {
                 log.Debug("Tried advancing task " + taskId + " to a full column.");
                 throw new Exception("The next column is already full.");
-                }
             }
-            public int GetTotalTasks() //Returns the total number of tasks from all the users.
+        }
+        public int GetTotalTasks() //Returns the total number of tasks from all the users.
+        {
+            return this.totalTasks;
+        }
+        public void LoadData()
+        {
+            var board = new DataAccessLayer.Board();
+            var dalboard = board.FromJson();
+            foreach (var dal in dalboard)
             {
-                return this.totalTasks;
-            }
-            public void LoadData()
-            {
-                DataAccessLayer.Board bo = new DataAccessLayer.Board();
-                List<DataAccessLayer.Board> dalbo = bo.FromJson();
-                foreach (DataAccessLayer.Board dal in dalbo)
+                var newBoard = new Board(dal.Email);
+                foreach (var cdal in dal.Columns)
                 {
-                    var newBoard = new Board(dal.Email);
-                    foreach (DataAccessLayer.Column cdal in dal.Columns)
-                    {
-                        var newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName,cdal.Limit);
+                    var newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName, cdal.Limit);
 
-                        foreach (DataAccessLayer.Task tdal in cdal.Tasks)
-                        {
-                            newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationDate));
-                        }
-                        newBoard.GetColumn(cdal.ColumnOrdinal).SetTasks(newCol.GetTasks());
-                        newBoard.GetColumn(cdal.ColumnOrdinal).LimitColumnTasks(cdal.Limit);
+                    foreach (DataAccessLayer.Task tdal in cdal.Tasks)
+                    {
+                        newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationDate));
                     }
-                    Boards.Add(dal.Email, new Board(dal.Email,newBoard.GetColumns()));
+                    newBoard.GetColumn(cdal.ColumnOrdinal).SetTasks(newCol.GetTasks());
+                    newBoard.GetColumn(cdal.ColumnOrdinal).LimitColumnTasks(cdal.Limit);
                 }
-                foreach (KeyValuePair<string, Board> entry in Boards)
-                {
-                    this.totalTasks = this.totalTasks + entry.Value.TotalTask();
-                }
+                Boards.Add(dal.Email, new Board(dal.Email, newBoard.GetColumns()));
             }
+            foreach (var entry in Boards)
+            {
+                this.totalTasks = this.totalTasks + entry.Value.TotalTask();
+            }
+        }
     }
 }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Board: IPersistedObject<DataAccessLayer.Board>
+    class Board : IPersistedObject<DataAccessLayer.Board>
     {
-        
+        //fields
         private string email;
         private List<Column> columns;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public Board(string email)
+        public Board(string email) //ctor
         {
             this.email = email;
             Column backlog = new Column(0, "backlog");
@@ -24,7 +24,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns.Add(done);
         }
         public Board() { }
-        public Board(string email,List<Column> columns)
+        public Board(string email, List<Column> columns)
         {
             this.email = email;
             this.columns = columns;
@@ -33,10 +33,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public List<Column> GetColumns() { return columns; }
         public Column GetColumn(int columnOrdinal) // we get the key of the column and we return the column with this key
         {
-            foreach (Column col in columns)
+            foreach (var column in columns)
             {
-                if (col.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
-                    return col;
+                if (column.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
+                    return column;
             }
             log.Debug("Tried getting an illegal column ordinal.");
             throw new Exception("Column ordinal is illegal.");
@@ -44,15 +44,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public Column GetColumn(string columnName) // we get the name of the column and we return the column with this name
         {
-            foreach (Column col in columns)
+            foreach (var column in columns)
             {
-                if (col.GetColumnName().Equals(columnName))  // we check the columnName
-                    return col;
+                if (column.GetColumnName().Equals(columnName))  // we check the columnName
+                    return column;
             }
             log.Debug("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
         }
-        public void AddTask(int taskId,String title, String description, DateTime dueDate)
+        public void AddTask(int taskId, String title, String description, DateTime dueDate)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -64,7 +64,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried adding new task with an title longer than 50 characters.");
                 throw new Exception("Title can't be longer than 50 characters.");
             }
-            if (description!=null)
+            if (description != null)
             {
                 if (description.Length > 300)
                 {
@@ -81,14 +81,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Save();
             log.Debug("Task " + (taskId) + " was created by user " + email + ".");
         }
-       
+
         public DataAccessLayer.Board ToDalObject()
         {
-            List<DataAccessLayer.Column> col = new List<DataAccessLayer.Column>();
-            foreach(Column c in this.columns ){
-                col.Add(c.ToDalObject());
+            var column = new List<DataAccessLayer.Column>();
+            foreach (var col in this.columns)
+            {
+                column.Add(col.ToDalObject());
             }
-            return new DataAccessLayer.Board(this.email,col);
+            return new DataAccessLayer.Board(this.email, column);
         }
         public void Save()
         {

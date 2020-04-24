@@ -22,42 +22,30 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.tasks = new List<Task>();
 
         }
-        public Column(int columnOrdinal, string columnName,int limit)
+        public Column(int columnOrdinal, string columnName, int limit)
         {
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
             this.limit = limit;
             this.tasks = new List<Task>();
-            
-
         }
-        
-        
 
         public int GetColumnOrdinal() { return this.columnOrdinal; }
         public string GetColumnName() { return this.columnName; }
         public int GetLimit() { return this.limit; }
         public void LimitColumnTasks(int limit) //Sets a limit to the current column.
         {
-            //if (this.columnOrdinal == 1)
-           // {
-                if (limit < -1)
-                {
-                    log.Debug("Tried setting an illegal limit");
-                    throw new Exception("Illegal limit.");  //legal limit values are >=-1.
-                }
-                if ((limit < tasks.Count) && (limit > -1))
-                {
-                    log.Debug("Tried setting a limit lower than the current number of tasks to the current column.");
-                    throw new Exception("This column currently holds more tasks than the limit.");// if in the column right now more tasks then the new limit
-                }
-                this.limit = limit;
-           // }
-            /*else
+            if (limit < -1)
             {
-                log.Debug("tried limiting a column other than the in progress column.");
-                throw new Exception("can only limit of the in progress column.");
-            }*/
+                log.Debug("Tried setting an illegal limit");
+                throw new Exception("Illegal limit.");  //legal limit values are >=-1.
+            }
+            if ((limit < tasks.Count) && (limit > -1))
+            {
+                log.Debug("Tried setting a limit lower than the current number of tasks to the current column.");
+                throw new Exception("This column currently holds more tasks than the limit.");// if in the column right now more tasks then the new limit
+            }
+            this.limit = limit;
         }
         public List<Task> GetTasks() { return this.tasks; } //Gets the list of tasks in the current column.
 
@@ -75,15 +63,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public Task RemoveTask(int taskId) //Removes task from the current column.
         {
-            Task getTask = GetTask(taskId);
+            var getTask = GetTask(taskId);
             tasks.Remove(getTask);
             return getTask;
 
         }
-
         public Task GetTask(int taskId) //Task getter, throws exception if not found.
         {
-            foreach (Task task in tasks)
+            foreach (var task in tasks)
             {
                 if (task.GetTaskID() == taskId)
                     return task;
@@ -93,21 +80,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public DataAccessLayer.Column ToDalObject()
         {
-            List<DataAccessLayer.Task> Ta = new List<DataAccessLayer.Task>();
-            foreach (Task aTask in this.tasks)
+            var Task = new List<DataAccessLayer.Task>();
+            foreach (var aTask in this.tasks)
             {
-                Ta.Add(aTask.ToDalObject());
+                Task.Add(aTask.ToDalObject());
             }
-            return new DataAccessLayer.Column(this.columnOrdinal, this.columnName, this.limit, Ta);
+            return new DataAccessLayer.Column(this.columnOrdinal, this.columnName, this.limit, Task);
         }
-        public void SetTasks(List<Task> tas)
+        public void SetTasks(List<Task> task)
         {
-            foreach(Task newTask in tas)
+            foreach (var newTask in task)
             {
                 AddTask(newTask);
             }
         }
-      
+
     }
 }
 

@@ -17,6 +17,5 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.Title = title;
             this.Description = description;
         }
-        // You can add code here
     }
 }

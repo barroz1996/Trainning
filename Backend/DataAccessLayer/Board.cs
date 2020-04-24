@@ -38,15 +38,15 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
         public List<Board> FromJson()
         {
-            List<Board> reBoard = new List<Board>();
-            List<string> jsons = base.controller.ReadFromBoardFile();
+            var reBoard = new List<Board>();
+            var jsons = base.controller.ReadFromBoardFile();
             var json = new JsonSerializerOptions
             {
                 WriteIndented = true
             };
-            foreach (string fromjs in jsons)
+            foreach (var fromjson in jsons)
             {
-                reBoard.Add(JsonSerializer.Deserialize<Board>(fromjs, json));
+                reBoard.Add(JsonSerializer.Deserialize<Board>(fromjson, json));
             }
             log.Debug("All board data loaded");
             return reBoard;

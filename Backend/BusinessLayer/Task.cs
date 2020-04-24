@@ -29,7 +29,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.title = title;
             this.description = description;
             this.creationDate = creationDate;
-            this.dueDate = dueDate;    
+            this.dueDate = dueDate;
         }
         //getters and setters.
         public void EditTaskTitle(string title) { this.title = title; }
@@ -40,14 +40,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public string GetTitle() { return this.title; }
         public string GetDescription() { return this.description; }
         public DateTime GetDueDate() { return this.dueDate; }
-       
-  
 
-        public  DataAccessLayer.Task ToDalObject()
+
+
+        public DataAccessLayer.Task ToDalObject()
         {
-            return new DataAccessLayer.Task(this.taskId, this.title, this.description, this.dueDate,this.creationDate);
+            return new DataAccessLayer.Task(this.taskId, this.title, this.description, this.dueDate, this.creationDate);
         }
-        
+
     }
-   
+
 }

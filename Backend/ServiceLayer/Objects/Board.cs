@@ -9,10 +9,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     public struct Board
     {
         public readonly IReadOnlyCollection<string> ColumnsNames;
-        internal Board(IReadOnlyCollection<string> columnsNames) 
+        internal Board(IReadOnlyCollection<string> columnsNames)
         {
             this.ColumnsNames = columnsNames;
         }
-        // You can add code here
     }
 }

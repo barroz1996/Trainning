@@ -11,8 +11,8 @@ using System.Globalization;
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
 
-     class UserController
-     {
+    class UserController
+    {
         private bool HasLogged;
         private Dictionary<string, User> Users;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -20,17 +20,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             this.HasLogged = false;
             this.Users = new Dictionary<string, User>();
-           
+
         }
         public void LoadData() //Loads all the data while starting the program.
         {
-            DataAccessLayer.User us = new DataAccessLayer.User();
-            List<DataAccessLayer.User> dalus = us.FromJson(); //Gets a list of all DataAcessLayer users from the json file.
-            foreach(DataAccessLayer.User dal in dalus)
+            var user = new DataAccessLayer.User();
+            var dalUser = user.FromJson(); //Gets a list of all DataAcessLayer users from the json file.
+            foreach (var dal in dalUser)
             {
                 Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all the users to the users dictionary.
             }
-            foreach (KeyValuePair<string, User> entry in Users) //Checks if any of the users is logged in.
+            foreach (var entry in Users) //Checks if any of the users is logged in.
             {
                 if (entry.Value.GetLoggedIn())
                     HasLogged = true;
@@ -44,7 +44,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             {
                 log.Debug("Tried getting unregistered user " + email);
                 throw new Exception("This email is not registered.");
-                
+
             }
         }
 
@@ -58,7 +58,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
             if (!string.IsNullOrWhiteSpace(nickname))
             {
-                if (EmailVerify(email)){
+                if (EmailVerify(email))
+                {
                     Users.Add(email, new User(email, password, nickname));
                     GetUser(email).Save();
                     log.Debug("User " + email + " was created.");
@@ -77,11 +78,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public bool IsLogged(string email) //Checks if a specific user is logged in.
         {
-                return GetUser(email).GetLoggedIn();
+            return GetUser(email).GetLoggedIn();
         }
-        public void Login(string email , string password) //Tries logging in a user.
-        {if(!IsLogged(email))
-                if(HasLogged == false) //User can only log in if everybody else is logged out.
+        public void Login(string email, string password) //Tries logging in a user.
+        {
+            if (!IsLogged(email))
+                if (HasLogged == false) //User can only log in if everybody else is logged out.
                 {
                     GetUser(email).Login(password); //Throws exception if password doesn't match.
                     HasLogged = true;
@@ -91,24 +93,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     log.Debug("Error: User " + email + " tried logging in while another user was already logged in.");
                     throw new Exception("Someone is already logged in.");
                 }
-           else
+            else
             {
                 log.Debug("User " + email + " already is logged in");
                 throw new Exception("user is already logged in");
             }
-            
+
         }
         public void Logout(string email) //Logs a user out.
         {
-                GetUser(email).Logout();
-                HasLogged = false;
+            GetUser(email).Logout();
+            HasLogged = false;
         }
         public bool EmailVerify(string email) //Makes sure that the input email is valid.
         {
-
             if (string.IsNullOrWhiteSpace(email))
                 return false;
-
             try
             {
                 // Normalize the domain
@@ -148,9 +148,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 return false;
             }
         }
-    
-
-
         public void PasswordVerify(string password) //akes sure the input password is valid.
         {
             if (string.IsNullOrWhiteSpace(password)) //checks if the password is null.
@@ -158,7 +155,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 log.Debug("empty password");
                 throw new Exception("Password should not be empty");
             }
-         
+
 
             if (!password.Any(char.IsLower)) //checks if it contains a lowercase letter.
             {
@@ -174,7 +171,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 }
                 else
                 {
-                    if (password.Length<4||password.Length>20) //checks if it fits the required length.
+                    if (password.Length < 4 || password.Length > 20) //checks if it fits the required length.
                     {
                         log.Debug("Register password out of bounds.");
                         throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");

@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             UserController.LoadData();
             BoardController.LoadData();
-            
+
             return new Response();
         }
 
@@ -60,7 +60,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Debug(ex.Message);
                 return new Response<Object>(ex.Message);
             }
-            
+
         }
 
 
@@ -78,7 +78,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 var user = new User(email, UserController.GetUser(email).GetNickname());
                 return new Response<User>(user);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new Response<User>(ex.Message);
             }
@@ -113,12 +113,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    List<string> ColumnsNames = new List<string>();
-                    foreach (BusinessLayer.BoardPackage.Column column in BoardController.GetBoard(email).GetColumns())
+                    var ColumnsNames = new List<string>();
+                    foreach (var column in BoardController.GetBoard(email).GetColumns())
                     {
                         ColumnsNames.Add(column.GetColumnName());
                     }
-                    Board board = new Board((IReadOnlyCollection<string>)ColumnsNames);
+                    var board = new Board((IReadOnlyCollection<string>)ColumnsNames);
                     return new Response<Board>(board);
                 }
                 catch (Exception ex)
@@ -181,18 +181,18 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             else
                 return new Response<Task>("This User is not logged in");
         }
-    
 
-    /// <summary>
-    /// Update the due date of a task
-    /// </summary>
-    /// <param name="email">Email of the user. Must be logged in</param>
-    /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
-    /// <param name="taskId">The task to be updated identified task ID</param>
-    /// <param name="dueDate">The new due date of the column</param>
-    /// <returns>A response object. The response should contain a error message in case of an error</returns>
-    public Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
-    {
+
+        /// <summary>
+        /// Update the due date of a task
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="taskId">The task to be updated identified task ID</param>
+        /// <param name="dueDate">The new due date of the column</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
+        {
             if (UserController.IsLogged(email))
             {
                 try
@@ -302,12 +302,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    List<Task> Tasks = new List<Task>();
-                    foreach (BusinessLayer.BoardPackage.Task task in BoardController.GetColumn(email, columnName).GetTasks())
+                    var Tasks = new List<Task>();
+                    foreach (var task in BoardController.GetColumn(email, columnName).GetTasks())
                     {
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
-                    Column column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(email, columnName).GetLimit());
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(email, columnName).GetLimit());
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -333,13 +333,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    List<Task> Tasks = new List<Task>();
-                    foreach (BusinessLayer.BoardPackage.Task task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
+                    var Tasks = new List<Task>();
+                    foreach (var task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
                     {
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
-                   Column column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
-                   
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
+
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -348,9 +348,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-            
+
                 return new Response<Column>("This user is not logged in");
-            
+
         }
 
     }

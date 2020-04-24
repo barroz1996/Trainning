@@ -12,8 +12,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         public DalController controller;
         public DalObject()
-            {
-            this.controller=new DalController();
-            }
-   }
+        {
+            this.controller = new DalController();
+        }
+    }
 }

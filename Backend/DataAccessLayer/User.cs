@@ -37,7 +37,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 WriteIndented = true
             };
             log.Debug("User " + this.Email + " saved");
-            return JsonSerializer.Serialize(this,json);
+            return JsonSerializer.Serialize(this, json);
         }
         public void Save()
         {
@@ -45,15 +45,15 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
         public List<User> FromJson()
         {
-            List<User> reUser = new List<User>();
-            List<string> jsons = base.controller.ReadFromUserFile();
+            var reUser = new List<User>();
+            var jsons = base.controller.ReadFromUserFile();
             var json = new JsonSerializerOptions
             {
                 WriteIndented = true
             };
-            foreach (string fromjs in jsons)
+            foreach (var fromjson in jsons)
             {
-                reUser.Add(JsonSerializer.Deserialize<User>(fromjs, json));
+                reUser.Add(JsonSerializer.Deserialize<User>(fromjson, json));
             }
             log.Debug("All User data loaded");
             return reUser;
