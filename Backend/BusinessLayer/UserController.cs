@@ -171,7 +171,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 }
                 else
                 {
-                    if (password.Length < 4 || password.Length > 20) //checks if it fits the required length.
+                    if (password.Length < 5 || password.Length > 25) //checks if it fits the required length.
                     {
                         log.Debug("Register password out of bounds.");
                         throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");

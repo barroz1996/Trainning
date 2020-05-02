@@ -94,6 +94,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 AddTask(newTask);
             }
         }
+        public void SetOrdinal(int columnOrdinal)
+        {
+            this.columnOrdinal = columnOrdinal;
+        }
 
     }
 }

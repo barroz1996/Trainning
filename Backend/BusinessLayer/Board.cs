@@ -99,5 +99,72 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             return GetColumn(0).GetTasks().Count + GetColumn(1).GetTasks().Count + GetColumn(2).GetTasks().Count;
         }
+        public Column AddColumn(int columnOrdinal, string Name)
+        {
+            if (string.IsNullOrWhiteSpace(Name) || Name.Length > 15)
+                throw new Exception("Name out of bounds!");
+            foreach(Column col in columns)
+            {
+                if (col.GetColumnName().Equals(Name))
+                    throw new Exception("This column name already exists");
+            }
+            if(columnOrdinal!=columns.Count)
+               checkOrdinal(columnOrdinal);
+            Column newCol = new Column(columnOrdinal, Name);
+            columns.Insert(columnOrdinal, newCol);
+            for(int i = columnOrdinal + 1; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
+            {
+                GetColumn(i).SetOrdinal(i);
+            }
+            return newCol;
+        }
+        public Column MoveColumn(int columnOrdinal,int direction)
+        {
+            checkOrdinal(columnOrdinal);
+            if (direction == 1 && columnOrdinal == columns.Count - 1)
+                throw new Exception("Last column can not be moved right!");
+            if (direction == -1 && columnOrdinal == 0)
+                throw new Exception("First column can not be moved Left!");
+           return SwapCol(columnOrdinal, columnOrdinal + direction);
+            
+        }
+        private Column SwapCol(int columnOrdinal1,int columnOrdinal2)
+        {
+            Column sCol = GetColumn(columnOrdinal1);
+            columns[columnOrdinal1] = GetColumn(columnOrdinal2);
+            columns[columnOrdinal2] = sCol;
+            GetColumn(columnOrdinal1).SetOrdinal(columnOrdinal2);
+            GetColumn(columnOrdinal2).SetOrdinal(columnOrdinal1);
+            return GetColumn(columnOrdinal2);
+        }
+        private void checkOrdinal(int columnOrdinal)
+        {
+            if ((columns.Count < columnOrdinal) || (columnOrdinal < 0))
+                throw new Exception("The columnOrdinal out of bounds!");
+        }
+        public void RemoveColumn(int columnOrdinal)
+        {
+            if (columns.Count == 2)
+                throw new Exception("Cannot have less than 2 columns!");
+            checkOrdinal(columnOrdinal);
+            if (columnOrdinal == 0)
+            {
+                if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count)
+                    throw new Exception("The next column cannot hold all the tasks!");
+                GetColumn(1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
+            }
+            else
+            {
+                if (GetColumn(columnOrdinal - 1).GetLimit() < GetColumn(columnOrdinal).GetTasks().Count + GetColumn(columnOrdinal - 1).GetTasks().Count)
+                    throw new Exception("The previous column cannot hold all the tasks!");
+                GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
+            }
+            columns.Remove(GetColumn(columnOrdinal));
+            for (int i = columnOrdinal+1; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
+            {
+                GetColumn(i).SetOrdinal(i-1);
+            }
+
+        }
     }
 }

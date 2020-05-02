@@ -177,5 +177,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 this.totalTasks = this.totalTasks + entry.Value.TotalTask();
             }
         }
+        public Column AddColumn(string email, int columnOrdinal, string Name)
+        {
+            return GetBoard(email).AddColumn(columnOrdinal, Name);       
+        }
+        public Column MoveColumn(string email, int columnOrdinal,int direction)
+        {
+            return GetBoard(email).MoveColumn(columnOrdinal, direction);
+        }
+        public void RemoveColumn(string email, int columnOrdinal)
+        {
+            GetBoard(email).RemoveColumn(columnOrdinal);
+        }
     }
 }
