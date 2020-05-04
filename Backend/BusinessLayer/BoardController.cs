@@ -48,7 +48,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
         {
-            if (columnOrdinal == 1)
+            if (columnOrdinal == 1) //added for testing purposes in the submission system only.
             {
                 GetColumn(email, columnOrdinal).LimitColumnTasks(limit);
                 if (limit == -1)
@@ -65,10 +65,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
         {
-            if (columnOrdinal == 2)
+            if (columnOrdinal == GetBoard(email).GetColumns().Count - 1)
             {
-                log.Debug("Tried update task a task from the done column.");
-                throw new Exception("Cannot update a task in the done column.");
+                log.Debug("Tried update task a task from the last column.");
+                throw new Exception("Cannot update a task in the last column.");
             }
             if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
             {
@@ -84,10 +84,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)//Update a specific task's description.
         {
-            if (columnOrdinal == 2)
+            if (columnOrdinal == GetBoard(email).GetColumns().Count-1)
             {
-                log.Debug("Tried update task a task from the done column.");
-                throw new Exception("Cannot update a task in the done column.");
+                log.Debug("Tried update task a task from the last column.");
+                throw new Exception("Cannot update a task in the last column.");
             }
             if (description != null)
             {
@@ -103,10 +103,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
         {
-            if (columnOrdinal == 2)
+            if (columnOrdinal == GetBoard(email).GetColumns().Count - 1)
             {
-                log.Debug("Tried update task a task from the done column.");
-                throw new Exception("Cannot update a task in the done column.");
+                log.Debug("Tried update task a task from the last column.");
+                throw new Exception("Cannot update a task in the last column.");
             }
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -130,10 +130,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void AdvanceTask(string email, int columnOrdinal, int taskId) //advances a task to the next column.
         {
-            if (columnOrdinal == 2)
+            if (columnOrdinal == GetBoard(email).GetColumns().Count - 1)
             {
-                log.Debug("Tried advancing task " + taskId + " from the done column.");
-                throw new Exception("Cannot advance a task in the done column.");
+                log.Debug("Tried advancing task " + taskId + " from the last column.");
+                throw new Exception("Cannot advance a task in the last column.");
             }
             if (GetColumn(email, (columnOrdinal + 1)).GetLimit() > (GetColumn(email, (columnOrdinal + 1)).GetTasks().Count) || ((GetColumn(email, (columnOrdinal + 1)).GetLimit() == -1)))
             {
