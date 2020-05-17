@@ -13,6 +13,7 @@ namespace Test
         {
             Service service = new Service();
             service.LoadData();
+            Console.ReadKey();
         }
     }
 }

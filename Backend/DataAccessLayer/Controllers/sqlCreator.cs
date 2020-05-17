@@ -22,28 +22,33 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             if (!File.Exists(_connectionString))
             {
                 SQLiteConnection.CreateFile("database.db");
-                using(var connection=new SQLiteConnection(_connectionString))
+
+                using (var connection = new SQLiteConnection(@"data source=" + _connectionString))
                 {
+
                     string UserTable = "CREATE TABLE \"Users\"( \"Email\" TEXT NOT NULL UNIQUE, \"Nickname\"  TEXT NOT NULL, \"Password\"  TEXT NOT NULL, \"LoggedIn\"  TEXT NOT NULL,PRIMARY KEY (\"Email\"))";
                     //string BoardTable = @"CREATE TABLE cars(id INTEGER PRIMARY KEY,name TEXT, price INT)";
                     string BoardTable = "CREATE TABLE \"Boards\" (\"Email\" TEXT NOT NULL UNIQUE, PRIMARY KEY(\"Email\"))";
                     string ColumnTable = "CREATE TABLE \"Columns\" (\"ColumnOrdinal\" INTEGER NOT NULL,\"ColumnName\"    TEXT NOT NULL,\"ColumnLimit\" INTEGER NOT NULL,\"Email\" TEXT NOT NULL,PRIMARY KEY(\"ColumnOrdinal\", \"Email\"))";
                     string TaskTable = "CREATE TABLE \"Tasks\"(\"ID\"    INTEGER NOT NULL UNIQUE, \"Title\" TEXT NOT NULL, \"Description\"   TEXT,\"DueDate\"   TEXT NOT NULL, \"CreationDate\"  TEXT NOT NULL, \"Email\" TEXT NOT NULL, \"ColumnOridnal\" INTEGER NOT NULL, PRIMARY KEY(\"ID\"))";
-                    SQLiteCommand command = new SQLiteCommand(null,connection);
-                    connection.Open();
-                    command.CommandText = UserTable;
-                    command.ExecuteNonQuery();
+                    SQLiteCommand command = new SQLiteCommand(null, connection);
+
                     try
                     {
+
+                        Console.WriteLine("ss");
                         connection.Open();
+                        command.CommandText = UserTable;
+                        command.ExecuteNonQuery();
                         command.CommandText = BoardTable;
                         command.ExecuteNonQuery();
                         command.CommandText = ColumnTable;
                         command.ExecuteNonQuery();
                         command.CommandText = TaskTable;
                         command.ExecuteNonQuery();
+
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         log.Debug(ex.Message);
                     }
