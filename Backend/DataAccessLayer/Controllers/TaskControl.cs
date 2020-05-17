@@ -119,7 +119,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"SELECT* FROM {_tableName} WHERE [{DTOs.TaskDTO.TasksEmailColumnEmail}]=@Email AND [{DTOs.TaskDTO.TasksIdColumnId}]=@ColumnOridnal";
+                command.CommandText = $"SELECT * FROM {_tableName} WHERE [{DTOs.TaskDTO.TasksEmailColumnEmail}]=@Email AND [{DTOs.TaskDTO.TasksIdColumnId}]=@ColumnOridnal";
                 command.Parameters.Add(new SQLiteParameter(@"Email", email));
                 command.Parameters.Add(new SQLiteParameter(@"ColumnOridnal", ColumnOridnal));
                 SQLiteDataReader dataReader = null;

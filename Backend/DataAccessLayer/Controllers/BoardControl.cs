@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"SELECT* FROM {_tableName}";
+                command.CommandText = $"SELECT * FROM {_tableName}";
                 SQLiteDataReader dataReader = null;
                 try
                 {
@@ -127,11 +127,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} WHERE ID={DTOs.BoardDTO.BoardEmailColumnEmail}, ({DTOs.TaskDTO.TasksColumnIdColumnColumnId}  " +
-                        $"VALUES (@emailVal);";
+                    command.CommandText = $"INSERT INTO {_tableName} WHERE Email={DTOs.BoardDTO.BoardEmailColumnEmail}, ({DTOs.TaskDTO.TasksColumnIdColumnColumnId}  " +
+                        $"VALUES (@EmailVal);";
 
-                    SQLiteParameter emailParam = new SQLiteParameter(@"idVal", Board.Email);
-                    
+                    SQLiteParameter emailParam = new SQLiteParameter(@"EmailVal", Board.Email);
+                    //check later
 
                     command.Parameters.Add(emailParam);
                     

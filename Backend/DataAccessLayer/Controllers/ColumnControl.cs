@@ -59,7 +59,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id} AND email ={email}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ColumnOrdinal={id} AND Email ={email}"
                 };
                 try
                 {
@@ -88,7 +88,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"SELECT* FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
+                command.CommandText = $"SELECT * FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
                 command.Parameters.Add(new SQLiteParameter(@"Email", email));
                 SQLiteDataReader dataReader = null;
                 try
@@ -157,10 +157,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"Delete FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@colOrdinal"
+                    CommandText = $"Delete FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
                 };
                 SQLiteParameter emailParam = new SQLiteParameter(@"Email", email);
-                SQLiteParameter colOrdinalParam = new SQLiteParameter(@"colOrdinal", columnOrdinal);
+                SQLiteParameter colOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", columnOrdinal);
                 command.Parameters.Add(emailParam);
                 command.Parameters.Add(colOrdinalParam);
                 try

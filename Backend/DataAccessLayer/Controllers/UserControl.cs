@@ -117,7 +117,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"SELECT* FROM {_tableName}";
+                command.CommandText = $"SELECT * FROM {_tableName}";
                 SQLiteDataReader dataReader = null;
                 try
                 {
