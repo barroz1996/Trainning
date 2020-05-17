@@ -24,6 +24,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
            this.UserController = new BusinessLayer.UserPackage.UserController();
             this.BoardController = new BusinessLayer.BoardPackage.BoardController();
+            LoadData();
         }
                
         /// <summary>        
