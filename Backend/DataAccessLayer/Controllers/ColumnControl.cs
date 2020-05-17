@@ -10,6 +10,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
     class ColumnControl
     {
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string _connectionString;
         private readonly string _tableName;
         public ColumnControl()
@@ -19,7 +20,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             this._tableName = "Columns";
         }
 
-        public bool Update(int id, string attributeName, string attributeValue)
+        public bool Update(int id, string attributeName, string attributeValue,string email)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -27,7 +28,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id} AND email ={email}"
                 };
                 try
                 {
@@ -36,9 +37,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch
+                catch(Exception ex)
                 {
-                    //log
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
@@ -50,7 +51,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int id, string attributeName, int attributeValue)
+        public bool Update(int id, string attributeName, int attributeValue,string email)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -58,7 +59,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id} AND email ={email}"
                 };
                 try
                 {
@@ -66,9 +67,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //log
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
@@ -88,7 +89,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
                 command.CommandText = $"select* from {_tableName} where [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
-                command.Parameters.Add(new SQLiteParameter("Email", email));
+                command.Parameters.Add(new SQLiteParameter(@"Email", email));
                 SQLiteDataReader dataReader = null;
                 try
                 {
@@ -99,6 +100,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     {
                         columnsList.Add(new DTOs.ColumnDTO((int)dataReader.GetValue(0),dataReader.GetString(1),(int)dataReader.GetValue(2),email));
                     }
+                }
+                catch (Exception ex)
+                {
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
@@ -113,8 +118,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return columnsList;
         }
-
-        public bool Delete(DTOs.ColumnDTO DTOObj)
+        public bool DeleteTable()
         {
             int res = -1;
 
@@ -123,12 +127,50 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"delete from {_tableName} where id={DTOObj.}"
+                    CommandText = $"DELETE FROM {_tableName} "
                 };
                 try
                 {
                     connection.Open();
                     res = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    log.Debug(ex.Message);
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+
+        public bool Delete(string email,int columnOrdinal)
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"Delete FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@colOrdinal"
+                };
+                SQLiteParameter emailParam = new SQLiteParameter(@"Email", email);
+                SQLiteParameter colOrdinalParam = new SQLiteParameter(@"colOrdinal", columnOrdinal);
+                command.Parameters.Add(emailParam);
+                command.Parameters.Add(colOrdinalParam);
+                try
+                {
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
@@ -148,7 +190,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} where ID={Columns.ColumnOrdinal}, ({DTOs.ColumnDTO.ColumnOrdinalColumnOrindal} ,{DTOs.ColumnDTO.ColumnNameColumnName},{DTOs.ColumnDTO.ColumnLimitColumnLimit},{DTOs.ColumnDTO.ColumnEmailColumnEmail}) " +
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal} ,{DTOs.ColumnDTO.ColumnNameColumnName},{DTOs.ColumnDTO.ColumnLimitColumnLimit},{DTOs.ColumnDTO.ColumnEmailColumnEmail}) " +
                         $"VALUES (@columnOridnalVal,@columnNameVal,@limitVal,@email);";
 
                     SQLiteParameter idParam = new SQLiteParameter(@"columnOridnalVal", Columns.ColumnOrdinal);
@@ -167,7 +209,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    //log error
+                    log.Debug(ex.Message);
                 }
                 finally
                 {

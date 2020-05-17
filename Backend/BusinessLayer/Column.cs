@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Column : IPersistedObject<DataAccessLayer.Column>
+    class Column 
     {
         private int columnOrdinal;
         private string columnName;
@@ -52,7 +52,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void AddTask(Task newTask)   //Adds task to the current column.
         {
-            if (tasks.Count < limit || limit == -1)  //Checks if there's room for another task in the current column.
+            if (tasks.Count < limit || limit == -1) //Checks if there's room for another task in the current column.
                 tasks.Add(newTask);
             else
             {

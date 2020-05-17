@@ -10,14 +10,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
     {
         public const string BoardEmailColumnEmail = "Email";
         private Controllers.BoardControl _controller;
-        private string email;
+        private string _email;
         public BoardDTO(string email)
         {
-            this.Email = email;
+            this._email = email;
             _controller = new Controllers.BoardControl();
             _controller.Insert(this);
         }
 
-        public string Email { get => email; set => email = value; }
+        public string Email { get => _email; set => _email = value; }
     }
 }

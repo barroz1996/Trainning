@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
+ 
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
     class TaskControl
     {
+        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string _connectionString;
         private readonly string _tableName;
         public TaskControl()
@@ -36,9 +38,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //log
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
@@ -64,17 +66,47 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 {
                     command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
-                    command.ExecuteNonQuery();
+                    res=command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //log
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
                     command.Dispose();
                     connection.Close();
 
+                }
+
+            }
+            return res > 0;
+        }
+        public bool Update(int id, string attributeName, DateTime attributeValue)
+        {
+            int res = -1;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                };
+                try
+                {
+
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    log.Debug(ex.Message);
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
                 }
 
             }
@@ -87,9 +119,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"select* from {_tableName} where [{DTOs.TaskDTO.TasksEmailColumnEmail}]=@Email AND [{DTOs.TaskDTO.TasksIdColumnId}]=@ColumnOridnal";
-                command.Parameters.Add(new SQLiteParameter("Email", email));
-                command.Parameters.Add(new SQLiteParameter("ColumnOridnal", ColumnOridnal));
+                command.CommandText = $"SELECT* FROM {_tableName} WHERE [{DTOs.TaskDTO.TasksEmailColumnEmail}]=@Email AND [{DTOs.TaskDTO.TasksIdColumnId}]=@ColumnOridnal";
+                command.Parameters.Add(new SQLiteParameter(@"Email", email));
+                command.Parameters.Add(new SQLiteParameter(@"ColumnOridnal", ColumnOridnal));
                 SQLiteDataReader dataReader = null;
                 try
                 {
@@ -98,8 +130,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        taskList.Add(new DTOs.TaskDTO((int)dataReader.GetValue(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetString(3), dataReader.GetString(4), email, ColumnOridnal));
+                        //צריך לסדר
+                        taskList.Add(new DTOs.TaskDTO((int)dataReader.GetValue(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
                     }
+                }
+                catch (Exception ex)
+                {
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
@@ -115,7 +152,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return taskList;
         }
 
-        public bool Delete(int taskId)
+        public bool Delete(DTOs.TaskDTO DTOObj)
         {
             int res = -1;
 
@@ -124,12 +161,46 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"delete from {_tableName} where id={DTOObj.TaskId}"
+                    CommandText = $"DELETE FROM {_tableName} WHERE [{DTOs.TaskDTO.TasksIdColumnId}]=@taskId"
+                };
+                command.Parameters.Add(new SQLiteParameter(@"taskId", DTOObj.TaskId));
+                try
+                {
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    log.Debug(ex.Message);
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+        public bool DeleteTable()
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"DELETE FROM {_tableName} "
                 };
                 try
                 {
                     connection.Open();
                     res = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    log.Debug(ex.Message);
                 }
                 finally
                 {
@@ -149,7 +220,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} where ID={Tasks.TaskId}, ({DTOs.TaskDTO.TasksColumnIdColumnColumnId} ,{DTOs.TaskDTO.TasksTitleColumnTitle},{DTOs.TaskDTO.TasksDescriptionColumnDescription},{DTOs.TaskDTO.TasksDueDateColumnDueDate},{DTOs.TaskDTO.TasksCreationDateColumnCreationDate},{DTOs.TaskDTO.TasksEmailColumnEmail},{DTOs.TaskDTO.TasksIdColumnId}) " +
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.TaskDTO.TasksIdColumnId} ,{DTOs.TaskDTO.TasksTitleColumnTitle},{DTOs.TaskDTO.TasksDescriptionColumnDescription},{DTOs.TaskDTO.TasksDueDateColumnDueDate},{DTOs.TaskDTO.TasksCreationDateColumnCreationDate},{DTOs.TaskDTO.TasksEmailColumnEmail},{DTOs.TaskDTO.TasksColumnIdColumnColumnId}) " +
                         $"VALUES (@idVal,@titleVal,@descriptionVal,@dueDateTimeVal,@creationTimeVal,@emailVal,@columnOridnalVal);";
 
                     SQLiteParameter idParam = new SQLiteParameter(@"idVal", Tasks.TaskId);
@@ -172,7 +243,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    //log error
+                    log.Debug(ex.Message);
                 }
                 finally
                 {

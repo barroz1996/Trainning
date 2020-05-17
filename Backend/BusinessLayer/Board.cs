@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Board : IPersistedObject<DataAccessLayer.Board>
+    class Board 
     {
-        //fields
+        private DataAccessLayer.Controllers.ColumnControl ColumnCon = new DataAccessLayer.Controllers.ColumnControl();
+        private DataAccessLayer.Controllers.TaskControl TaskCon = new DataAccessLayer.Controllers.TaskControl();
         private string email;
         private List<Column> columns;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -78,22 +79,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("Due date is required to be a futuristic date.");
             }
             GetColumn(0).AddTask(new Task(taskId, title, description, dueDate));
-            Save();
+            TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0));
             log.Debug("Task " + (taskId) + " was created by user " + email + ".");
-        }
-
-        public DataAccessLayer.Board ToDalObject()
-        {
-            var column = new List<DataAccessLayer.Column>();
-            foreach (var col in this.columns)
-            {
-                column.Add(col.ToDalObject());
-            }
-            return new DataAccessLayer.Board(this.email, column);
-        }
-        public void Save()
-        {
-            ToDalObject().Save();
         }
         public int TotalTask()
         {
@@ -115,7 +102,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             for(int i = columnOrdinal + 1; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
             {
                 GetColumn(i).SetOrdinal(i);
+                ColumnCon.Update(i-1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i, email);
+                foreach (Task tasks in GetColumn(i).GetTasks())
+                {
+                    TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, i );
+                }
             }
+            ColumnCon.Insert(new DataAccessLayer.DTOs.ColumnDTO(newCol.GetColumnOrdinal(), newCol.GetColumnName(), newCol.GetLimit(), email));
             return newCol;
         }
         public Column MoveColumn(int columnOrdinal,int direction)
@@ -135,6 +128,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns[columnOrdinal2] = sCol;
             GetColumn(columnOrdinal1).SetOrdinal(columnOrdinal2);
             GetColumn(columnOrdinal2).SetOrdinal(columnOrdinal1);
+            ColumnCon.Update(columnOrdinal1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, columnOrdinal2, email);
+            foreach(Task tasks in GetColumn(columnOrdinal2).GetTasks())
+            {
+                TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal2);
+            }
+            ColumnCon.Update(columnOrdinal2, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, columnOrdinal1, email);
+            foreach (Task tasks in GetColumn(columnOrdinal1).GetTasks())
+            {
+                TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal1);
+            }
             return GetColumn(columnOrdinal2);
         }
         private void checkOrdinal(int columnOrdinal)
@@ -158,13 +161,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (GetColumn(columnOrdinal - 1).GetLimit() < GetColumn(columnOrdinal).GetTasks().Count + GetColumn(columnOrdinal - 1).GetTasks().Count)
                     throw new Exception("The previous column cannot hold all the tasks!");
                 GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
+                foreach (Task tasks in GetColumn(columnOrdinal).GetTasks())
+                {
+                    TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal - 1);
+                }
             }
             columns.Remove(GetColumn(columnOrdinal));
-            for (int i = columnOrdinal+1; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
+            ColumnCon.Delete(email, columnOrdinal);
+            for (int i = columnOrdinal; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
             {
-                GetColumn(i).SetOrdinal(i-1);
+                GetColumn(i).SetOrdinal(i);
+                if(i!=columnOrdinal)
+                   ColumnCon.Update(i, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i - 1, email);
+                foreach(Task tasks in GetColumn(i).GetTasks())
+                {
+                    TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, i);
+                }
             }
-
         }
     }
 }

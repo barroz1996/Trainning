@@ -13,6 +13,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
     class UserController
     {
+        private DataAccessLayer.Controllers.UserControl newUser = new DataAccessLayer.Controllers.UserControl();
         private bool HasLogged;
         private Dictionary<string, User> Users;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -24,8 +25,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public void LoadData() //Loads all the data while starting the program.
         {
-            var user = new DataAccessLayer.User();
-            var dalUser = user.FromJson(); //Gets a list of all DataAcessLayer users from the json file.
+            var user = new DataAccessLayer.Controllers.UserControl();
+            var dalUser = user.Select(); //Gets a list of users
             foreach (var dal in dalUser)
             {
                 Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all the users to the users dictionary.
@@ -61,7 +62,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 if (EmailVerify(email))
                 {
                     Users.Add(email, new User(email, password, nickname));
-                    GetUser(email).Save();
+                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false));        
                     log.Debug("User " + email + " was created.");
                 }
                 else
@@ -186,6 +187,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     }
                 }
             }
+        }
+        public void Delete()
+        {
+            newUser.DeleteTable();
         }
     }
 }

@@ -7,9 +7,9 @@ using System.Text.Json;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
-    class User : IPersistedObject<DataAccessLayer.User>
+    class User 
     {
-
+        private DataAccessLayer.Controllers.UserControl newUser = new DataAccessLayer.Controllers.UserControl();
         private string email;
         private string nickname;
         private string password;
@@ -34,27 +34,26 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public string GetNickname() { return this.nickname; }
         public string GetPassword() { return this.password; }
         public bool GetLoggedIn() { return this.LoggedIn; }
-        public void SetNickname(string nickname)
-        {
-            if (nickname == null)
-            {
-                log.Debug("User " + this.email + " tried setting a null nickname.");
-                throw new Exception("Nickname cannot be null.");
-            }
-            else
-            {
-                this.nickname = nickname;
-                log.Debug("User " + this.email + " changed his nickname to " + this.nickname + ".");
-            }
+        /* public void SetNickname(string nickname)
+         {
+             if (nickname == null)
+             {
+                 log.Debug("User " + this.email + " tried setting a null nickname.");
+                 throw new Exception("Nickname cannot be null.");
+             }
+             else
+             {
+                 this.nickname = nickname;
+                 log.Debug("User " + this.email + " changed his nickname to " + this.nickname + ".");
+             }
+         } */
 
-        }
-
-        public void Login(string password) //tries logging in the user.
+    public void Login(string password) //tries logging in the user.
         {
             if (this.password.Equals(password))  //verify if the password matches the user's.
             {
                 this.LoggedIn = true;
-                Save();                     //Saves in the json file that the user is logged in.
+                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, true);      //Saves in the json file that the user is logged in.
                 log.Debug("User " + email + " has logged in.");
             }
             else
@@ -68,7 +67,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             if (GetLoggedIn()) //checks if the user is logged in, else throws an exception.
             {
                 this.LoggedIn = false;
-                Save();
+                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, false);
                 log.Debug("User " + email + " has logged out.");
             }
             else
@@ -78,14 +77,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
         }
 
-        public DataAccessLayer.User ToDalObject() //returns a DataAccessLayer version of the current user.
-        {
-            return new DataAccessLayer.User(this.email, this.password, this.nickname, this.LoggedIn);
-        }
-        public void Save() //saves changes.
-        {
-            ToDalObject().Save();
-        }
+      
+        
 
     }
 }

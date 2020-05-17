@@ -8,6 +8,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
     class BoardController
     {
+        private DataAccessLayer.Controllers.BoardControl BoardCon = new DataAccessLayer.Controllers.BoardControl();
+        private DataAccessLayer.Controllers.ColumnControl ColumnCon = new DataAccessLayer.Controllers.ColumnControl();
+        private DataAccessLayer.Controllers.TaskControl TaskCon = new DataAccessLayer.Controllers.TaskControl();
         private Dictionary<string, Board> Boards;
         private int totalTasks;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -21,7 +24,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             var newBoard = new Board(email);
             this.Boards.Add(email, newBoard);
-            GetBoard(email).Save();
+            BoardCon.Insert(new DataAccessLayer.DTOs.BoardDTO(email));
+            foreach(Column col in GetBoard(email).GetColumns())
+            {
+                ColumnCon.Insert(new DataAccessLayer.DTOs.ColumnDTO(col.GetColumnOrdinal(),col.GetColumnName(),col.GetLimit(),email))
+            }
         }
         public Board GetBoard(string email) //Returns the board of the current user.
         {
@@ -55,7 +62,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     log.Debug("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
                 else
                     log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName() + " to " + limit + ".");
-                GetBoard(email).Save();
+                ColumnCon.Update(columnOrdinal, DataAccessLayer.DTOs.ColumnDTO.ColumnLimitColumnLimit, limit, email);
             }
             else
             {
@@ -78,7 +85,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             else
             {
                 GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
-                GetBoard(email).Save();
+                TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDueDateColumnDueDate, dueDate);
                 log.Debug("Updated the due date of task " + taskId + ".");
             }
         }
@@ -98,7 +105,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
             GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
-            GetBoard(email).Save();
+            TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDescriptionColumnDescription, description);
             log.Debug("Updated the description of task " + taskId + ".");
         }
         public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)//Update a specific task's title.
@@ -123,7 +130,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 else
                 {
                     GetColumn(email, columnOrdinal).GetTask(taskId).EditTaskTitle(title);
-                    GetBoard(email).Save();
+                    TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksTitleColumnTitle, title);
                     log.Debug("Updated the description of task " + taskId + ".");
                 }
             }
@@ -140,7 +147,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
                 GetColumn(email, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
                 log.Debug("Task " + taskId + " was advanced from the " + GetColumn(email, columnOrdinal).GetColumnName() + " column to the " + GetColumn(email, columnOrdinal + 1).GetColumnName() + " column.");
-                GetBoard(email).Save();
+                TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal + 1);
             }
             else //the condition makes sure that the next column has not reached it's limit.
             {
@@ -153,27 +160,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return this.totalTasks;
         }
         public void LoadData()
-        {
-            var board = new DataAccessLayer.Controllers.BoardControl();
-            var dalboard = board.Select();
+        {    
+            var dalboard = BoardCon.Select();
             foreach (var dal in dalboard)
             {
-                var newBoard = new Board(dal.Email);
-                var Columncol = new DataAccessLayer.Controllers.ColumnControl();
-                var dalCol = Columncol.SelectColumn(dal.Email);
+                var colList = new List<Column>();  
+                var dalCol = ColumnCon.SelectColumn(dal.Email);
                 foreach (var cdal in dalCol)
                 {
                     var newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName, cdal.Limit);
-                    var tasks = new DataAccessLayer.Controllers.TaskControl();
-                    var dalTasl = tasks.SelectTasks(dal.Email, cdal.ColumnOrdinal);
-                    foreach (var tdal in dalTasl)
+                    var dalTask = TaskCon.SelectTasks(dal.Email, cdal.ColumnOrdinal);
+                    foreach (var tdal in dalTask)
                     {
-                        newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationDate));
+                        newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationTime));
                     }
-                    newBoard.GetColumn(cdal.ColumnOrdinal).SetTasks(newCol.GetTasks());
-                    newBoard.GetColumn(cdal.ColumnOrdinal).LimitColumnTasks(cdal.Limit);
+                    colList.Add(newCol);
                 }
-                Boards.Add(dal.Email, new Board(dal.Email, newBoard.GetColumns()));
+                Boards.Add(dal.Email, new Board(dal.Email, colList));
             }
             foreach (var entry in Boards)
             {
@@ -191,6 +194,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void RemoveColumn(string email, int columnOrdinal)
         {
             GetBoard(email).RemoveColumn(columnOrdinal);
+        }
+        public void Delete()
+        {
+            BoardCon.DeleteTable();
+            ColumnCon.DeleteTable();
+            TaskCon.DeleteTable();
         }
     }
 }

@@ -42,7 +42,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<summary>Remove all persistent data.</summary>
         public Response DeleteData()
         {
-            throw new NotImplementedException();
+            UserController.Delete();
+            BoardController.Delete();
+            return LoadData();
         }
 
 
