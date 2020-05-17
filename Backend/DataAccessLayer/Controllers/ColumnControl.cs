@@ -157,7 +157,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"Delete FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
+                    CommandText = $"DELETE FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
                 };
                 SQLiteParameter emailParam = new SQLiteParameter(@"Email", email);
                 SQLiteParameter colOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", columnOrdinal);
