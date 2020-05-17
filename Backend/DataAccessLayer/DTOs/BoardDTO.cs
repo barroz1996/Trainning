@@ -15,7 +15,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
         {
             this._email = email;
             _controller = new Controllers.BoardControl();
-            _controller.Insert(this);
         }
 
         public string Email { get => _email; set => _email = value; }

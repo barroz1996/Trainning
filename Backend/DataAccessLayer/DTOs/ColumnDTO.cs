@@ -24,7 +24,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
             this._limit = limit;
             this._email = email;
             _controller = new Controllers.ColumnControl();
-            _controller.Insert(this);
         }
 
         public int ColumnOrdinal { get => _columnOrdinal; set { _columnOrdinal = value; } }

@@ -24,7 +24,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
             this._password = password;
             this._loggedIn = loggedIn;
             _controller = new Controllers.UserControl();
-            _controller.Insert(this);
+          
         }
 
         public string Email { get => _email; set => _email = value; }

@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         private readonly string _tableName;
         public UserControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db3"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = "Users";
         }
@@ -117,7 +117,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"SELECT  {_tableName}";
+                command.CommandText = $"SELECT* FROM {_tableName}";
                 SQLiteDataReader dataReader = null;
                 try
                 {
@@ -136,7 +136,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    if (dataReader == null)
                     {
                         dataReader.Close();
                     }
@@ -158,7 +158,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"delete from {_tableName} where [{DTOs.UserDTO.UsersEmailColumn}]=@emailVal"
+                    CommandText = $"DELETE FROM {_tableName} WHERE [{DTOs.UserDTO.UsersEmailColumn}]=@emailVal"
                 };
                 command.Parameters.Add(new SQLiteParameter(@"emailVal", DTOObj.Email));
                 try

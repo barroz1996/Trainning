@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         private readonly string _tableName;
         public ColumnControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db3"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = "Columns";
         }
@@ -88,7 +88,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"select* from {_tableName} where [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
+                command.CommandText = $"SELECT* FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
                 command.Parameters.Add(new SQLiteParameter(@"Email", email));
                 SQLiteDataReader dataReader = null;
                 try
@@ -107,7 +107,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    if (dataReader == null)
                     {
                         dataReader.Close();
                     }

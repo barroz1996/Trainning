@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         private readonly string _tableName;
         public BoardControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db3"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = "Boards";
         }
@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
-                command.CommandText = $"SELECT FROM {_tableName}";
+                command.CommandText = $"SELECT* FROM {_tableName}";
                 SQLiteDataReader dataReader = null;
                 try
                 {
@@ -45,7 +45,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    if (dataReader == null)
                     {
                         dataReader.Close();
                     }

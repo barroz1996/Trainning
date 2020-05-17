@@ -33,7 +33,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
             this._email = email;
             this.ColumnOridnal = columnOridnal;
             _controller = new Controllers.TaskControl();
-            _controller.Insert(this);
+      
         }
 
         public int TaskId { get => _taskId; set => _taskId = value; }
