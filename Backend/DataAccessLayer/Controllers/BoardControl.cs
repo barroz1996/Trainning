@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         private readonly string _tableName;
         public BoardControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db3"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = "Boards";
         }
