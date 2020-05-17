@@ -27,7 +27,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             BoardCon.Insert(new DataAccessLayer.DTOs.BoardDTO(email));
             foreach(Column col in GetBoard(email).GetColumns())
             {
-                ColumnCon.Insert(new DataAccessLayer.DTOs.ColumnDTO(col.GetColumnOrdinal(),col.GetColumnName(),col.GetLimit(),email))
+                ColumnCon.Insert(new DataAccessLayer.DTOs.ColumnDTO(col.GetColumnOrdinal(), col.GetColumnName(), col.GetLimit(), email));
             }
         }
         public Board GetBoard(string email) //Returns the board of the current user.

@@ -78,15 +78,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             log.Debug("Task " + taskId + " does not exist in the current column.");
             throw new Exception("The task doesn't exist in this column.");
         }
-        public DataAccessLayer.Column ToDalObject()
-        {
-            var Task = new List<DataAccessLayer.Task>();
-            foreach (var aTask in this.tasks)
-            {
-                Task.Add(aTask.ToDalObject());
-            }
-            return new DataAccessLayer.Column(this.columnOrdinal, this.columnName, this.limit, Task);
-        }
         public void SetTasks(List<Task> task)
         {
             foreach (var newTask in task)

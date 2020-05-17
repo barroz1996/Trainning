@@ -27,13 +27,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
             _controller.Insert(this);
         }
 
-        public int ColumnOrdinal { get => _columnOrdinal; set { _columnOrdinal = value; _controller.Update(_columnOrdinal, ColumnOrdinalColumnOrindal, value); } }
-        public string ColumnName { get => _columnName; set { _columnName = value; _controller.Update(_columnOrdinal, ColumnNameColumnName, value); } }
-        public int Limit { get => _limit; set { _limit = value; _controller.Update(_columnOrdinal, ColumnLimitColumnLimit, value); } }
+        public int ColumnOrdinal { get => _columnOrdinal; set { _columnOrdinal = value; } }
+        public string ColumnName { get => _columnName; set { _columnName = value; } }
+        public int Limit { get => _limit; set { _limit = value;} }
         public string Email { get => _email; set => _email = value; }
-         public bool Delete()
-        {
-           return _controller.Delete(this);
-        }
     }
 }

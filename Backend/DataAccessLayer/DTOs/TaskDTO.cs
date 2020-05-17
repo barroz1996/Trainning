@@ -37,9 +37,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
         }
 
         public int TaskId { get => _taskId; set => _taskId = value; }
-        public string Title { get => _title; set { _title = value; _controller.Update(_taskId, TasksTitleColumnTitle, value); } }
-        public string Description { get => _description; set { _description = value; _controller.Update(_taskId, TasksDescriptionColumnDescription, value); } }
-        public DateTime DueDate { get => _dueDate; set { _dueDate = value; _controller.Update(_taskId, TasksDueDateColumnDueDate, value); } }
+        public string Title { get => _title; set { _title = value;  } }
+        public string Description { get => _description; set { _description = value; } }
+        public DateTime DueDate { get => _dueDate; set { _dueDate = value; } }
         public DateTime CreationTime { get => _creationTime; set => _creationTime = value; }
         public string Email { get => _email; set => _email = value; }
         public int ColumnOridnal { get => columnOridnal; set => columnOridnal = value; }

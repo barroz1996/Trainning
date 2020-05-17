@@ -7,7 +7,7 @@ using IntroSE.Kanban.Backend.DataAccessLayer;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Task : IPersistedObject<DataAccessLayer.Task>
+    class Task 
     {
         private int taskId;
         private string title;
@@ -42,11 +42,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public DateTime GetDueDate() { return this.dueDate; }
 
 
-
-        public DataAccessLayer.Task ToDalObject()
-        {
-            return new DataAccessLayer.Task(this.taskId, this.title, this.description, this.dueDate, this.creationDate);
-        }
 
     }
 

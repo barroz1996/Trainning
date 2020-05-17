@@ -28,8 +28,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
         }
 
         public string Email { get => _email; set => _email = value; }
-        public string Nickname { get => _nickName; set { _nickName = value; _controller.Update(_email, UsersNicknameColumn, value); } }
-        public string Password { get => _password; set { _password = value; _controller.Update(_email, UsersPasswordColumn, value); } }
-        public bool LoggedIn { get => _loggedIn; set { _loggedIn = value; _controller.Update(_email, UsersLoggedInColumn, value); } }
+        public string Nickname { get => _nickName; set { _nickName = value; } }
+        public string Password { get => _password; set { _password = value; } }
+        public bool LoggedIn { get => _loggedIn; set { _loggedIn = value; } }
     }
 }
