@@ -16,7 +16,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         private readonly string _tableName;
         public TaskControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db3"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = "Tasks";
         }
@@ -130,7 +130,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        //צריך לסדר
                         taskList.Add(new DTOs.TaskDTO((int)dataReader.GetValue(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
                     }
                 }
@@ -140,7 +139,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    if (dataReader == null)
+                    if (dataReader != null)
                     {
                         dataReader.Close();
                     }

@@ -191,6 +191,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void Delete()
         {
             newUser.DeleteTable();
+            Users.Clear();
         }
     }
 }

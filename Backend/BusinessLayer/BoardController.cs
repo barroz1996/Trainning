@@ -200,6 +200,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             BoardCon.DeleteTable();
             ColumnCon.DeleteTable();
             TaskCon.DeleteTable();
+            Boards.Clear();
         }
     }
 }

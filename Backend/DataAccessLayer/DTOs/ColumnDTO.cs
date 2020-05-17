@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
     {
         public const string ColumnOrdinalColumnOrdinal = "ColumnOrdinal";
         public const string ColumnNameColumnName = "ColumnName";
-        public const string ColumnLimitColumnLimit = "Limit";
+        public const string ColumnLimitColumnLimit = "ColumnLimit";
         public const string ColumnEmailColumnEmail = "Email";
         private Controllers.ColumnControl _controller;
         private int _columnOrdinal;

@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Service()
         {
            this.UserController = new BusinessLayer.UserPackage.UserController();
-            this.BoardController = new BusinessLayer.BoardPackage.BoardController();
+           this.BoardController = new BusinessLayer.BoardPackage.BoardController();
         }
                
         /// <summary>        
@@ -32,19 +32,34 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error.</returns>
         public Response LoadData()
         {
-             UserController.LoadData();
-            BoardController.LoadData();
-
-            return new Response();
+            try
+            {
+                DataAccessLayer.Controllers.sqlCreator create = new DataAccessLayer.Controllers.sqlCreator();
+                UserController.LoadData();
+                BoardController.LoadData();
+                return new Response();
+            }
+            catch(Exception ex)
+            {
+                return new Response<Object>(ex.Message);
+            }
         }
 
 
         ///<summary>Remove all persistent data.</summary>
         public Response DeleteData()
         {
-            UserController.Delete();
-            BoardController.Delete();
-            return LoadData();
+            try
+            {
+                UserController.Delete();
+                BoardController.Delete();
+                return new Response();
+            }
+            catch (Exception ex)
+            {
+                return new Response<Object>(ex.Message);
+            }
+
         }
 
 
