@@ -104,18 +104,14 @@
     <Compile Include="BusinessLayer\Task.cs" />
     <Compile Include="BusinessLayer\User.cs" />
     <Compile Include="BusinessLayer\UserController.cs" />
-    <Compile Include="DataAccessLayer\DalController.cs" />
-    <Compile Include="DataAccessLayer\DalObject.cs" />
-    <Compile Include="DataAccessLayer\SQLcontroller.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DataAccessLayer\SQLcontroller.Designer.cs">
-      <DependentUpon>SQLcontroller.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DataAccessLayer\Task.cs" />
-    <Compile Include="DataAccessLayer\Column.cs" />
-    <Compile Include="DataAccessLayer\User.cs" />
-    <Compile Include="DataAccessLayer\Board.cs" />
+    <Compile Include="DataAccessLayer\Controllers\BoardControl.cs" />
+    <Compile Include="DataAccessLayer\Controllers\ColumnControl.cs" />
+    <Compile Include="DataAccessLayer\Controllers\TaskControl.cs" />
+    <Compile Include="DataAccessLayer\Controllers\UserControl.cs" />
+    <Compile Include="DataAccessLayer\DTOs\BoardDTO.cs" />
+    <Compile Include="DataAccessLayer\DTOs\ColumnDTO.cs" />
+    <Compile Include="DataAccessLayer\DTOs\TaskDTO.cs" />
+    <Compile Include="DataAccessLayer\DTOs\UserDTO.cs" />
     <Compile Include="ServiceLayer\Response.cs" />
     <Compile Include="ServiceLayer\ResponseT.cs" />
     <Compile Include="ServiceLayer\IService.cs" />
@@ -135,11 +131,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DataAccessLayer\SQLcontroller.resx">
-      <DependentUpon>SQLcontroller.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

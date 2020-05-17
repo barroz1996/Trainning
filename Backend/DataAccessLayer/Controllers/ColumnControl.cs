@@ -1,0 +1,183 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SQLite;
+using System.IO;
+
+namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
+{
+    class ColumnControl
+    {
+        private readonly string _connectionString;
+        private readonly string _tableName;
+        public ColumnControl()
+        {
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db3"));
+            this._connectionString = $"Data Source={path}; Version=3;";
+            this._tableName = "Columns";
+        }
+
+        public bool Update(int id, string attributeName, string attributeValue)
+        {
+            int res = -1;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                };
+                try
+                {
+
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+
+        public bool Update(int id, string attributeName, int attributeValue)
+        {
+            int res = -1;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                };
+                try
+                {
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+
+                }
+
+            }
+            return res > 0;
+        }
+
+        public List<DTOs.ColumnDTO> SelectColumn(string email)
+        {
+            List<DTOs.ColumnDTO> columnsList = new List<DTOs.ColumnDTO>();
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(connection);
+                command.CommandText = $"select* from {_tableName} where [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
+                command.Parameters.Add(new SQLiteParameter("Email", email));
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    dataReader = command.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+                        columnsList.Add(new DTOs.ColumnDTO((int)dataReader.GetValue(0),dataReader.GetString(1),(int)dataReader.GetValue(2),email));
+                    }
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+                    command.Dispose();
+                    connection.Close();
+                }
+                
+            }
+            return columnsList;
+        }
+
+        public bool Delete(DTOs.ColumnDTO DTOObj)
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} where id={DTOObj.}"
+                };
+                try
+                {
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+        public bool Insert(DTOs.ColumnDTO Columns)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(connection);
+                int res = -1;
+                try
+                {
+                    connection.Open();
+                    command.CommandText = $"INSERT INTO {_tableName} where ID={Columns.ColumnOrdinal}, ({DTOs.ColumnDTO.ColumnOrdinalColumnOrindal} ,{DTOs.ColumnDTO.ColumnNameColumnName},{DTOs.ColumnDTO.ColumnLimitColumnLimit},{DTOs.ColumnDTO.ColumnEmailColumnEmail}) " +
+                        $"VALUES (@columnOridnalVal,@columnNameVal,@limitVal,@email);";
+
+                    SQLiteParameter idParam = new SQLiteParameter(@"columnOridnalVal", Columns.ColumnOrdinal);
+                    SQLiteParameter NameParam = new SQLiteParameter(@"columnNameVal", Columns.ColumnName);
+                    SQLiteParameter limitParam = new SQLiteParameter(@"limitVal", Columns.Limit);
+                    SQLiteParameter emailParam = new SQLiteParameter(@"email", Columns.Email);
+                    
+
+                    command.Parameters.Add(idParam);
+                    command.Parameters.Add(NameParam);
+                    command.Parameters.Add(limitParam);
+                    command.Parameters.Add(emailParam);
+                   
+                    command.Prepare();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    //log error
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+
+                }
+                return res > 0;
+
+            }
+        }
+    }
+}

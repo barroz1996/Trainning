@@ -154,16 +154,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void LoadData()
         {
-            var board = new DataAccessLayer.Board();
-            var dalboard = board.FromJson();
+            var board = new DataAccessLayer.Controllers.BoardControl();
+            var dalboard = board.Select();
             foreach (var dal in dalboard)
             {
                 var newBoard = new Board(dal.Email);
-                foreach (var cdal in dal.Columns)
+                var Columncol = new DataAccessLayer.Controllers.ColumnControl();
+                var dalCol = Columncol.SelectColumn(dal.Email);
+                foreach (var cdal in dalCol)
                 {
                     var newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName, cdal.Limit);
-
-                    foreach (DataAccessLayer.Task tdal in cdal.Tasks)
+                    var tasks = new DataAccessLayer.Controllers.TaskControl();
+                    var dalTasl = tasks.SelectTasks(dal.Email, cdal.ColumnOrdinal);
+                    foreach (var tdal in dalTasl)
                     {
                         newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationDate));
                     }
