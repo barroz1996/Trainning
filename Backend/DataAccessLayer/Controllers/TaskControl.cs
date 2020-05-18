@@ -21,7 +21,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             this._tableName = "Tasks";
         }
 
-        public bool Update(int id, string attributeName, string attributeValue)
+        public bool Update(int ID, string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -29,13 +29,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ID=@ID"
                 };
                 try
                 {
-
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
+                    command.Parameters.Add(new SQLiteParameter(@"ID", ID));
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -52,7 +53,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int id, string attributeName, int attributeValue)
+        public bool Update(int ID, string attributeName, int attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -60,13 +61,15 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ID=@ID"
                 };
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
-                    res=command.ExecuteNonQuery();
+                    command.Parameters.Add(new SQLiteParameter(@"ID", ID));
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Prepare();
+                    res = command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
@@ -130,7 +133,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        taskList.Add(new DTOs.TaskDTO((int)dataReader.GetValue(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
+                        taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
                     }
                 }
                 catch (Exception ex)
@@ -229,7 +232,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     SQLiteParameter dueDateParam = new SQLiteParameter(@"dueDateTimeVal", Tasks.DueDate);
                     SQLiteParameter creationTimeParam = new SQLiteParameter(@"creationTimeVal", Tasks.CreationTime);
                     SQLiteParameter emailParam = new SQLiteParameter(@"emailVal", Tasks.Email);
-                    SQLiteParameter columnOridnalParam = new SQLiteParameter(@"columnOridnalVal", Tasks.Email);
+                    SQLiteParameter columnOridnalParam = new SQLiteParameter(@"columnOridnalVal", Tasks.ColumnOridnal);
 
                     command.Parameters.Add(idParam);
                     command.Parameters.Add(titleParam);

@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             this._tableName = "Columns";
         }
 
-        public bool Update(int id, string attributeName, string attributeValue,string email)
+        public bool Update(int ColumnOrdinal, string attributeName, string attributeValue,string Email)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -28,13 +28,15 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id} AND email ={email}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ColumnOrdinal=@ColumnOrdinal AND Email =@Email@"
                 };
                 try
                 {
-
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
+                    command.Parameters.Add(new SQLiteParameter(@"ColumnOrdinal", ColumnOrdinal));
+                    command.Parameters.Add(new SQLiteParameter(@"Email", Email));
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
                 catch(Exception ex)
@@ -51,7 +53,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int id, string attributeName, int attributeValue,string email)
+        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue,string email)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -63,9 +65,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 };
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
-                    command.ExecuteNonQuery();
+                    command.Parameters.Add(new SQLiteParameter(@"ID", ID));
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Prepare();
+                    res = command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
@@ -98,7 +102,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        columnsList.Add(new DTOs.ColumnDTO((int)dataReader.GetValue(0),dataReader.GetString(1),(int)dataReader.GetValue(2),email));
+                        columnsList.Add(new DTOs.ColumnDTO(dataReader.GetInt32(0),dataReader.GetString(1),dataReader.GetInt32(2),email));
                     }
                 }
                 catch (Exception ex)

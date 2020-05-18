@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             this._tableName = "Users";
         }
 
-        public bool Update(string id, string attributeName, string attributeValue)
+        public bool Update(string Email, string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -28,13 +28,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE Email=@Email "
                 };
                 try
                 {
-
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
+                    command.Parameters.Add(new SQLiteParameter(@"Email", Email));
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -51,7 +52,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(string id, string attributeName, bool attributeValue)//we need to check!
+        public bool Update(string Email, string attributeName, bool attributeValue)//we need to check!
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -59,13 +60,15 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
+                    CommandText = $"UPDATE {_tableName}  SET [{attributeName}]=@{attributeName} WHERE Email=@Email "
                 };
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
-                    command.ExecuteNonQuery();
+                    command.Parameters.Add(new SQLiteParameter(@"Email", Email));
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Prepare();
+                    res=command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {

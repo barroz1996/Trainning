@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Board 
+    class Board
     {
         private DataAccessLayer.Controllers.ColumnControl ColumnCon = new DataAccessLayer.Controllers.ColumnControl();
         private DataAccessLayer.Controllers.TaskControl TaskCon = new DataAccessLayer.Controllers.TaskControl();
@@ -34,13 +34,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public List<Column> GetColumns() { return columns; }
         public Column GetColumn(int columnOrdinal) // we get the key of the column and we return the column with this key
         {
+
             foreach (var column in columns)
             {
                 if (column.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
                     return column;
             }
+
+        
+        
+        
             log.Debug("Tried getting an illegal column ordinal.");
             throw new Exception("Column ordinal is illegal.");
+            
         }
 
         public Column GetColumn(string columnName) // we get the name of the column and we return the column with this name
@@ -152,13 +158,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             checkOrdinal(columnOrdinal);
             if (columnOrdinal == 0)
             {
-                if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count)
+                if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count && GetColumn(1).GetLimit() != -1)
                     throw new Exception("The next column cannot hold all the tasks!");
                 GetColumn(1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
             }
             else
             {
-                if (GetColumn(columnOrdinal - 1).GetLimit() < GetColumn(columnOrdinal).GetTasks().Count + GetColumn(columnOrdinal - 1).GetTasks().Count)
+                if (GetColumn(columnOrdinal - 1).GetLimit() < GetColumn(columnOrdinal).GetTasks().Count + GetColumn(columnOrdinal - 1).GetTasks().Count && GetColumn(columnOrdinal-1).GetLimit()!=-1)
                     throw new Exception("The previous column cannot hold all the tasks!");
                 GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
                 foreach (Task tasks in GetColumn(columnOrdinal).GetTasks())
@@ -171,8 +177,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             for (int i = columnOrdinal; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
             {
                 GetColumn(i).SetOrdinal(i);
-                if(i!=columnOrdinal)
-                   ColumnCon.Update(i, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i - 1, email);
+                ColumnCon.Update(i+1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i , email);
                 foreach(Task tasks in GetColumn(i).GetTasks())
                 {
                     TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, i);

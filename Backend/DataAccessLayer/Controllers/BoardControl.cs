@@ -99,7 +99,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 {
                     Connection = connection,
                     //CommandText = $"DELETE FROM {_tableName} "
-                    CommandText = $"DROP TABLE {_tableName} "
+                    CommandText = $"SELECT* FROM {_tableName} "
                 };
                 try
                 {
@@ -128,7 +128,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} WHERE Email={DTOs.BoardDTO.BoardEmailColumnEmail}, ({DTOs.TaskDTO.TasksColumnIdColumnColumnId}  " +
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.BoardDTO.BoardEmailColumnEmail})  " +
                         $"VALUES (@EmailVal);";
 
                     SQLiteParameter emailParam = new SQLiteParameter(@"EmailVal", Board.Email);
