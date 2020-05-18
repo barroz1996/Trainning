@@ -34,16 +34,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public List<Column> GetColumns() { return columns; }
         public Column GetColumn(int columnOrdinal) // we get the key of the column and we return the column with this key
         {
-
-            foreach (var column in columns)
-            {
-                if (column.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
-                    return column;
-            }
-
-        
-        
-        
+            /* foreach (var column in columns)
+             {
+                 if (column.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
+                     return column;
+             }*/
+            if (columnOrdinal >= 0 && columnOrdinal < columns.Count)
+                return columns[columnOrdinal];
             log.Debug("Tried getting an illegal column ordinal.");
             throw new Exception("Column ordinal is illegal.");
             

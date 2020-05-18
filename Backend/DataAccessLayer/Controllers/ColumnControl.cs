@@ -28,18 +28,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ColumnOrdinal=@ColumnOrdinal AND Email =@Email@"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@attributeName WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
                 };
                 try
                 {
                     connection.Open();
+                    command.Parameters.Add(new SQLiteParameter(@"attributeName", attributeValue));
                     command.Parameters.Add(new SQLiteParameter(@"ColumnOrdinal", ColumnOrdinal));
                     command.Parameters.Add(new SQLiteParameter(@"Email", Email));
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Debug(ex.Message);
                 }
@@ -53,7 +53,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue,string email)
+        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue,string Email)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -61,13 +61,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ColumnOrdinal={id} AND Email ={email}"
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@attributeName WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
                 };
                 try
                 {
                     connection.Open();
-                    command.Parameters.Add(new SQLiteParameter(@"ID", ID));
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Parameters.Add(new SQLiteParameter(@"attributeName", attributeValue));
+                    command.Parameters.Add(new SQLiteParameter(@"ColumnOrdinal", ColumnOrdinal));
+                    command.Parameters.Add(new SQLiteParameter(@"Email", Email));
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
@@ -79,7 +80,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 {
                     command.Dispose();
                     connection.Close();
-
                 }
 
             }
