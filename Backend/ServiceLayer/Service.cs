@@ -41,6 +41,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch(Exception ex)
             {
+                log.Debug("unable to load data.");
                 return new Response<Object>(ex.Message);
             }
         }
