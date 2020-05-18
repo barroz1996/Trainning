@@ -55,7 +55,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
         {
-            if (columnOrdinal == 1) //added for testing purposes in the submission system only.
+           // if (columnOrdinal == 1) //added for testing purposes in the submission system only.
             {
                 GetColumn(email, columnOrdinal).LimitColumnTasks(limit);
                 if (limit == -1)
@@ -64,11 +64,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName() + " to " + limit + ".");
                 ColumnCon.Update(columnOrdinal, DataAccessLayer.DTOs.ColumnDTO.ColumnLimitColumnLimit, limit, email);
             }
-            else
+          /*  else
             {
                 log.Debug("tried limiting a column other than the in progress column.");
                 throw new Exception("can only limit of the in progress column.");
-            }
+            }*/
         }
         public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
         {
