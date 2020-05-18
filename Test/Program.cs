@@ -18,8 +18,9 @@ namespace Test
             //service.Register("yakov@gmail.com", "Kk4fs", "dark");
             //service.Login(email, password);
             //service.AddTask(email, "title", "", DateTime.MaxValue);
-            service.AddColumn(email, 1, "newCol");
+            //service.AddColumn(email, 1, "newCol");
             //service.AdvanceTask(email, 0, 0);
+            service.MoveColumnLeft(email, 3);
             Console.ReadKey();
         }
     }

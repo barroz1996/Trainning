@@ -141,12 +141,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns[columnOrdinal2] = sCol;
             GetColumn(columnOrdinal1).SetOrdinal(columnOrdinal2);
             GetColumn(columnOrdinal2).SetOrdinal(columnOrdinal1);
-            ColumnCon.Update(columnOrdinal1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, columnOrdinal2, email);
-            foreach(Task tasks in GetColumn(columnOrdinal2).GetTasks())
+            ColumnCon.Update(columnOrdinal1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, -1, email);
+            ColumnCon.Update(columnOrdinal2, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, columnOrdinal1, email);
+            ColumnCon.Update(-1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, columnOrdinal2, email);
+            foreach (Task tasks in GetColumn(columnOrdinal2).GetTasks())
             {
                 TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal2);
             }
-            ColumnCon.Update(columnOrdinal2, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, columnOrdinal1, email);
             foreach (Task tasks in GetColumn(columnOrdinal1).GetTasks())
             {
                 TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal1);
