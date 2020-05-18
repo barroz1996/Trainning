@@ -174,7 +174,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     {
                         newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationTime));
                     }
-                    colList.Add(newCol);
+                    if (colList.Count <= newCol.GetColumnOrdinal())
+                        colList.Add(newCol);
+                    else
+                        colList.Insert(newCol.GetColumnOrdinal(), newCol);
                 }
                 Boards.Add(dal.Email, new Board(dal.Email, colList));
             }

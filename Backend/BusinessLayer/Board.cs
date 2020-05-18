@@ -91,18 +91,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public Column AddColumn(int columnOrdinal, string Name)
         {
-            if (string.IsNullOrWhiteSpace(Name) || Name.Length > 15)
+            if (string.IsNullOrWhiteSpace(Name) || Name.Length > 15) {
+                log.Debug("Name out of bounds!");
                 throw new Exception("Name out of bounds!");
-            foreach(Column col in columns)
+            }
+            foreach (Column col in columns)
             {
-                if (col.GetColumnName().Equals(Name))
+                if (col.GetColumnName().Equals(Name)) {
+                    log.Debug("This column name already exists");
                     throw new Exception("This column name already exists");
+                }
             }
             if(columnOrdinal!=columns.Count)
                checkOrdinal(columnOrdinal);
             Column newCol = new Column(columnOrdinal, Name);
             columns.Insert(columnOrdinal, newCol);
-            for(int i = columnOrdinal + 1; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
+            for(int i = columns.Count-1; i > columnOrdinal; i = i - 1) // we update the columnOrdinal we moved
             {
                 GetColumn(i).SetOrdinal(i);
                 ColumnCon.Update(i-1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i, email);
@@ -118,9 +122,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             checkOrdinal(columnOrdinal);
             if (direction == 1 && columnOrdinal == columns.Count - 1)
+            {
+                log.Debug("error: tried moving the last column right");
                 throw new Exception("Last column can not be moved right!");
+            }
             if (direction == -1 && columnOrdinal == 0)
+            {
+                log.Debug("error: tried moving the first column left");
                 throw new Exception("First column can not be moved Left!");
+            }
            return SwapCol(columnOrdinal, columnOrdinal + direction);
             
         }
@@ -146,23 +156,35 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private void checkOrdinal(int columnOrdinal)
         {
             if ((columns.Count < columnOrdinal) || (columnOrdinal < 0))
-                throw new Exception("The columnOrdinal out of bounds!");
+            {
+                    log.Debug("error: illegal column ordinal");
+                    throw new Exception("The columnOrdinal out of bounds!");
+            }
         }
         public void RemoveColumn(int columnOrdinal)
         {
-            if (columns.Count == 2)
-                throw new Exception("Cannot have less than 2 columns!");
+            if (columns.Count <= 2)
+            {
+                    log.Debug("error: a board cannot have less than 2 columns");
+                    throw new Exception("Cannot have less than 2 columns!");
+            }
             checkOrdinal(columnOrdinal);
             if (columnOrdinal == 0)
             {
                 if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count && GetColumn(1).GetLimit() != -1)
+                {
+                    log.Debug("error: there is not enough free space in the next column for all the tasks from this one");
                     throw new Exception("The next column cannot hold all the tasks!");
+                }
                 GetColumn(1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
             }
             else
             {
-                if (GetColumn(columnOrdinal - 1).GetLimit() < GetColumn(columnOrdinal).GetTasks().Count + GetColumn(columnOrdinal - 1).GetTasks().Count && GetColumn(columnOrdinal-1).GetLimit()!=-1)
+                if (GetColumn(columnOrdinal - 1).GetLimit() < GetColumn(columnOrdinal).GetTasks().Count + GetColumn(columnOrdinal - 1).GetTasks().Count && GetColumn(columnOrdinal - 1).GetLimit() != -1)
+                {
+                    log.Debug("error: there is not enough free space in the previous column for all the tasks from this one");
                     throw new Exception("The previous column cannot hold all the tasks!");
+                }
                 GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
                 foreach (Task tasks in GetColumn(columnOrdinal).GetTasks())
                 {
