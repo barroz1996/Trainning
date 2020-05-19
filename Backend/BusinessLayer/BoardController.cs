@@ -17,14 +17,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             totalTasks = 0;
         }
 
-        public void Register(string email)  //Creates a new board in the dictionary.
+        public void Register(string email)  //Creates a new board.
         {
             var newBoard = new Board(email);
             Boards.Add(email, newBoard);
-            BoardCon.Insert(new DataAccessLayer.DTOs.BoardDTO(email));
+            BoardCon.Insert(new DataAccessLayer.DTOs.BoardDTO(email)); //inserts the new board to the database.
             foreach (Column col in GetBoard(email).GetColumns())
             {
-                ColumnCon.Insert(new DataAccessLayer.DTOs.ColumnDTO(col.GetColumnOrdinal(), col.GetColumnName(), col.GetLimit(), email));
+                ColumnCon.Insert(new DataAccessLayer.DTOs.ColumnDTO(col.GetColumnOrdinal(), col.GetColumnName(), col.GetLimit(), email)); //inserts all of the new columns of the new board to the database.
             }
         }
         public Board GetBoard(string email) //Returns the board of the current user.
@@ -56,11 +56,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             {
                 GetColumn(email, columnOrdinal).LimitColumnTasks(limit);
-                if (limit == -1)
+                if (limit == -1) //limit disabled.
                 {
                     log.Debug("User " + email + " disabled the limit for column " + GetColumn(email, columnOrdinal).GetColumnName());
                 }
-                else
+                else //new limit set.
                 {
                     log.Debug("User " + email + " set the limit for column " + GetColumn(email, columnOrdinal).GetColumnName() + " to " + limit + ".");
                 }
@@ -146,7 +146,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Task " + taskId + " was advanced from the " + GetColumn(email, columnOrdinal).GetColumnName() + " column to the " + GetColumn(email, columnOrdinal + 1).GetColumnName() + " column.");
                 TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal + 1);
             }
-            //the condition makes sure that the next column has not reached it's limit.
+            //the condition makes sure that the next column has free space for the current task.
             else
             {
                 log.Debug("Tried advancing task " + taskId + " to a full column.");
@@ -159,11 +159,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void LoadData()
         {
-            var dalboard = BoardCon.Select();
+            var dalboard = BoardCon.Select(); 
             foreach (var dal in dalboard)
             {
                 var colList = new List<Column>();
-                var dalCol = ColumnCon.SelectColumn(dal.Email);
+                var dalCol = ColumnCon.SelectColumn(dal.Email); 
                 foreach (var cdal in dalCol)
                 {
                     var newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName, cdal.Limit);
@@ -172,20 +172,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     {
                         newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationTime));
                     }
-                    if (colList.Count <= newCol.GetColumnOrdinal())
+                    if (colList.Count <= newCol.GetColumnOrdinal()) //if this is the last column so far, add it to the end of the list.
                     {
                         colList.Add(newCol);
                     }
-                    else
+                    else //if it is not, add it in a specific location based on it's ordinal.
                     {
                         colList.Insert(newCol.GetColumnOrdinal(), newCol);
                     }
-
-                    Console.WriteLine(newCol.GetTasks().Count);
                 }
                 Boards.Add(dal.Email, new Board(dal.Email, colList));
             }
-            foreach (var entry in Boards)
+            foreach (var entry in Boards) 
             {
                 totalTasks = totalTasks + entry.Value.TotalTask();
             }
@@ -194,7 +192,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             return GetBoard(email).AddColumn(columnOrdinal, Name);
         }
-        public Column MoveColumn(string email, int columnOrdinal, int direction)
+        public Column MoveColumn(string email, int columnOrdinal, int direction) //recieves direction (1 or -1 from service).
         {
             return GetBoard(email).MoveColumn(columnOrdinal, direction);
         }
@@ -202,7 +200,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             GetBoard(email).RemoveColumn(columnOrdinal);
         }
-        public void Delete()
+        public void Delete() //deletes all data from businesslayer based tables, clears the dictionary and sets the total tasks to 0.
         {
             BoardCon.DeleteTable();
             ColumnCon.DeleteTable();

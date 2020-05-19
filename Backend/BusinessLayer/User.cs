@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             if (this.password.Equals(password))  //verify if the password matches the user's.
             {
                 LoggedIn = true;
-                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, true);      //Saves in the json file that the user is logged in.
+                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, true);  //sets the logged in status of the user to true in the database.
                 log.Debug("User " + email + " has logged in.");
             }
             else
@@ -49,7 +49,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             if (GetLoggedIn()) //checks if the user is logged in, else throws an exception.
             {
                 LoggedIn = false;
-                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, false);
+                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, false); //sets the logged in status of the user to false in the database.
                 log.Debug("User " + email + " has logged out.");
             }
             else

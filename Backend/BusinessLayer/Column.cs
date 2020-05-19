@@ -38,9 +38,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("Illegal limit.");  //legal limit values are >=-1.
             }
             if ((limit < tasks.Count) && (limit > -1))
-            {
+            { //the column's limit can't be lower than the current number of tasks the column holds.
                 log.Debug("Tried setting a limit lower than the current number of tasks to the current column.");
-                throw new Exception("This column currently holds more tasks than the limit.");// if in the column right now more tasks then the new limit
+                throw new Exception("This column currently holds more tasks than the limit.");
             }
             this.limit = limit;
         }

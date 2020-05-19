@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             _tableName = "Columns";
         }
 
-        public bool Update(int ColumnOrdinal, string attributeName, string attributeValue, string Email)
+        public bool Update(int ColumnOrdinal, string attributeName, string attributeValue, string Email) //updates column with specific ordinal and name (attribute is string).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while updating this column.");
                 }
                 finally
                 {
@@ -50,7 +50,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue, string Email)
+        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue, string Email) //updates column with specific ordinal and name (attribute is int).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -71,7 +71,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while updating this column.");
                 }
                 finally
                 {
@@ -83,7 +83,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public List<DTOs.ColumnDTO> SelectColumn(string Email)
+        public List<DTOs.ColumnDTO> SelectColumn(string Email) //Returns all columns with a specific email.
         {
             var columnsList = new List<DTOs.ColumnDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -104,7 +104,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while getting all columns from this board.");
                 }
                 finally
                 {
@@ -115,7 +115,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return columnsList;
         }
-        public bool DeleteTable()
+        public bool DeleteTable() //Deletes all columns.
         {
             int res = -1;
 
@@ -133,7 +133,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while deleting all columns");
                 }
                 finally
                 {
@@ -145,7 +145,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Delete(string email, int columnOrdinal)
+        public bool Delete(string email, int columnOrdinal) //Deletes a specific column (keys are email and ordinal).
         {
             int res = -1;
 
@@ -167,7 +167,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while deleting this column.");
                 }
                 finally
                 {
@@ -178,7 +178,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool Insert(DTOs.ColumnDTO Columns)
+        public bool Insert(DTOs.ColumnDTO Columns) //Creates a new column.
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -206,7 +206,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while inserting a new column");
                 }
                 finally
                 {

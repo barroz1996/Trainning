@@ -24,7 +24,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
            this.UserController = new BusinessLayer.UserPackage.UserController();
            this.BoardController = new BusinessLayer.BoardPackage.BoardController();
-            LoadData();
+           LoadData();
         }
                
         /// <summary>        
@@ -35,10 +35,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                DataAccessLayer.Controllers.SQLCreator create = new DataAccessLayer.Controllers.SQLCreator();
+                DataAccessLayer.Controllers.SQLCreator create = new DataAccessLayer.Controllers.SQLCreator(); //creates new database if doesn't exist.
                 UserController.LoadData();
                 BoardController.LoadData();
-                log.Info("Data loaded successfully");
+                log.Debug("Data loaded successfully");
                 return new Response();
             }
             catch(Exception ex)
@@ -153,7 +153,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Board>("This user is not logged in");
             }
         }
@@ -181,7 +181,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
         }
@@ -210,7 +210,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Task>("This user is not logged in");
             }
         }
@@ -239,7 +239,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
 
@@ -269,7 +269,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
         }
@@ -298,7 +298,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
         }
@@ -326,7 +326,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
         }
@@ -359,7 +359,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
             }
         }
@@ -393,7 +393,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
             }
         }
@@ -423,7 +423,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Info("This user is not logged in");
+                log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
         }
@@ -443,10 +443,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 try { 
                 BoardController.AddColumn(email, columnOrdinal, Name);
                     var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
-                    {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
-                    }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
                     log.Debug("user " + email + " added " + Name + " column to his board as column number "+columnOrdinal);
                     return new Response<Column>(column);

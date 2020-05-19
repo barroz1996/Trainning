@@ -18,7 +18,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             _tableName = "Tasks";
         }
 
-        public bool Update(int ID, string attributeName, string attributeValue)
+        public bool Update(int ID, string attributeName, string attributeValue) //updates a task with a specific ID (attribute is string).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while updating this task.");
                 }
                 finally
                 {
@@ -50,7 +50,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int ID, string attributeName, int attributeValue)
+        public bool Update(int ID, string attributeName, int attributeValue) //updates a task with a specific ID (attribute is int).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -70,7 +70,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while updating this task.");
                 }
                 finally
                 {
@@ -82,7 +82,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool Update(int id, string attributeName, DateTime attributeValue)
+        public bool Update(int id, string attributeName, DateTime attributeValue) //updates a task with a specific ID (attribute is DateTime).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -101,7 +101,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while updating this task.");
                 }
                 finally
                 {
@@ -113,7 +113,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public List<DTOs.TaskDTO> SelectTasks(string email, int ColumnOridnal)
+        public List<DTOs.TaskDTO> SelectTasks(string email, int ColumnOridnal) //returns all tasks from the same column (same ordinal and email).
         {
             var taskList = new List<DTOs.TaskDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -135,7 +135,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while getting all tasks from this board's column");
                 }
                 finally
                 {
@@ -147,7 +147,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return taskList;
         }
 
-        public bool Delete(DTOs.TaskDTO DTOObj)
+        public bool Delete(DTOs.TaskDTO DTOObj) //Deletes a specific task.
         {
             int res = -1;
 
@@ -166,7 +166,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while deleting this task");
                 }
                 finally
                 {
@@ -177,7 +177,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool DeleteTable()
+        public bool DeleteTable() //Deletes all tasks from the database.
         {
             int res = -1;
 
@@ -195,7 +195,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while deleting all tasks.");
                 }
                 finally
                 {
@@ -206,7 +206,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool Insert(DTOs.TaskDTO Tasks)
+        public bool Insert(DTOs.TaskDTO Tasks) //Creates a new task in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -238,7 +238,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while creating this task.");
                 }
                 finally
                 {

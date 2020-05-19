@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             _tableName = "Boards";
         }
 
-        public List<DTOs.BoardDTO> Select()
+        public List<DTOs.BoardDTO> Select() //Returns all boards.
         {
             var boardsList = new List<DTOs.BoardDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while getting all boards");
                 }
                 finally
                 {
@@ -52,7 +52,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return boardsList;
         }
 
-        public bool Delete(DTOs.BoardDTO DTOObj)
+        public bool Delete(DTOs.BoardDTO DTOObj) //Deletes a specific board.
         {
             int res = -1;
 
@@ -72,7 +72,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while deleting this board");
                 }
                 finally
                 {
@@ -83,7 +83,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool DeleteTable()
+        public bool DeleteTable() //Deletes all boards.
         {
             int res = -1;
 
@@ -101,7 +101,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while trying to delete all boards.");
                 }
                 finally
                 {
@@ -112,7 +112,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool Insert(DTOs.BoardDTO Board)
+        public bool Insert(DTOs.BoardDTO Board) //creates a new board in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -134,7 +134,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while inserting a new board");
                 }
                 finally
                 {

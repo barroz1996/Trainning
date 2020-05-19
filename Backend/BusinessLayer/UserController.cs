@@ -21,10 +21,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void LoadData() //Loads all the data while starting the program.
         {
             var user = new DataAccessLayer.Controllers.UserControl();
-            var dalUser = user.Select(); //Gets a list of users
+            var dalUser = user.Select(); //Gets all users from the database.
             foreach (var dal in dalUser)
             {
-                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all the users to the users dictionary.
+                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all users to the users dictionary.
             }
             foreach (var entry in Users) //Checks if any of the users is logged in.
             {
@@ -61,7 +61,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 if (EmailVerify(email))
                 {
                     Users.Add(email, new User(email, password, nickname));
-                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false));
+                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false)); //creates the new user in the database.
                     log.Debug("User " + email + " was created.");
                 }
                 else
@@ -82,7 +82,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public void Login(string email, string password) //Tries logging in a user.
         {
-            if (!IsLogged(email))
+            if (!IsLogged(email)) //checks if this user is already logged in.
             {
                 if (HasLogged == false) //User can only log in if everybody else is logged out.
                 {
@@ -192,7 +192,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 }
             }
         }
-        public void Delete()
+        public void Delete() //deletes all the users from the database and dictionary, sets haslogged to false.
         {
             newUser.DeleteTable();
             Users.Clear();

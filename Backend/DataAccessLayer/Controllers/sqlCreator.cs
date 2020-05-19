@@ -9,7 +9,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string _connectionString;
         private readonly string path;
-        public SQLCreator()
+        public SQLCreator() //constructor calls create method.
         {
             path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
             _connectionString = $"Data Source={path}; Version=3;";
@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         }
         public void Create()
         {
-            if (!File.Exists(path))
+            if (!File.Exists(path)) //if the file does not exist, it will create a new db file with all the tables.
             {
                 SQLiteConnection.CreateFile("database.db");
 
@@ -30,7 +30,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     var TaskTable = "CREATE TABLE \"Tasks\"(\"ID\"    INTEGER NOT NULL UNIQUE, \"Title\" TEXT NOT NULL, \"Description\"   TEXT,\"DueDate\"   TEXT NOT NULL, \"CreationDate\"  TEXT NOT NULL, \"Email\" TEXT NOT NULL, \"ColumnOrdinal\" INTEGER NOT NULL, PRIMARY KEY(\"ID\"))";
                     var command = new SQLiteCommand(null, connection);
 
-                    try
+                    try //Creates all tables.
                     {
                         connection.Open();
                         command.CommandText = UserTable;

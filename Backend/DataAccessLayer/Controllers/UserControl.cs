@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             _tableName = "Users";
         }
 
-        public bool Update(string Email, string attributeName, string attributeValue)
+        public bool Update(string Email, string attributeName, string attributeValue) //updates user with specific email (attribute is string).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -37,7 +37,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while updating this user.");
                 }
                 finally
                 {
@@ -49,7 +49,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(string Email, string attributeName, bool attributeValue)//we need to check!
+        public bool Update(string Email, string attributeName, bool attributeValue) //updates user with specific email (attribute is boolean).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -69,7 +69,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while deleting this user");
                 }
                 finally
                 {
@@ -81,7 +81,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool DeleteTable()
+        public bool DeleteTable() //Deletes all users from the database.
         {
             int res = -1;
 
@@ -99,7 +99,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while deleting all users");
                 }
                 finally
                 {
@@ -111,7 +111,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public List<DTOs.UserDTO> Select()
+        public List<DTOs.UserDTO> Select() //Returns all users.
         {
             var userList = new List<DTOs.UserDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -132,7 +132,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while getting all user.");
                 }
                 finally
                 {
@@ -145,7 +145,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return userList;
         }
 
-        public bool Delete(DTOs.UserDTO DTOObj)
+        public bool Delete(DTOs.UserDTO DTOObj) //Deletes a specific user (based on email)
         {
             int res = -1;
 
@@ -164,7 +164,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while updating this user.");
                 }
                 finally
                 {
@@ -175,7 +175,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool Insert(DTOs.UserDTO User)
+        public bool Insert(DTOs.UserDTO User) //creates a new User in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -197,7 +197,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.Debug(ex.Message);
+                    log.Debug("an error occured while creating this user.");
                 }
                 finally
                 {
