@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Column 
+    internal class Column
     {
         private int columnOrdinal;
-        private string columnName;
+        private readonly string columnName;
         private int limit;
         private List<Task> tasks;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -18,8 +15,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
-            this.limit = -1;
-            this.tasks = new List<Task>();
+            limit = -1;
+            tasks = new List<Task>();
 
         }
         public Column(int columnOrdinal, string columnName, int limit)
@@ -27,12 +24,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
             this.limit = limit;
-            this.tasks = new List<Task>();
+            tasks = new List<Task>();
         }
 
-        public int GetColumnOrdinal() { return this.columnOrdinal; }
-        public string GetColumnName() { return this.columnName; }
-        public int GetLimit() { return this.limit; }
+        public int GetColumnOrdinal() { return columnOrdinal; }
+        public string GetColumnName() { return columnName; }
+        public int GetLimit() { return limit; }
         public void LimitColumnTasks(int limit) //Sets a limit to the current column.
         {
             if (limit < -1)
@@ -47,17 +44,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             this.limit = limit;
         }
-        public List<Task> GetTasks() { return this.tasks; } //Gets the list of tasks in the current column.
+        public List<Task> GetTasks() { return tasks; } //Gets the list of tasks in the current column.
 
 
         public void AddTask(Task newTask)   //Adds task to the current column.
         {
             if (tasks.Count < limit || limit == -1) //Checks if there's room for another task in the current column.
+            {
                 tasks.Add(newTask);
+            }
             else
             {
                 log.Debug("Tried adding a task to a full column.");
-                throw new Exception("The " + this.columnName + " column is aleady full.");
+                throw new Exception("The " + columnName + " column is aleady full.");
             }
         }
 
@@ -73,7 +72,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             foreach (var task in tasks)
             {
                 if (task.GetTaskID() == taskId)
+                {
                     return task;
+                }
             }
             log.Debug("Task " + taskId + " does not exist in the current column.");
             throw new Exception("The task doesn't exist in this column.");

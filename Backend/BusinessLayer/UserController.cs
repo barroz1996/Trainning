@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Text.Json;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
-
-    class UserController
+    internal class UserController
     {
         private DataAccessLayer.Controllers.UserControl newUser = new DataAccessLayer.Controllers.UserControl();
         private bool HasLogged;
@@ -19,8 +14,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public UserController()
         {
-            this.HasLogged = false;
-            this.Users = new Dictionary<string, User>();
+            HasLogged = false;
+            Users = new Dictionary<string, User>();
 
         }
         public void LoadData() //Loads all the data while starting the program.
@@ -34,13 +29,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             foreach (var entry in Users) //Checks if any of the users is logged in.
             {
                 if (entry.Value.GetLoggedIn())
+                {
                     HasLogged = true;
+                }
             }
         }
         public User GetUser(string email) //Gets a specific user from the dictionary.
         {
-            if (this.Users.ContainsKey(email))
+            if (Users.ContainsKey(email))
+            {
                 return Users[email];
+            }
             else
             {
                 log.Debug("Tried getting unregistered user " + email);
@@ -62,7 +61,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 if (EmailVerify(email))
                 {
                     Users.Add(email, new User(email, password, nickname));
-                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false));        
+                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false));
                     log.Debug("User " + email + " was created.");
                 }
                 else
@@ -84,6 +83,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void Login(string email, string password) //Tries logging in a user.
         {
             if (!IsLogged(email))
+            {
                 if (HasLogged == false) //User can only log in if everybody else is logged out.
                 {
                     GetUser(email).Login(password); //Throws exception if password doesn't match.
@@ -94,6 +94,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     log.Debug("Error: User " + email + " tried logging in while another user was already logged in.");
                     throw new Exception("Someone is already logged in.");
                 }
+            }
             else
             {
                 log.Debug("User " + email + " already is logged in");
@@ -109,7 +110,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public bool EmailVerify(string email) //Makes sure that the input email is valid.
         {
             if (string.IsNullOrWhiteSpace(email))
+            {
                 return false;
+            }
+
             try
             {
                 // Normalize the domain

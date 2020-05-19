@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
- 
+
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    class TaskControl
+    internal class TaskControl
     {
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string _connectionString;
         private readonly string _tableName;
         public TaskControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            this._connectionString = $"Data Source={path}; Version=3;";
-            this._tableName = "Tasks";
+            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            _connectionString = $"Data Source={path}; Version=3;";
+            _tableName = "Tasks";
         }
 
         public bool Update(int ID, string attributeName, string attributeValue)
@@ -26,7 +23,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                var command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ID=@ID"
@@ -58,7 +55,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                var command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ID=@ID"
@@ -90,7 +87,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                var command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
@@ -118,10 +115,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
         public List<DTOs.TaskDTO> SelectTasks(string email, int ColumnOridnal)
         {
-            List<DTOs.TaskDTO> taskList = new List<DTOs.TaskDTO>();
+            var taskList = new List<DTOs.TaskDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(connection);
+                var command = new SQLiteCommand(connection);
                 command.CommandText = $"SELECT * FROM {_tableName} WHERE [{DTOs.TaskDTO.TasksEmailColumnEmail}]=@Email AND [{DTOs.TaskDTO.TasksColumnIdColumnColumnId}]=@ColumnOridnal";
                 command.Parameters.Add(new SQLiteParameter(@"Email", email));
                 command.Parameters.Add(new SQLiteParameter(@"ColumnOridnal", ColumnOridnal));
@@ -133,7 +130,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                            taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.IsDBNull(2) ? null:dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
+                        taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.IsDBNull(2) ? null : dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
                     }
                 }
                 catch (Exception ex)
@@ -142,10 +139,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    /*if (dataReader != null)
-                    {
-                        dataReader.Close();
-                    }*/
                     command.Dispose();
                     connection.Close();
                 }
@@ -217,7 +210,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(connection);
+                var command = new SQLiteCommand(connection);
                 int res = -1;
                 try
                 {
@@ -225,13 +218,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.TaskDTO.TasksIdColumnId} ,{DTOs.TaskDTO.TasksTitleColumnTitle},{DTOs.TaskDTO.TasksDescriptionColumnDescription},{DTOs.TaskDTO.TasksDueDateColumnDueDate},{DTOs.TaskDTO.TasksCreationDateColumnCreationDate},{DTOs.TaskDTO.TasksEmailColumnEmail},{DTOs.TaskDTO.TasksColumnIdColumnColumnId}) " +
                         $"VALUES (@idVal,@titleVal,@descriptionVal,@dueDateTimeVal,@creationTimeVal,@emailVal,@columnOridnalVal);";
 
-                    SQLiteParameter idParam = new SQLiteParameter(@"idVal", Tasks.TaskId);
-                    SQLiteParameter titleParam = new SQLiteParameter(@"titleVal", Tasks.Title);
-                    SQLiteParameter descriptionParam = new SQLiteParameter(@"descriptionVal", Tasks.Description);
-                    SQLiteParameter dueDateParam = new SQLiteParameter(@"dueDateTimeVal", Tasks.DueDate);
-                    SQLiteParameter creationTimeParam = new SQLiteParameter(@"creationTimeVal", Tasks.CreationTime);
-                    SQLiteParameter emailParam = new SQLiteParameter(@"emailVal", Tasks.Email);
-                    SQLiteParameter columnOridnalParam = new SQLiteParameter(@"columnOridnalVal", Tasks.ColumnOridnal);
+                    var idParam = new SQLiteParameter(@"idVal", Tasks.TaskId);
+                    var titleParam = new SQLiteParameter(@"titleVal", Tasks.Title);
+                    var descriptionParam = new SQLiteParameter(@"descriptionVal", Tasks.Description);
+                    var dueDateParam = new SQLiteParameter(@"dueDateTimeVal", Tasks.DueDate);
+                    var creationTimeParam = new SQLiteParameter(@"creationTimeVal", Tasks.CreationTime);
+                    var emailParam = new SQLiteParameter(@"emailVal", Tasks.Email);
+                    var columnOridnalParam = new SQLiteParameter(@"columnOridnalVal", Tasks.ColumnOridnal);
 
                     command.Parameters.Add(idParam);
                     command.Parameters.Add(titleParam);

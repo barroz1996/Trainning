@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Board
+    internal class Board
     {
         private DataAccessLayer.Controllers.ColumnControl ColumnCon = new DataAccessLayer.Controllers.ColumnControl();
         private DataAccessLayer.Controllers.TaskControl TaskCon = new DataAccessLayer.Controllers.TaskControl();
-        private string email;
+        private readonly string email;
         private List<Column> columns;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public Board(string email) //ctor
         {
             this.email = email;
-            Column backlog = new Column(0, "backlog");
-            Column in_progress = new Column(1, "in progress");
-            Column done = new Column(2, "done");
-            this.columns = new List<Column>();
+            var backlog = new Column(0, "backlog");
+            var in_progress = new Column(1, "in progress");
+            var done = new Column(2, "done");
+            columns = new List<Column>();
             columns.Add(backlog);
             columns.Add(in_progress);
             columns.Add(done);
@@ -34,16 +31,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public List<Column> GetColumns() { return columns; }
         public Column GetColumn(int columnOrdinal) // we get the key of the column and we return the column with this key
         {
-            /* foreach (var column in columns)
-             {
-                 if (column.GetColumnOrdinal() == columnOrdinal)  // we check the columnOrdinal
-                     return column;
-             }*/
             if (columnOrdinal >= 0 && columnOrdinal < columns.Count)
+            {
                 return columns[columnOrdinal];
+            }
+
             log.Debug("Tried getting an illegal column ordinal.");
             throw new Exception("Column ordinal is illegal.");
-            
+
         }
 
         public Column GetColumn(string columnName) // we get the name of the column and we return the column with this name
@@ -51,7 +46,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             foreach (var column in columns)
             {
                 if (column.GetColumnName().Equals(columnName))  // we check the columnName
+                {
                     return column;
+                }
             }
             log.Debug("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
@@ -89,39 +86,47 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             int sum = 0;
             foreach (var col in columns)
+            {
                 sum = sum + col.GetTasks().Count;
+            }
+
             return sum;
         }
         public Column AddColumn(int columnOrdinal, string Name)
         {
-            if (string.IsNullOrWhiteSpace(Name) || Name.Length > 15) {
+            if (string.IsNullOrWhiteSpace(Name) || Name.Length > 15)
+            {
                 log.Debug("Name out of bounds!");
                 throw new Exception("Name out of bounds!");
             }
             foreach (Column col in columns)
             {
-                if (col.GetColumnName().Equals(Name)) {
+                if (col.GetColumnName().Equals(Name))
+                {
                     log.Debug("This column name already exists");
                     throw new Exception("This column name already exists");
                 }
             }
-            if(columnOrdinal!=columns.Count)
-               checkOrdinal(columnOrdinal);
-            Column newCol = new Column(columnOrdinal, Name);
+            if (columnOrdinal != columns.Count)
+            {
+                checkOrdinal(columnOrdinal);
+            }
+
+            var newCol = new Column(columnOrdinal, Name);
             columns.Insert(columnOrdinal, newCol);
-            for(int i = columns.Count-1; i > columnOrdinal; i = i - 1) // we update the columnOrdinal we moved
+            for (int i = columns.Count - 1; i > columnOrdinal; i = i - 1) // we update the columnOrdinal we moved
             {
                 GetColumn(i).SetOrdinal(i);
-                ColumnCon.Update(i-1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i, email);
+                ColumnCon.Update(i - 1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i, email);
                 foreach (Task tasks in GetColumn(i).GetTasks())
                 {
-                    TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, i );
+                    TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, i);
                 }
             }
             ColumnCon.Insert(new DataAccessLayer.DTOs.ColumnDTO(newCol.GetColumnOrdinal(), newCol.GetColumnName(), newCol.GetLimit(), email));
             return newCol;
         }
-        public Column MoveColumn(int columnOrdinal,int direction)
+        public Column MoveColumn(int columnOrdinal, int direction)
         {
             checkOrdinal(columnOrdinal);
             if (direction == 1 && columnOrdinal == columns.Count - 1)
@@ -134,12 +139,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("error: tried moving the first column left");
                 throw new Exception("First column can not be moved Left!");
             }
-           return SwapCol(columnOrdinal, columnOrdinal + direction);
-            
+            return SwapCol(columnOrdinal, columnOrdinal + direction);
+
         }
-        private Column SwapCol(int columnOrdinal1,int columnOrdinal2)
+        private Column SwapCol(int columnOrdinal1, int columnOrdinal2)
         {
-            Column sCol = GetColumn(columnOrdinal1);
+            var sCol = GetColumn(columnOrdinal1);
             columns[columnOrdinal1] = GetColumn(columnOrdinal2);
             columns[columnOrdinal2] = sCol;
             GetColumn(columnOrdinal1).SetOrdinal(columnOrdinal2);
@@ -161,16 +166,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             if ((columns.Count < columnOrdinal) || (columnOrdinal < 0))
             {
-                    log.Debug("error: illegal column ordinal");
-                    throw new Exception("The columnOrdinal out of bounds!");
+                log.Debug("error: illegal column ordinal");
+                throw new Exception("The columnOrdinal out of bounds!");
             }
         }
         public void RemoveColumn(int columnOrdinal)
         {
             if (columns.Count <= 2)
             {
-                    log.Debug("error: a board cannot have less than 2 columns");
-                    throw new Exception("Cannot have less than 2 columns!");
+                log.Debug("error: a board cannot have less than 2 columns");
+                throw new Exception("Cannot have less than 2 columns!");
             }
             checkOrdinal(columnOrdinal);
             if (columnOrdinal == 0)
@@ -190,7 +195,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("The previous column cannot hold all the tasks!");
                 }
                 GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
-                foreach (Task tasks in GetColumn(columnOrdinal).GetTasks())
+                foreach (var tasks in GetColumn(columnOrdinal).GetTasks())
                 {
                     TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal - 1);
                 }
@@ -200,8 +205,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             for (int i = columnOrdinal; i < columns.Count; i = i + 1) // we update the columnOrdinal we moved
             {
                 GetColumn(i).SetOrdinal(i);
-                ColumnCon.Update(i+1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i , email);
-                foreach(Task tasks in GetColumn(i).GetTasks())
+                ColumnCon.Update(i + 1, DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i, email);
+                foreach (var tasks in GetColumn(i).GetTasks())
                 {
                     TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, i);
                 }
