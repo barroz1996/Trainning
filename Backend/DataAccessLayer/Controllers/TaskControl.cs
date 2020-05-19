@@ -142,10 +142,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    /*if (dataReader != null)
                     {
                         dataReader.Close();
-                    }
+                    }*/
                     command.Dispose();
                     connection.Close();
                 }

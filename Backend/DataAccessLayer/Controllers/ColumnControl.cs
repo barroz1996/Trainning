@@ -86,14 +86,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public List<DTOs.ColumnDTO> SelectColumn(string email)
+        public List<DTOs.ColumnDTO> SelectColumn(string Email)
         {
             List<DTOs.ColumnDTO> columnsList = new List<DTOs.ColumnDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(connection);
                 command.CommandText = $"SELECT * FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
-                command.Parameters.Add(new SQLiteParameter(@"Email", email));
+                command.Parameters.Add(new SQLiteParameter(@"Email", Email));
                 SQLiteDataReader dataReader = null;
                 try
                 {
@@ -102,7 +102,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        columnsList.Add(new DTOs.ColumnDTO(dataReader.GetInt32(0),dataReader.GetString(1),dataReader.GetInt32(2),email));
+                        columnsList.Add(new DTOs.ColumnDTO(dataReader.GetInt32(0),dataReader.GetString(1),dataReader.GetInt32(2),Email));
                     }
                 }
                 catch (Exception ex)
@@ -111,10 +111,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    if (dataReader != null)
+                    /*if (dataReader != null)
                     {
                         dataReader.Close();
-                    }
+                    }*/
                     command.Dispose();
                     connection.Close();
                 }

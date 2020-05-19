@@ -35,7 +35,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 DataAccessLayer.Controllers.sqlCreator create = new DataAccessLayer.Controllers.sqlCreator();
-                //create.Create();
                 UserController.LoadData();
                 BoardController.LoadData();
                 log.Info("Data loaded successfully");
@@ -55,8 +54,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 UserController.Delete();
                 BoardController.Delete();
-                //DataAccessLayer.Controllers.sqlCreator reCreate = new DataAccessLayer.Controllers.sqlCreator();
-                //reCreate.ReCreate();
                 log.Debug("All persisted data deleted");
                 return new Response();
             }
@@ -154,7 +151,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
+            {
+                log.Info("This user is not logged in");
                 return new Response<Board>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -179,7 +179,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-                return new Response<Exception>("This user is not logged in");
+            {
+                log.Info("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -205,7 +208,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-                return new Response<Task>("This User is not logged in");
+            {
+                log.Info("This user is not logged in");
+                return new Response<Task>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -231,7 +237,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-                return new Response<Exception>("This user is not logged in");
+            {
+                log.Info("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
 
         }
 
@@ -258,7 +267,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-                return new Response<Exception>("This user is not logged in");
+            {
+                log.Info("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -284,7 +296,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-                return new Response<Exception>("This user is not logged in");
+            {
+                log.Info("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -309,7 +324,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-                return new Response<Exception>("This user is not logged in");
+            {
+                log.Info("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
         }
 
 
@@ -339,7 +357,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
+            {
+                log.Info("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -362,7 +383,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
-
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -371,8 +391,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-
+            {
+                log.Info("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -390,6 +412,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 try
                 {
                     BoardController.RemoveColumn(email, columnOrdinal);
+                    log.Info("user " + email + " deleted column number " + columnOrdinal + " from his board.");
                     return new Response();
                 }
                 catch (Exception ex)
@@ -398,8 +421,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-
-                return new Response<Exception>("This user is not logged in");
+            {
+                log.Info("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
         }
 
         /// <summary>
@@ -422,16 +447,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
+                    log.Debug("user " + email + " added " + Name + " column to his board as column number "+columnOrdinal);
                     return new Response<Column>(column);
                 }
-                    catch (Exception ex)
+                catch (Exception ex)
                 {
                     return new Response<Column>(ex.Message);
                 }
             }
             else
-
+            {
+                log.Debug("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
+            }
 
         }
 
@@ -455,6 +483,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal+1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal+1).GetLimit());
+                    log.Debug("user " + email + " moved his " + column.Name + " column right.");
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -463,8 +492,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-
+            {
+                log.Debug("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
+            }
 
         }
 
@@ -488,6 +519,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal-1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal-1).GetLimit());
+                    log.Debug("user " + email + " moved his " + column.Name + " column left.");
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -496,9 +528,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
             }
             else
-
+            {
+                log.Debug("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
-
+            }
         }
 
     }
