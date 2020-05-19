@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace IntroSE.Kanban.Backend.ServiceLayer
+﻿namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public struct User
     {
@@ -9,8 +6,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public readonly string Nickname;
         internal User(string email, string nickname)
         {
-            this.Email = email;
-            this.Nickname = nickname;
+            Email = email;
+            Nickname = nickname;
         }
 
     }

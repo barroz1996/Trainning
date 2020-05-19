@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Data.SQLite;
+using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    class sqlCreator
+    internal class SQLCreator
     {
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private string _connectionString;
-        private string path;
-        public sqlCreator()
+        private readonly string _connectionString;
+        private readonly string path;
+        public SQLCreator()
         {
-            this.path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            this._connectionString = $"Data Source={path}; Version=3;";
+            path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            _connectionString = $"Data Source={path}; Version=3;";
             Create();
         }
         public void Create()
@@ -28,14 +24,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 using (var connection = new SQLiteConnection(_connectionString))
                 {
 
-                    string UserTable = "CREATE TABLE \"Users\"( \"Email\" TEXT NOT NULL UNIQUE, \"Nickname\"  TEXT NOT NULL, \"Password\"  TEXT NOT NULL, \"LoggedIn\"  INTEGER NOT NULL,PRIMARY KEY (\"Email\"))";
-                    string BoardTable = "CREATE TABLE \"Boards\" (\"Email\" TEXT NOT NULL UNIQUE, PRIMARY KEY(\"Email\"))";
-                    string ColumnTable = "CREATE TABLE \"Columns\" (\"ColumnOrdinal\" INTEGER NOT NULL,\"ColumnName\"    TEXT NOT NULL,\"ColumnLimit\" INTEGER NOT NULL,\"Email\" TEXT NOT NULL,PRIMARY KEY(\"ColumnOrdinal\", \"Email\"))";
-                    string TaskTable = "CREATE TABLE \"Tasks\"(\"ID\"    INTEGER NOT NULL UNIQUE, \"Title\" TEXT NOT NULL, \"Description\"   TEXT,\"DueDate\"   TEXT NOT NULL, \"CreationDate\"  TEXT NOT NULL, \"Email\" TEXT NOT NULL, \"ColumnOrdinal\" INTEGER NOT NULL, PRIMARY KEY(\"ID\"))";
-                    SQLiteCommand command = new SQLiteCommand(null, connection);
+                    var UserTable = "CREATE TABLE \"Users\"( \"Email\" TEXT NOT NULL UNIQUE, \"Nickname\"  TEXT NOT NULL, \"Password\"  TEXT NOT NULL, \"LoggedIn\"  INTEGER NOT NULL,PRIMARY KEY (\"Email\"))";
+                    var BoardTable = "CREATE TABLE \"Boards\" (\"Email\" TEXT NOT NULL UNIQUE, PRIMARY KEY(\"Email\"))";
+                    var ColumnTable = "CREATE TABLE \"Columns\" (\"ColumnOrdinal\" INTEGER NOT NULL,\"ColumnName\"    TEXT NOT NULL,\"ColumnLimit\" INTEGER NOT NULL,\"Email\" TEXT NOT NULL,PRIMARY KEY(\"ColumnOrdinal\", \"Email\"))";
+                    var TaskTable = "CREATE TABLE \"Tasks\"(\"ID\"    INTEGER NOT NULL UNIQUE, \"Title\" TEXT NOT NULL, \"Description\"   TEXT,\"DueDate\"   TEXT NOT NULL, \"CreationDate\"  TEXT NOT NULL, \"Email\" TEXT NOT NULL, \"ColumnOrdinal\" INTEGER NOT NULL, PRIMARY KEY(\"ID\"))";
+                    var command = new SQLiteCommand(null, connection);
 
                     try
-                    { 
+                    {
                         connection.Open();
                         command.CommandText = UserTable;
                         command.ExecuteNonQuery();
@@ -57,45 +53,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                         connection.Close();
                     }
                 }
-            
+
             }
-        
-        }
-        public void ReCreate()
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
 
-                string UserTable = "CREATE TABLE \"Users\"( \"Email\" TEXT NOT NULL UNIQUE, \"Nickname\"  TEXT NOT NULL, \"Password\"  TEXT NOT NULL, \"LoggedIn\"  INTEGER NOT NULL,PRIMARY KEY (\"Email\"))";
-                string BoardTable = "CREATE TABLE \"Boards\" (\"Email\" TEXT NOT NULL UNIQUE, PRIMARY KEY(\"Email\"))";
-                string ColumnTable = "CREATE TABLE \"Columns\" (\"ColumnOrdinal\" INTEGER NOT NULL,\"ColumnName\"    TEXT NOT NULL,\"ColumnLimit\" INTEGER NOT NULL,\"Email\" TEXT NOT NULL,PRIMARY KEY(\"ColumnOrdinal\", \"Email\"))";
-                string TaskTable = "CREATE TABLE \"Tasks\"(\"ID\"    INTEGER NOT NULL UNIQUE, \"Title\" TEXT NOT NULL, \"Description\"   TEXT,\"DueDate\"   TEXT NOT NULL, \"CreationDate\"  TEXT NOT NULL, \"Email\" TEXT NOT NULL, \"ColumnOrdinal\" INTEGER NOT NULL, PRIMARY KEY(\"ID\"))";
-                SQLiteCommand command = new SQLiteCommand(null, connection);
-
-                try
-                {
-                    connection.Open();
-                    command.CommandText = UserTable;
-                    command.ExecuteNonQuery();
-                    command.CommandText = BoardTable;
-                    command.ExecuteNonQuery();
-                    command.CommandText = ColumnTable;
-                    command.ExecuteNonQuery();
-                    command.CommandText = TaskTable;
-                    command.ExecuteNonQuery();
-
-                }
-                catch (Exception ex)
-                {
-                    log.Debug(ex.Message);
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-            }
-            
         }
     }
 }

@@ -1,31 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    class ColumnControl
+    internal class ColumnControl
     {
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string _connectionString;
         private readonly string _tableName;
         public ColumnControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            this._connectionString = $"Data Source={path}; Version=3;";
-            this._tableName = "Columns";
+            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            _connectionString = $"Data Source={path}; Version=3;";
+            _tableName = "Columns";
         }
 
-        public bool Update(int ColumnOrdinal, string attributeName, string attributeValue,string Email)
+        public bool Update(int ColumnOrdinal, string attributeName, string attributeValue, string Email)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                var command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@attributeName WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
@@ -53,12 +50,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue,string Email)
+        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue, string Email)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                var command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@attributeName WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
@@ -88,10 +85,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
         public List<DTOs.ColumnDTO> SelectColumn(string Email)
         {
-            List<DTOs.ColumnDTO> columnsList = new List<DTOs.ColumnDTO>();
+            var columnsList = new List<DTOs.ColumnDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(connection);
+                var command = new SQLiteCommand(connection);
                 command.CommandText = $"SELECT * FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email";
                 command.Parameters.Add(new SQLiteParameter(@"Email", Email));
                 SQLiteDataReader dataReader = null;
@@ -102,7 +99,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        columnsList.Add(new DTOs.ColumnDTO(dataReader.GetInt32(0),dataReader.GetString(1),dataReader.GetInt32(2),Email));
+                        columnsList.Add(new DTOs.ColumnDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.GetInt32(2), Email));
                     }
                 }
                 catch (Exception ex)
@@ -111,14 +108,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    /*if (dataReader != null)
-                    {
-                        dataReader.Close();
-                    }*/
                     command.Dispose();
                     connection.Close();
                 }
-                
+
             }
             return columnsList;
         }
@@ -152,7 +145,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Delete(string email,int columnOrdinal)
+        public bool Delete(string email, int columnOrdinal)
         {
             int res = -1;
 
@@ -163,8 +156,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     Connection = connection,
                     CommandText = $"DELETE FROM {_tableName} WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
                 };
-                SQLiteParameter emailParam = new SQLiteParameter(@"Email", email);
-                SQLiteParameter colOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", columnOrdinal);
+                var emailParam = new SQLiteParameter(@"Email", email);
+                var colOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", columnOrdinal);
                 command.Parameters.Add(emailParam);
                 command.Parameters.Add(colOrdinalParam);
                 try
@@ -197,17 +190,17 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal} ,{DTOs.ColumnDTO.ColumnNameColumnName},{DTOs.ColumnDTO.ColumnLimitColumnLimit},{DTOs.ColumnDTO.ColumnEmailColumnEmail}) " +
                         $"VALUES (@columnOridnalVal,@columnNameVal,@limitVal,@email);";
 
-                    SQLiteParameter idParam = new SQLiteParameter(@"columnOridnalVal", Columns.ColumnOrdinal);
-                    SQLiteParameter NameParam = new SQLiteParameter(@"columnNameVal", Columns.ColumnName);
-                    SQLiteParameter limitParam = new SQLiteParameter(@"limitVal", Columns.Limit);
-                    SQLiteParameter emailParam = new SQLiteParameter(@"email", Columns.Email);
-                    
+                    var idParam = new SQLiteParameter(@"columnOridnalVal", Columns.ColumnOrdinal);
+                    var NameParam = new SQLiteParameter(@"columnNameVal", Columns.ColumnName);
+                    var limitParam = new SQLiteParameter(@"limitVal", Columns.Limit);
+                    var emailParam = new SQLiteParameter(@"email", Columns.Email);
+
 
                     command.Parameters.Add(idParam);
                     command.Parameters.Add(NameParam);
                     command.Parameters.Add(limitParam);
                     command.Parameters.Add(emailParam);
-                   
+
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }

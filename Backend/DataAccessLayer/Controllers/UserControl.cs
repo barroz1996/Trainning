@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    class UserControl
+    internal class UserControl
     {
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly string _connectionString;
         private readonly string _tableName;
         public UserControl()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            this._connectionString = $"Data Source={path}; Version=3;";
-            this._tableName = "Users";
+            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            _connectionString = $"Data Source={path}; Version=3;";
+            _tableName = "Users";
         }
 
         public bool Update(string Email, string attributeName, string attributeValue)
@@ -25,7 +22,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                var command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE Email=@Email "
@@ -57,7 +54,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                var command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"UPDATE {_tableName}  SET [{attributeName}]=@{attributeName} WHERE Email=@Email "
@@ -68,7 +65,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Parameters.Add(new SQLiteParameter(@"Email", Email));
                     command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     command.Prepare();
-                    res=command.ExecuteNonQuery();
+                    res = command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
@@ -116,10 +113,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
         public List<DTOs.UserDTO> Select()
         {
-            List<DTOs.UserDTO> userList = new List<DTOs.UserDTO>();
+            var userList = new List<DTOs.UserDTO>();
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(connection);
+                var command = new SQLiteCommand(connection);
                 command.CommandText = $"SELECT * FROM {_tableName}";
                 SQLiteDataReader dataReader = null;
                 try
@@ -129,7 +126,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0),dataReader.GetString(1),dataReader.GetString(2),dataReader.GetBoolean(3)));
+                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetBoolean(3)));
                     }
 
                 }
@@ -139,10 +136,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 }
                 finally
                 {
-                    /*if (dataReader != null)
-                    {
-                        dataReader.Close();
-                    }*/
                     command.Dispose();
                     connection.Close();
                 }
@@ -186,7 +179,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand(connection);
+                var command = new SQLiteCommand(connection);
                 int res = -1;
                 try
                 {
@@ -198,7 +191,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Parameters.Add(new SQLiteParameter(@"nickNameVal", User.Nickname));
                     command.Parameters.Add(new SQLiteParameter(@"passwordVal", User.Password));
                     command.Parameters.Add(new SQLiteParameter(@"loggedInVal", User.LoggedIn));
-                    
+
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }

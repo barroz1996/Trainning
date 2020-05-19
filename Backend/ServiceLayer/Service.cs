@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                DataAccessLayer.Controllers.sqlCreator create = new DataAccessLayer.Controllers.sqlCreator();
+                DataAccessLayer.Controllers.SQLCreator create = new DataAccessLayer.Controllers.SQLCreator();
                 UserController.LoadData();
                 BoardController.LoadData();
                 log.Info("Data loaded successfully");
