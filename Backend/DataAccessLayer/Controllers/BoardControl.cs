@@ -98,8 +98,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    //CommandText = $"DELETE FROM {_tableName} "
-                    CommandText = $"SELECT* FROM {_tableName} "
+                    CommandText = $"DELETE FROM {_tableName}"
                 };
                 try
                 {

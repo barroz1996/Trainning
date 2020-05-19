@@ -192,6 +192,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             newUser.DeleteTable();
             Users.Clear();
+            HasLogged = false;
         }
     }
 }

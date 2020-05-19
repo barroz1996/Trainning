@@ -87,7 +87,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public int TotalTask()
         {
-            return GetColumn(0).GetTasks().Count + GetColumn(1).GetTasks().Count + GetColumn(2).GetTasks().Count;
+            int sum = 0;
+            foreach (var col in columns)
+                sum = sum + col.GetTasks().Count;
+            return sum;
         }
         public Column AddColumn(int columnOrdinal, string Name)
         {

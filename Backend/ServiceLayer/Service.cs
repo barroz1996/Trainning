@@ -35,13 +35,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 DataAccessLayer.Controllers.sqlCreator create = new DataAccessLayer.Controllers.sqlCreator();
+                //create.Create();
                 UserController.LoadData();
                 BoardController.LoadData();
+                log.Info("Data loaded successfully");
                 return new Response();
             }
             catch(Exception ex)
             {
-                log.Debug("unable to load data.");
                 return new Response<Object>(ex.Message);
             }
         }
@@ -54,6 +55,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 UserController.Delete();
                 BoardController.Delete();
+                //DataAccessLayer.Controllers.sqlCreator reCreate = new DataAccessLayer.Controllers.sqlCreator();
+                //reCreate.ReCreate();
+                log.Debug("All persisted data deleted");
                 return new Response();
             }
             catch (Exception ex)

@@ -144,7 +144,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             if (GetColumn(email, (columnOrdinal + 1)).GetLimit() > (GetColumn(email, (columnOrdinal + 1)).GetTasks().Count) || ((GetColumn(email, (columnOrdinal + 1)).GetLimit() == -1)))
             {
-
                 GetColumn(email, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
                 log.Debug("Task " + taskId + " was advanced from the " + GetColumn(email, columnOrdinal).GetColumnName() + " column to the " + GetColumn(email, columnOrdinal + 1).GetColumnName() + " column.");
                 TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal + 1);
@@ -178,6 +177,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                         colList.Add(newCol);
                     else
                         colList.Insert(newCol.GetColumnOrdinal(), newCol);
+                    Console.WriteLine(newCol.GetTasks().Count);
                 }
                 Boards.Add(dal.Email, new Board(dal.Email, colList));
             }
@@ -204,6 +204,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             ColumnCon.DeleteTable();
             TaskCon.DeleteTable();
             Boards.Clear();
+            totalTasks = 0;
         }
     }
 }
