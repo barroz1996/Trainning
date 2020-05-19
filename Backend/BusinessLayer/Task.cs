@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IntroSE.Kanban.Backend.DataAccessLayer;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Task : IPersistedObject<DataAccessLayer.Task>
+    internal class Task
     {
-        private int taskId;
+        private readonly int taskId;
         private string title;
         private string description;
-        private DateTime creationDate;
+        private readonly DateTime creationDate;
         private DateTime dueDate;
         public Task() { }
         public Task(int taskId, string title, string description, DateTime dueDate)
@@ -20,7 +15,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.taskId = taskId;
             this.title = title;
             this.description = description;
-            this.creationDate = DateTime.Now;
+            creationDate = DateTime.Now;
             this.dueDate = dueDate;
         }
         public Task(int taskId, string title, string description, DateTime dueDate, DateTime creationDate)
@@ -35,18 +30,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void EditTaskTitle(string title) { this.title = title; }
         public void EditTaskDescription(string description) { this.description = description; }
         public void EditTaskDueDate(DateTime dueDate) { this.dueDate = dueDate; }
-        public int GetTaskID() { return this.taskId; }
-        public DateTime GetCreationDate() { return this.creationDate; }
-        public string GetTitle() { return this.title; }
-        public string GetDescription() { return this.description; }
-        public DateTime GetDueDate() { return this.dueDate; }
+        public int GetTaskID() { return taskId; }
+        public DateTime GetCreationDate() { return creationDate; }
+        public string GetTitle() { return title; }
+        public string GetDescription() { return description; }
+        public DateTime GetDueDate() { return dueDate; }
 
 
-
-        public DataAccessLayer.Task ToDalObject()
-        {
-            return new DataAccessLayer.Task(this.taskId, this.title, this.description, this.dueDate, this.creationDate);
-        }
 
     }
 

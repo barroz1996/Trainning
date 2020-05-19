@@ -1,45 +1,45 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Text.Json;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
-
-    class UserController
+    internal class UserController
     {
+        private DataAccessLayer.Controllers.UserControl newUser = new DataAccessLayer.Controllers.UserControl();
         private bool HasLogged;
         private Dictionary<string, User> Users;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public UserController()
         {
-            this.HasLogged = false;
-            this.Users = new Dictionary<string, User>();
+            HasLogged = false;
+            Users = new Dictionary<string, User>();
 
         }
         public void LoadData() //Loads all the data while starting the program.
         {
-            var user = new DataAccessLayer.User();
-            var dalUser = user.FromJson(); //Gets a list of all DataAcessLayer users from the json file.
+            var user = new DataAccessLayer.Controllers.UserControl();
+            var dalUser = user.Select(); //Gets all users from the database.
             foreach (var dal in dalUser)
             {
-                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all the users to the users dictionary.
+                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all users to the users dictionary.
             }
             foreach (var entry in Users) //Checks if any of the users is logged in.
             {
                 if (entry.Value.GetLoggedIn())
+                {
                     HasLogged = true;
+                }
             }
         }
         public User GetUser(string email) //Gets a specific user from the dictionary.
         {
-            if (this.Users.ContainsKey(email))
+            if (Users.ContainsKey(email))
+            {
                 return Users[email];
+            }
             else
             {
                 log.Debug("Tried getting unregistered user " + email);
@@ -61,7 +61,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 if (EmailVerify(email))
                 {
                     Users.Add(email, new User(email, password, nickname));
-                    GetUser(email).Save();
+                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false)); //creates the new user in the database.
                     log.Debug("User " + email + " was created.");
                 }
                 else
@@ -82,7 +82,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
         public void Login(string email, string password) //Tries logging in a user.
         {
-            if (!IsLogged(email))
+            if (!IsLogged(email)) //checks if this user is already logged in.
+            {
                 if (HasLogged == false) //User can only log in if everybody else is logged out.
                 {
                     GetUser(email).Login(password); //Throws exception if password doesn't match.
@@ -93,6 +94,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     log.Debug("Error: User " + email + " tried logging in while another user was already logged in.");
                     throw new Exception("Someone is already logged in.");
                 }
+            }
             else
             {
                 log.Debug("User " + email + " already is logged in");
@@ -108,7 +110,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public bool EmailVerify(string email) //Makes sure that the input email is valid.
         {
             if (string.IsNullOrWhiteSpace(email))
+            {
                 return false;
+            }
+
             try
             {
                 // Normalize the domain
@@ -171,7 +176,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 }
                 else
                 {
-                    if (password.Length < 4 || password.Length > 20) //checks if it fits the required length.
+                    if (password.Length < 5 || password.Length > 25) //checks if it fits the required length.
                     {
                         log.Debug("Register password out of bounds.");
                         throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");
@@ -186,6 +191,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     }
                 }
             }
+        }
+        public void Delete() //deletes all the users from the database and dictionary, sets haslogged to false.
+        {
+            newUser.DeleteTable();
+            Users.Clear();
+            HasLogged = false;
         }
     }
 }
