@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -14,19 +13,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     /// </summary>
     public class Service : IService
     {
-    	private BusinessLayer.UserPackage.UserController UserController;
-        private BusinessLayer.BoardPackage.BoardController BoardController;
-        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private DataAccessLayer.Controllers.SQLCreator create;
+
         /// <summary>
         /// Simple public constructor.
         /// </summary>
         public Service()
         {
-           this.UserController = new BusinessLayer.UserPackage.UserController();
-           this.BoardController = new BusinessLayer.BoardPackage.BoardController();
-           create = new DataAccessLayer.Controllers.SQLCreator();
-           
+            throw new NotImplementedException();
         }
                
         /// <summary>        
@@ -35,61 +28,71 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error.</returns>
         public Response LoadData()
         {
-            try
-            {
-                DataAccessLayer.Controllers.SQLCreator create = new DataAccessLayer.Controllers.SQLCreator(); //creates new database if doesn't exist.
-                UserController.LoadData();
-                BoardController.LoadData();
-                log.Debug("Data loaded successfully");
-                return new Response();
-            }
-            catch(Exception ex)
-            {
-                return new Response<Object>(ex.Message);
-            }
+            throw new NotImplementedException();
         }
 
 
         ///<summary>Remove all persistent data.</summary>
         public Response DeleteData()
         {
-            try
-            {
-                UserController.Delete();
-                BoardController.Delete();
-                log.Debug("All persisted data deleted");
-                return new Response();
-            }
-            catch (Exception ex)
-            {
-                return new Response<Object>(ex.Message);
-            }
-
+            throw new NotImplementedException();
         }
 
 
-    /// <summary>
-    /// Registers a new user
-    /// </summary>
-    /// <param name="email">The email address of the user to register</param>
-    /// <param name="password">The password of the user to register</param>
-    /// <param name="nickname">The nickname of the user to register</param>
-    /// <returns>A response object. The response should contain a error message in case of an error<returns>
-    public Response Register(string email, string password, string nickname)
+		/// <summary>
+		/// Registers a new user and creates a new board for him.
+		/// </summary>
+		/// <param name="email">The email address of the user to register</param>
+		/// <param name="password">The password of the user to register</param>
+		/// <param name="nickname">The nickname of the user to register</param>
+		/// <returns>A response object. The response should contain a error message in case of an error<returns>
+		public Response Register(string email, string password, string nickname)
         {
-            try
-            {
-                UserController.PasswordVerify(password);
-                UserController.Register(email, password, nickname);
-                BoardController.Register(email);
-                return new Response();
-            }
-            catch (Exception ex)
-            {
-                log.Debug(ex.Message);
-                return new Response<Object>(ex.Message);
-            }
+            throw new NotImplementedException();
         }
+		
+
+		/// <summary>
+		/// Registers a new user and joins the user to an existing board.
+		/// </summary>
+		/// <param name="email">The email address of the user to register</param>
+		/// <param name="password">The password of the user to register</param>
+		/// <param name="nickname">The nickname of the user to register</param>
+		/// <param name="emailHost">The email address of the host user which owns the board</param>
+		/// <returns>A response object. The response should contain a error message in case of an error<returns>
+		public Response Register(string email, string password, string nickname, string emailHost)
+        {
+            throw new NotImplementedException();
+        }
+				
+
+		
+		/// <summary>
+        /// Assigns a task to a user
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="taskId">The task to be updated identified task ID</param>        
+		/// <param name="emailAssignee">Email of the user to assign to task to</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            throw new NotImplementedException();
+        }		
+		
+		/// <summary>
+        /// Delete a task
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="taskId">The task to be updated identified task ID</param>        		
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response DeleteTask(string email, int columnOrdinal, int taskId)
+        {
+            throw new NotImplementedException();
+        }		
+		
+
 
         /// <summary>
         /// Log in an existing user
@@ -99,16 +102,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
-             try
-            {
-                UserController.Login(email, password);
-                var user = new User(email, UserController.GetUser(email).GetNickname());
-                return new Response<User>(user);
-            }
-            catch (Exception ex)
-            {
-                return new Response<User>(ex.Message);
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>        
@@ -118,15 +112,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-             try
-            {
-                UserController.Logout(email);
-                return new Response();
-            }
-            catch (Exception ex)
-            {
-                return new Response<Object>(ex.Message);
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -136,28 +122,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
         public Response<Board> GetBoard(string email)
         {
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    var ColumnsNames = new List<string>();
-                    foreach (var column in BoardController.GetBoard(email).GetColumns())
-                    {
-                        ColumnsNames.Add(column.GetColumnName());
-                    }
-                    var board = new Board((IReadOnlyCollection<string>)ColumnsNames);
-                    return new Response<Board>(board);
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Board>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Board>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -169,23 +134,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response LimitColumnTasks(string email, int columnOrdinal, int limit)
         {
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.LimitColumnTasks(email, columnOrdinal, limit);
-                    return new Response();
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Object>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Object>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -198,23 +147,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Task, instead the response should contain a error message in case of an error</returns>
         public Response<Task> AddTask(string email, string title, string description, DateTime dueDate)
         {
-              if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.AddTask(email, title, description, dueDate);
-                    return new Response<Task>(new Task(BoardController.GetTotalTasks() - 1, DateTime.Now, dueDate, title, description));
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Task>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Task>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -227,24 +160,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
         {
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.UpdateTaskDueDate(email, columnOrdinal, taskId, dueDate);
-                    return new Response();
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Object>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Object>("This user is not logged in");
-            }
-
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -257,23 +173,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
-             if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.UpdateTaskTitle(email, columnOrdinal, taskId, title);
-                    return new Response();
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Object>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Object>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -286,23 +186,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
-             if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.UpdateTaskDescription(email, columnOrdinal, taskId, description);
-                    return new Response();
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Object>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Object>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -314,23 +198,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AdvanceTask(string email, int columnOrdinal, int taskId)
         {
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.AdvanceTask(email, columnOrdinal, taskId);
-                    return new Response();
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Object>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Object>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
 
@@ -342,28 +210,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<Column> GetColumn(string email, string columnName)
         {
-           if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnName).GetTasks())
-                    {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
-                    }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(email, columnName).GetLimit());
-                    return new Response<Column>(column);
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Column>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Column>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -376,28 +223,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         public Response<Column> GetColumn(string email, int columnOrdinal)
         {
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
-                    {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
-                    }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
-                    return new Response<Column>(column);
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Column>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Column>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -409,25 +235,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RemoveColumn(string email, int columnOrdinal)
         {
-
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.RemoveColumn(email, columnOrdinal);
-                    log.Info("user " + email + " deleted column number " + columnOrdinal + " from his board.");
-                    return new Response();
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Object>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Object>("This user is not logged in");
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -440,25 +248,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the new Column, the response should contain a error message in case of an error</returns>
         public Response<Column> AddColumn(string email, int columnOrdinal, string Name)
         {
-            if (UserController.IsLogged(email))
-            {
-                try { 
-                BoardController.AddColumn(email, columnOrdinal, Name);
-                    var Tasks = new List<Task>();
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
-                    log.Debug("user " + email + " added " + Name + " column to his board as column number "+columnOrdinal);
-                    return new Response<Column>(column);
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Column>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Column>("This user is not logged in");
-            }
+            throw new NotImplementedException();
 
         }
 
@@ -471,30 +261,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
         public Response<Column> MoveColumnRight(string email, int columnOrdinal)
         {
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.MoveColumn(email, columnOrdinal,1);
-                    var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal+1).GetTasks())
-                    {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
-                    }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal+1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal+1).GetLimit());
-                    log.Debug("user " + email + " moved his " + column.Name + " column right.");
-                    return new Response<Column>(column);
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Column>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Column>("This user is not logged in");
-            }
+            throw new NotImplementedException();
 
         }
 
@@ -507,30 +274,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
         public Response<Column> MoveColumnLeft(string email, int columnOrdinal)
         {
-            if (UserController.IsLogged(email))
-            {
-                try
-                {
-                    BoardController.MoveColumn(email, columnOrdinal, -1);
-                    var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal-1).GetTasks())
-                    {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
-                    }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal-1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal-1).GetLimit());
-                    log.Debug("user " + email + " moved his " + column.Name + " column left.");
-                    return new Response<Column>(column);
-                }
-                catch (Exception ex)
-                {
-                    return new Response<Column>(ex.Message);
-                }
-            }
-            else
-            {
-                log.Debug("This user is not logged in");
-                return new Response<Column>("This user is not logged in");
-            }
+            throw new NotImplementedException();
+
         }
 
     }
