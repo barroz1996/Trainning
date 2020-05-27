@@ -126,7 +126,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetBoolean(3)));
+                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetBoolean(3), dataReader.GetString(4)));
                     }
 
                 }
@@ -184,14 +184,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.UserDTO.UsersEmailColumn} ,{DTOs.UserDTO.UsersNicknameColumn},{DTOs.UserDTO.UsersPasswordColumn},{DTOs.UserDTO.UsersLoggedInColumn}) " +
-                        $"VALUES (@emailVal,@nickNameVal,@passwordVal,@loggedInVal);";
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.UserDTO.UsersEmailColumn} ,{DTOs.UserDTO.UsersNicknameColumn},{DTOs.UserDTO.UsersPasswordColumn},{DTOs.UserDTO.UsersLoggedInColumn},{DTOs.UserDTO.UsersHostColumn}) " +
+                        $"VALUES (@emailVal,@nickNameVal,@passwordVal,@loggedInVal,@emailHostVal);";
 
                     command.Parameters.Add(new SQLiteParameter(@"emailVal", User.Email));
                     command.Parameters.Add(new SQLiteParameter(@"nickNameVal", User.Nickname));
                     command.Parameters.Add(new SQLiteParameter(@"passwordVal", User.Password));
                     command.Parameters.Add(new SQLiteParameter(@"loggedInVal", User.LoggedIn));
-
+                    command.Parameters.Add(new SQLiteParameter(@"emailHostVal", User.EmailHost));
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }

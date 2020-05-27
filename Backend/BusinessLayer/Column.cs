@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
-            limit = -1;
+            limit = 100;
             tasks = new List<Task>();
 
         }

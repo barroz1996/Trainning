@@ -8,8 +8,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private DataAccessLayer.Controllers.ColumnControl ColumnCon = new DataAccessLayer.Controllers.ColumnControl();
         private DataAccessLayer.Controllers.TaskControl TaskCon = new DataAccessLayer.Controllers.TaskControl();
         private readonly string email;
+        private List<string> boardEmails;
         private List<Column> columns;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private int deletedTasks;
         public Board(string email)
         {
             this.email = email;
@@ -20,12 +22,28 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns.Add(backlog);
             columns.Add(in_progress);
             columns.Add(done);
+            boardEmails.Add(email);
+            this.deletedTasks = 0;
         }
         public Board() { }
-        public Board(string email, List<Column> columns)
+        public List<string> GetBoardEmail()
+        {
+            return boardEmails;
+        }
+        public void SetDeletedTasks()
+        {
+            this.deletedTasks++;
+        }
+        public int GetDeletedTasks()
+        {
+            return deletedTasks;
+        }
+        public Board(string email, List<Column> columns,List<string> boardEmails,int deletedTasks)
         {
             this.email = email;
             this.columns = columns;
+            this.boardEmails = boardEmails;
+            this.deletedTasks = deletedTasks;
         }
         public String GetEmail() { return email; }
         public List<Column> GetColumns() { return columns; }
@@ -53,7 +71,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             log.Debug("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
         }
-        public void AddTask(int taskId, String title, String description, DateTime dueDate)
+        public void AddTask(int taskId, String title, String description, DateTime dueDate,string emailAssignee)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -78,8 +96,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried adding new task with a non futuristic due date.");
                 throw new Exception("Due date is required to be a futuristic date.");
             }
-            GetColumn(0).AddTask(new Task(taskId, title, description, dueDate));
-            TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0));
+            GetColumn(0).AddTask(new Task(taskId, title, description, dueDate,emailAssignee));
+            TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0, emailAssignee));
             log.Debug("Task " + (taskId) + " was created by user " + email + ".");
         }
         public int TotalTask()

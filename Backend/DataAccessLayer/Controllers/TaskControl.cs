@@ -130,7 +130,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.IsDBNull(2) ? null : dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
+                        taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.IsDBNull(2) ? null : dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal, dataReader.GetString(7)));
                     }
                 }
                 catch (Exception ex)
@@ -147,7 +147,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return taskList;
         }
 
-        public bool Delete(DTOs.TaskDTO DTOObj) //Deletes a specific task.
+        public bool Delete(int taskId) //Deletes a specific task.
         {
             int res = -1;
 
@@ -158,7 +158,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     Connection = connection,
                     CommandText = $"DELETE FROM {_tableName} WHERE [{DTOs.TaskDTO.TasksIdColumnId}]=@taskId"
                 };
-                command.Parameters.Add(new SQLiteParameter(@"taskId", DTOObj.TaskId));
+                command.Parameters.Add(new SQLiteParameter(@"taskId", taskId));
                 try
                 {
                     connection.Open();
@@ -215,8 +215,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.TaskDTO.TasksIdColumnId} ,{DTOs.TaskDTO.TasksTitleColumnTitle},{DTOs.TaskDTO.TasksDescriptionColumnDescription},{DTOs.TaskDTO.TasksDueDateColumnDueDate},{DTOs.TaskDTO.TasksCreationDateColumnCreationDate},{DTOs.TaskDTO.TasksEmailColumnEmail},{DTOs.TaskDTO.TasksColumnIdColumnColumnId}) " +
-                        $"VALUES (@idVal,@titleVal,@descriptionVal,@dueDateTimeVal,@creationTimeVal,@emailVal,@columnOridnalVal);";
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.TaskDTO.TasksIdColumnId} ,{DTOs.TaskDTO.TasksTitleColumnTitle},{DTOs.TaskDTO.TasksDescriptionColumnDescription},{DTOs.TaskDTO.TasksDueDateColumnDueDate},{DTOs.TaskDTO.TasksCreationDateColumnCreationDate},{DTOs.TaskDTO.TasksEmailColumnEmail},{DTOs.TaskDTO.TasksColumnIdColumnColumnId},{DTOs.TaskDTO.TasksEmailAssigneeColumn}) " +
+                        $"VALUES (@idVal,@titleVal,@descriptionVal,@dueDateTimeVal,@creationTimeVal,@emailVal,@columnOridnalVal,@emailAssigneeVal);";
 
                     var idParam = new SQLiteParameter(@"idVal", Tasks.TaskId);
                     var titleParam = new SQLiteParameter(@"titleVal", Tasks.Title);
@@ -225,6 +225,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     var creationTimeParam = new SQLiteParameter(@"creationTimeVal", Tasks.CreationTime);
                     var emailParam = new SQLiteParameter(@"emailVal", Tasks.Email);
                     var columnOridnalParam = new SQLiteParameter(@"columnOridnalVal", Tasks.ColumnOridnal);
+                    var emailAssigneeParam = new SQLiteParameter(@"emailAssigneeVal", Tasks.EmailAssignee);
 
                     command.Parameters.Add(idParam);
                     command.Parameters.Add(titleParam);
@@ -233,6 +234,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Parameters.Add(creationTimeParam);
                     command.Parameters.Add(emailParam);
                     command.Parameters.Add(columnOridnalParam);
+                    command.Parameters.Add(emailAssigneeParam);
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }

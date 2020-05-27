@@ -23,11 +23,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                 using (var connection = new SQLiteConnection(_connectionString))
                 {
-
-                    var UserTable = "CREATE TABLE \"Users\"( \"Email\" TEXT NOT NULL UNIQUE, \"Nickname\"  TEXT NOT NULL, \"Password\"  TEXT NOT NULL, \"LoggedIn\"  INTEGER NOT NULL,PRIMARY KEY (\"Email\"))";
-                    var BoardTable = "CREATE TABLE \"Boards\" (\"Email\" TEXT NOT NULL UNIQUE, PRIMARY KEY(\"Email\"))";
+                    var BoardEmails= "CREATE TABLE \"BoardEmails\"(\"Email\" TEXT NOT NULL UNIQUE,\"Host\"  TEXT NOT NULL,PRIMARY KEY(\"Email\"))";
+                    var UserTable = "CREATE TABLE \"Users\"( \"Email\" TEXT NOT NULL UNIQUE, \"Nickname\"  TEXT NOT NULL, \"Password\"  TEXT NOT NULL , \"LoggedIn\"  INTEGER NOT NULL,\"EmailHost\"  TEXT NOT NULL,PRIMARY KEY (\"Email\"))";
+                    var BoardTable = "CREATE TABLE \"Boards\" (\"Email\" TEXT NOT NULL UNIQUE,\"DeletedTasks\" INTEGER NOT NULL, PRIMARY KEY(\"Email\"))";
                     var ColumnTable = "CREATE TABLE \"Columns\" (\"ColumnOrdinal\" INTEGER NOT NULL,\"ColumnName\"    TEXT NOT NULL,\"ColumnLimit\" INTEGER NOT NULL,\"Email\" TEXT NOT NULL,PRIMARY KEY(\"ColumnOrdinal\", \"Email\"))";
-                    var TaskTable = "CREATE TABLE \"Tasks\"(\"ID\"    INTEGER NOT NULL UNIQUE, \"Title\" TEXT NOT NULL, \"Description\"   TEXT,\"DueDate\"   TEXT NOT NULL, \"CreationDate\"  TEXT NOT NULL, \"Email\" TEXT NOT NULL, \"ColumnOrdinal\" INTEGER NOT NULL, PRIMARY KEY(\"ID\"))";
+                    var TaskTable = "CREATE TABLE \"Tasks\"(\"ID\"    INTEGER NOT NULL UNIQUE, \"Title\" TEXT NOT NULL, \"Description\"   TEXT,\"DueDate\"   TEXT NOT NULL, \"CreationDate\"  TEXT NOT NULL, \"Email\" TEXT NOT NULL, \"ColumnOrdinal\" INTEGER NOT NULL,\"EmailAssignee\" TEXT NOT NULL, PRIMARY KEY(\"ID\"))";
                     var command = new SQLiteCommand(null, connection);
 
                     try //Creates all tables.
@@ -40,6 +40,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                         command.CommandText = ColumnTable;
                         command.ExecuteNonQuery();
                         command.CommandText = TaskTable;
+                        command.ExecuteNonQuery();
+                        command.CommandText = BoardEmails;
                         command.ExecuteNonQuery();
 
                     }

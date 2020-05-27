@@ -16,6 +16,38 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             _connectionString = $"Data Source={path}; Version=3;";
             _tableName = "Boards";
         }
+        public bool Update(string Email, string attributeName, int attributeValue) //updates a task with a specific ID (attribute is int).
+        {
+            int res = -1;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE Email=@Email"
+                };
+                try
+                {
+                    connection.Open();
+                    command.Parameters.Add(new SQLiteParameter(@"Email", Email));
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Prepare();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    log.Debug("an error occured while updating this task.");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+
+                }
+
+            }
+            return res > 0;
+        }
 
         public List<DTOs.BoardDTO> Select() //Returns all boards.
         {
@@ -32,13 +64,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        boardsList.Add(new DTOs.BoardDTO(dataReader.GetString(0)));
+                        boardsList.Add(new DTOs.BoardDTO(dataReader.GetString(0), dataReader.GetInt32(1)));
                     }
 
                 }
                 catch (Exception ex)
                 {
                     log.Debug("an error occured while getting all boards");
+                    //have to check if put exception
                 }
                 finally
                 {
@@ -121,13 +154,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.BoardDTO.BoardEmailColumnEmail})  " +
-                        $"VALUES (@EmailVal);";
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.BoardDTO.BoardEmailColumnEmail},{DTOs.BoardDTO.BoardDeletedTaskColumn})  " +
+                        $"VALUES (@EmailVal,@DeletedTaskVal);";
 
                     var emailParam = new SQLiteParameter(@"EmailVal", Board.Email);
-
+                    var deletedTasksParam = new SQLiteParameter(@"DeletedTaskVal", Board.DeletedTasks);
 
                     command.Parameters.Add(emailParam);
+                    command.Parameters.Add(deletedTasksParam);
 
                     command.Prepare();
                     res = command.ExecuteNonQuery();

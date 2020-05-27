@@ -9,22 +9,26 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private readonly string nickname;
         private readonly string password;
         private bool LoggedIn;
+        private string host;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public User() { }
-        public User(string email, string password, string nickname)
+        public User(string email, string password, string nickname,string host)
         {
             this.email = email;
             this.password = password;
             this.nickname = nickname;
             LoggedIn = false;
+            this.host = host;
         }
-        public User(string email, string password, string nickname, bool LoggedIn)
+        public User(string email, string password, string nickname, bool LoggedIn,string host)
         {
             this.email = email;
             this.password = password;
             this.nickname = nickname;
             this.LoggedIn = LoggedIn;
+            this.host = host;
         }
+        public string GetEmailHost() { return host; }
         public string GetEmail() { return email; }
         public string GetNickname() { return nickname; }
         public string GetPassword() { return password; }
