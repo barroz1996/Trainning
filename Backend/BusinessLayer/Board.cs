@@ -22,6 +22,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns.Add(backlog);
             columns.Add(in_progress);
             columns.Add(done);
+            boardEmails = new List<string>();
             boardEmails.Add(email);
             this.deletedTasks = 0;
         }
@@ -99,6 +100,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             GetColumn(0).AddTask(new Task(taskId, title, description, dueDate,emailAssignee));
             TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0, emailAssignee));
             log.Debug("Task " + (taskId) + " was created by user " + email + ".");
+            throw new Exception("Task " + (taskId) + " was created by user " + email + ".");
         }
         public int TotalTask()
         {

@@ -12,11 +12,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private bool HasLogged;
         private Dictionary<string, User> Users;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public bool GetHasLogged() { return HasLogged; }
         public UserController()
         {
             HasLogged = false;
             Users = new Dictionary<string, User>();
 
+        }
+        public Dictionary<string,User> GetUsers()
+        {
+            return Users;
         }
         public void LoadData() //Loads all the data while starting the program.
         {

@@ -11,12 +11,20 @@
             <ColumnDefinition Width="204*"/>
             <ColumnDefinition Width="193*"/>
         </Grid.ColumnDefinitions>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="166,148,0,0"  Text="{Binding Path=Email,Mode=TwoWay}" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="166,88,0,0"  Text="{Binding Path=Password,Mode=TwoWay}" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox Name="Email" HorizontalAlignment="Left" Height="23" Margin="176,87,0,0"  Text="{Binding Path=Email,Mode=TwoWay}" VerticalAlignment="Top" Width="120" />
+        <TextBox Name="Password" HorizontalAlignment="Left" Height="23" Margin="176,144,0,0"  Text="{Binding Path=Password,Mode=TwoWay}" VerticalAlignment="Top" Width="120" />
         <Label Content="Email" HorizontalAlignment="Left" Margin="63,75,0,0" VerticalAlignment="Top" Height="50" Width="69" FontSize="20"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="39,135,0,0" VerticalAlignment="Top" Height="41" Width="93" FontSize="20"/>
-        <Button Content="Login" HorizontalAlignment="Left" Margin="126,253,0,0" VerticalAlignment="Top" Width="124" Height="43" Click="Button_Click"/>
-        <Label  Content="Create new user" HorizontalAlignment="Left" Margin="109,197,0,0" VerticalAlignment="Top" Width="160" FontSize="20"/>
+        <Button Content="Login" HorizontalAlignment="Left" Margin="162,224,0,0" VerticalAlignment="Top" Width="124" Height="43" Click="Button_Click" />
+        <Button Content="Register" Grid.Column="1" HorizontalAlignment="Left" Margin="181.667,267,0,0" VerticalAlignment="Top" Width="105" Height="42" Click="Button_Click_1"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="181.667,87,0,0" TextWrapping="Wrap" Text="{Binding Path= RegEmail}" VerticalAlignment="Top" Width="120"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="181.667,135,0,0" TextWrapping="Wrap" Text="{Binding Path= RegPassword}" VerticalAlignment="Top" Width="120" />
+        <Label Content="Email" Grid.Column="1" HorizontalAlignment="Left" Margin="44.667,84,0,0" VerticalAlignment="Top" Width="89"/>
+        <Label Content="Password" Grid.Column="1" HorizontalAlignment="Left" Margin="44.667,131,0,0" VerticalAlignment="Top"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="181.667,182,0,0" TextWrapping="Wrap" Text="{Binding Path= NickName}" VerticalAlignment="Top" Width="120"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="181.667,224,0,0" TextWrapping="Wrap" Text="{Binding Path= Host}" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Nickname" Grid.Column="1" HorizontalAlignment="Left" Margin="44.667,178,0,0" VerticalAlignment="Top"/>
+        <Label Content="Host email (optional)" Grid.Column="1" HorizontalAlignment="Left" Margin="44.667,224,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

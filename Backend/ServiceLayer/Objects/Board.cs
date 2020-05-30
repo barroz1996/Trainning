@@ -15,6 +15,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.ColumnsNames = columnsNames;
 			this.emailCreator = emailCreator;
         }
-        // You can add code here
+        public IReadOnlyCollection<string> GetColumnsNames()
+        {
+            return ColumnsNames;
+        }
     }
 }
