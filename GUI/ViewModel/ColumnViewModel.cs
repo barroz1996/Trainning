@@ -53,6 +53,16 @@ namespace GUI.ViewModel
                 RaisePropertyChanged("Email");
             }
         }
+        private string filter;
+        public string Filter    
+        {
+            get { return filter; }
+            set
+            {
+                filter = value;
+                RaisePropertyChanged("Filter");
+            }
+        }
         private int columnOrdinal;
         public int ColumnOrdinal
         {
@@ -164,6 +174,16 @@ namespace GUI.ViewModel
             foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
             {
                 temp.Add(new Model.Task(task));
+            }
+            Tasks = temp;
+        }
+        public void ToFilter(string filter)
+        {
+            List<Model.Task> temp = new List<Model.Task>();
+            foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
+            {
+                if(task.Title.Contains(filter)|| task.Description.Contains(filter))
+                    temp.Add(new Model.Task(task));
             }
             Tasks = temp;
         }

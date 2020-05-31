@@ -83,6 +83,16 @@ namespace GUI
                 ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
             }
         }
+        private string newName = "";
+        public string NewName
+        {
+            get { return newName; }
+            set
+            {
+                newName = value;
+                RaisePropertyChanged("NewName");
+            }
+        }
         private string newColName = "";
         public string NewColName
         {
@@ -93,6 +103,8 @@ namespace GUI
                 RaisePropertyChanged("NewColName");
             }
         }
+
+
         private string colOrdinal = "";
         public string ColOrdinal
         {
@@ -228,6 +240,26 @@ namespace GUI
             else
             {
                 MessageBox.Show("Please select one of the columns in the list before clicking this botton.");
+            }
+        }
+        public void ChangeColumnName(int columnOrdinal)
+        {
+            if (!(columnOrdinal >= 0 && columnOrdinal < ColumnsNames.Count))
+            {
+                MessageBox.Show("Please select one of the columns in the list before clicking this botton.");
+            }
+            else
+            {
+                var res = service.ChangeColumnName(Email, columnOrdinal, NewName);
+                if (!res.ErrorOccured)
+                {
+                    NewName = "";
+                    ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
+                }
+                else
+                {
+                    MessageBox.Show(res.ErrorMessage);
+                }
             }
         }
 

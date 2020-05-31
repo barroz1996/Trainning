@@ -302,7 +302,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void ChangeColumnName(string email,int columnOrdinal,string newName)
         {
-            GetColumn(email, columnOrdinal).ChangeName(newName);
+            GetBoard(email).ChangeColumnName(columnOrdinal, newName);
         }
 
     }

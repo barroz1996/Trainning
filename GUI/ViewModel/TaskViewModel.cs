@@ -136,7 +136,7 @@ namespace GUI.ViewModel
         }
         public void UpdateDescription()
         {
-            var res = service.UpdateTaskTitle(email, ColumnOrdinal, Id, Description);
+            var res = service.UpdateTaskDescription(email, ColumnOrdinal, Id, Description);
             if (res.ErrorOccured)
             {
                 MessageBox.Show(res.ErrorMessage);

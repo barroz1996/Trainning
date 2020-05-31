@@ -234,5 +234,28 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
         }
+        public void ChangeColumnName(int columnOrdinal,string Name)
+        {
+            if (GetColumn(columnOrdinal).GetColumnName().Equals(Name))
+            {
+                log.Debug("This column's name is already this name!");
+                throw new Exception("This column's name is already this name!");
+            }
+            if (string.IsNullOrWhiteSpace(Name) || Name.Length > 15)
+            {
+                log.Debug("Name out of bounds!");
+                throw new Exception("Name out of bounds!");
+            }
+            foreach (Column col in columns)
+            {
+                if (col.GetColumnName().Equals(Name))
+                {
+                    log.Debug("This column name already exists");
+                    throw new Exception("This column name already exists");
+                }
+            }
+            GetColumn(columnOrdinal).ChangeName(Name);
+            ColumnCon.Update(columnOrdinal, DataAccessLayer.DTOs.ColumnDTO.ColumnNameColumnName, Name, email);
+        }
     }
 }

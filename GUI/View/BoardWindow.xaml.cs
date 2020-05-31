@@ -68,5 +68,10 @@ namespace GUI
         {
             vm.GetColumn(vm.Email, ColList.SelectedIndex);
         }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            vm.ChangeColumnName(ColList.SelectedIndex);
+        }
     }
 }

@@ -28,5 +28,7 @@
         <Button Content="Set limit" HorizontalAlignment="Left" Margin="344,177,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_6"/>
         <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Path=NewLimit}" VerticalAlignment="Top" Width="120" Margin="294,133,0,0"/>
         <Button Content="View Column" HorizontalAlignment="Left" Margin="692,301,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_7"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="16,61,0,0" TextWrapping="Wrap" Text="{Binding NewName}" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Set column name" HorizontalAlignment="Left" Margin="165,60,0,0" VerticalAlignment="Top" Width="104" Click="Button_Click_8"/>
     </Grid>
 </Window>

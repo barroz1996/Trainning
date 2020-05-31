@@ -13,6 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using GUI.ViewModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.ComponentModel;
+using System.Data;
+
 
 namespace GUI.View
 {
@@ -26,7 +31,7 @@ namespace GUI.View
         { 
             InitializeComponent();
             vm = new ColumnViewModel(service,email,columnOrdinal);
-            this.DataContext = vm; 
+            this.DataContext = vm;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -58,6 +63,16 @@ namespace GUI.View
         {
             vm.GetTask(vm.Email, Tasks.SelectedIndex);
             vm.Reload();
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            vm.ToFilter(vm.Filter);
+        }
+        private void DrawItem(object sender, DrawItemEventArgs e)
+        {
+            
+
         }
     }
 }
