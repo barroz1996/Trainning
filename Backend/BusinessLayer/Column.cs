@@ -6,7 +6,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
     internal class Column
     {
         private int columnOrdinal;
-        private readonly string columnName;
+        private string columnName;
         private int limit;
         private List<Task> tasks;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -25,6 +25,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.columnName = columnName;
             this.limit = limit;
             tasks = new List<Task>();
+        }
+        public void ChangeName(string newName)
+        {
+            this.columnName = newName;
         }
 
         public int GetColumnOrdinal() { return columnOrdinal; }

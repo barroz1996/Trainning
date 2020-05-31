@@ -24,7 +24,9 @@
         <Label Content="Title" HorizontalAlignment="Left" Margin="29,143,0,0" VerticalAlignment="Top" Width="59"/>
         <Label Content="Description" HorizontalAlignment="Left" Margin="16,196,0,0" VerticalAlignment="Top" Width="72"/>
         <Label Content="Due Date" HorizontalAlignment="Left" Margin="16,249,0,0" VerticalAlignment="Top" Width="72"/>
-        <DatePicker HorizontalAlignment="Left" Margin="101,249,0,0" VerticalAlignment="Top" Width="120" Text="{Binding Path=DueData}"/>
-
+        <DatePicker HorizontalAlignment="Left" Margin="101,249,0,0" VerticalAlignment="Top" Width="120" SelectedDate="{Binding Path=DueData}"/>
+        <Button Content="Set limit" HorizontalAlignment="Left" Margin="344,177,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_6"/>
+        <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Path=NewLimit}" VerticalAlignment="Top" Width="120" Margin="294,133,0,0"/>
+        <Button Content="View Column" HorizontalAlignment="Left" Margin="692,301,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_7"/>
     </Grid>
 </Window>

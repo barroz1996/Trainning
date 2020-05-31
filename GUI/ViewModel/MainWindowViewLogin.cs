@@ -12,6 +12,7 @@ namespace GUI
 {
     class MainWindowViewLogin : INotifyPropertyChanged
     {
+        Service service;
         public MainWindowViewLogin()
         {
             this.email = "";
@@ -20,6 +21,8 @@ namespace GUI
             this.regPassword = "";
             this.nickName = "";
             this.host = "";
+            service = new Service();
+            service.LoadData();
            
         }
         private string email;
@@ -46,7 +49,7 @@ namespace GUI
                 RaisePropertyChanged("Password");
             }
         }
-        public void Login(Service service,string email,string password)
+        public void Login(string email,string password)
         {
             Response<User> logUser = service.Login(email, password);
             if (logUser.ErrorOccured)
@@ -109,7 +112,7 @@ namespace GUI
                 RaisePropertyChanged("Host");
             }
         }
-        public void Register(Service service, string email,string password,string nickName,string host)
+        public void Register(string email,string password,string nickName,string host)
         {
             Response reg;
             if (string.IsNullOrWhiteSpace(host))

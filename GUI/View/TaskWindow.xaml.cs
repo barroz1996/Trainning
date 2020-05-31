@@ -10,35 +10,38 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GUI.ViewModel;
 using IntroSE.Kanban.Backend.ServiceLayer;
 
-
-namespace GUI
+namespace GUI.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for TaskWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class TaskWindow : Window
     {
-        private MainWindowViewLogin vm;
-        public MainWindow()
+        private TaskViewModel vm;
+        public TaskWindow(Service service, string email,int ColumnOrdinal, Model.Task task)
         {
             InitializeComponent();
-            this.vm = new MainWindowViewLogin();
+            vm = new TaskViewModel(service, email,ColumnOrdinal, task);
             this.DataContext = vm;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            vm.Login(vm.Email, vm.Password);
-                      
+            vm.UpdateTitle();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            vm.Register(vm.RegEmail, vm.RegPassword, vm.NickName, vm.Host);
+            vm.UpdateDescription();
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            vm.UpdateDueDate();
         }
     }
 }

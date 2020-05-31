@@ -250,11 +250,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void DeleteTask(string email, int columnOrdinal, int taskId,string emailHost)
         {
+
             if (!email.Equals(GetBoard(emailHost).GetColumn(columnOrdinal).GetTask(taskId).GetEmailAssignee()))
             {
                 log.Debug("This email is not the assignee of the task");
                 throw new Exception("This email is not the assignee of the task");
 
+            }
+            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
+            {
+                log.Debug("Tried deleting task " + taskId + " from the last column.");
+                throw new Exception("Cannot delete a task from the last column.");
             }
             GetBoard(emailHost).GetColumn(columnOrdinal).GetTasks().Remove(GetBoard(emailHost).GetColumn(columnOrdinal).GetTask(taskId));
             GetBoard(emailHost).SetDeletedTasks();
@@ -263,6 +269,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee,string emailHost)
         {
+            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
+            {
+                log.Debug("Tried assigning task " + taskId + " from the last column.");
+                throw new Exception("Cannot assign a task from the last column.");
+            }
             if (!GetBoard(emailHost).GetBoardEmail().Contains(emailAssignee))
             {
                 log.Debug("This email is not the assigned to this board");
@@ -288,6 +299,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             GetBoard(host).GetBoardEmail().Add(email);
             BoardEmail.Insert(new DataAccessLayer.DTOs.BoardEmailsDTO(email, host));
+        }
+        public void ChangeColumnName(string email,int columnOrdinal,string newName)
+        {
+            GetColumn(email, columnOrdinal).ChangeName(newName);
         }
 
     }

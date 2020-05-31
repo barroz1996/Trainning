@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     /// <summary>
@@ -66,7 +67,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
 
 		/// <summary>
-		/// Registers a new user and creates a new board for him.
+			/// Registers a new user and creates a new board for him.
 		/// </summary>
 		/// <param name="email">The email address of the user to register</param>
 		/// <param name="password">The password of the user to register</param>
@@ -77,7 +78,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 UserController.PasswordVerify(password);
-                UserController.Register(email, password, nickname,email);
+                UserController.Register(email, password, nickname, email);
                 BoardController.Register(email);
                 return new Response();
             }
@@ -101,9 +102,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-               UserController.PasswordVerify(password);
-               UserController.Register(email, password, nickname,emailHost);
-               BoardController.AddToBoard(email,emailHost);
+                UserController.PasswordVerify(password);
+                UserController.Register(email, password, nickname, emailHost);
+                BoardController.AddToBoard(email, emailHost);
                 return new Response();
             }
             catch (Exception ex)
@@ -129,7 +130,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.AssignTask(email, columnOrdinal, taskId,emailAssignee, UserController.GetUser(email).GetEmailHost());
+                    BoardController.AssignTask(email, columnOrdinal, taskId, emailAssignee, UserController.GetUser(email).GetEmailHost());
                     return new Response();
                 }
                 catch (Exception ex)
@@ -140,7 +141,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             else
             {
                 log.Debug("This user is not logged in");
-                return new Response<Board>("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
             }
         }		
 		
@@ -272,6 +273,35 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
+        /// Change the name of a specific column
+        /// </summary>
+        /// <param name="email">The email address of the user, must be logged in</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="newName">The new name.</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response ChangeColumnName(string email, int columnOrdinal, string newName)
+		{
+            if (UserController.IsLogged(email))
+            {
+                try
+                {
+                    BoardController.ChangeColumnName(email, columnOrdinal, newName);
+                    return new Response();
+                }
+                catch (Exception ex)
+                {
+                    return new Response<Object>(ex.Message);
+                }
+            }
+            else
+            {
+                log.Debug("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
+        }
+
+
+        /// <summary>
         /// Add a new task.
         /// </summary>
         /// <param name="email">Email of the user. The user must be logged in.</param>
@@ -285,8 +315,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.AddTask(email, title, description, dueDate,UserController.GetUser(email).GetEmailHost());
-                    return new Response<Task>(new Task(BoardController.GetTotalTasks() - 1, DateTime.Now, dueDate, title, description,email));
+                    BoardController.AddTask(email, title, description, dueDate, UserController.GetUser(email).GetEmailHost());
+                    return new Response<Task>(new Task(BoardController.GetTotalTasks() - 1, DateTime.Now, dueDate, title, description, email));
                 }
                 catch (Exception ex)
                 {
@@ -314,7 +344,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.UpdateTaskDueDate(email,UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, dueDate);
+                    BoardController.UpdateTaskDueDate(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, dueDate);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -343,7 +373,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.UpdateTaskTitle(email,UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, title);
+                    BoardController.UpdateTaskTitle(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, title);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -372,7 +402,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.UpdateTaskDescription(email,UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, description);
+                    BoardController.UpdateTaskDescription(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, description);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -400,7 +430,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.AdvanceTask(email,UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId);
+                    BoardController.AdvanceTask(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -431,7 +461,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     var Tasks = new List<Task>();
                     foreach (var task in BoardController.GetColumn(email, columnName).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(),task.GetEmailAssignee()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(email, columnName).GetLimit());
                     return new Response<Column>(column);
@@ -465,7 +495,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     var Tasks = new List<Task>();
                     foreach (var task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(),task.GetEmailAssignee()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
                     return new Response<Column>(column);
@@ -561,7 +591,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     var Tasks = new List<Task>();
                     foreach (var task in BoardController.GetColumn(email, columnOrdinal + 1).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(),task.GetEmailAssignee()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal + 1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal + 1).GetLimit());
                     log.Debug("user " + email + " moved his " + column.Name + " column right.");
@@ -597,7 +627,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     var Tasks = new List<Task>();
                     foreach (var task in BoardController.GetColumn(email, columnOrdinal - 1).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(),task.GetEmailAssignee()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal - 1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal - 1).GetLimit());
                     log.Debug("user " + email + " moved his " + column.Name + " column left.");
@@ -613,6 +643,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Debug("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
             }
+
         }
 
     }

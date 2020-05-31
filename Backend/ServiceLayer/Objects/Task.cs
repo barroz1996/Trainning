@@ -19,6 +19,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.Description = description;
 			this.emailAssignee = emailAssignee;
         }
-        // You can add code here
+        public int GetId() { return Id; }
     }
 }

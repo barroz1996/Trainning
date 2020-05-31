@@ -12,61 +12,52 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IntroSE.Kanban.Backend.ServiceLayer;
+using GUI.ViewModel;
 
-namespace GUI
+namespace GUI.View
 {
     /// <summary>
-    /// Interaction logic for BoardWindow.xaml
+    /// Interaction logic for ColumnWindow.xaml
     /// </summary>
-    public partial class BoardWindow : Window
+    public partial class ColumnWindow : Window
     {
-        private BoardWindowView vm;
-        public BoardWindow(Service service,string email)
-        {
+        private ColumnViewModel vm;
+        public ColumnWindow(Service service,string email,int columnOrdinal)
+        { 
             InitializeComponent();
-            vm = new BoardWindowView(service, email);
-            this.DataContext = vm;
+            vm = new ColumnViewModel(service,email,columnOrdinal);
+            this.DataContext = vm; 
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            vm.LogOut(vm.Email);
-            this.Close();
+            vm.DeleteTask((Model.Task)Tasks.SelectedItem);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            vm.MoveRight(vm.Email, ColList.SelectedIndex);
+            vm.AssignTask((Model.Task)Tasks.SelectedItem, vm.EmailAssignee);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            vm.MoveLeft(vm.Email, ColList.SelectedIndex);
+            this.Close();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            vm.AddColumn(vm.Email, vm.NewColName, vm.ColOrdinal);
+            vm.AdvanceTask((Model.Task)Tasks.SelectedItem);
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            vm.RemoveColumn(vm.Email, ColList.SelectedIndex);
+           // this = vm.NextColumn;
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            vm.AddTask(vm.Email, vm.NewTaskTitle, vm.NewDescription, vm.DueData);
-        }
-
-        private void Button_Click_6(object sender, RoutedEventArgs e)
-        {
-            vm.SetLimit(vm.Email, ColList.SelectedIndex, vm.NewLimit);
-        }
-
-        private void Button_Click_7(object sender, RoutedEventArgs e)
-        {
-            vm.GetColumn(vm.Email, ColList.SelectedIndex);
+            vm.GetTask(vm.Email, Tasks.SelectedIndex);
+            vm.Reload();
         }
     }
 }

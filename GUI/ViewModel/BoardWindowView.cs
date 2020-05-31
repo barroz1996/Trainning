@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using System.Windows;
+using GUI.View;
 
 namespace GUI
 {
@@ -21,7 +22,8 @@ namespace GUI
         public BoardWindowView(Service service, string email)
         {
             this.service = service;
-            this.emailCreator = email;
+            this.Email = email;
+            this.emailCreator = service.GetBoard(email).Value.emailCreator;
             this.columnsNames = service.GetBoard(email).Value.GetColumnsNames();
         }
         private string email;
@@ -51,12 +53,12 @@ namespace GUI
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
-        public void LogOut(Service service, string email) {
+        public void LogOut(string email) {
             service.Logout(email);
             ColOrdinal = "";
             NewColName = "";
         }
-        public void MoveRight(Service service, string email, int columnOrdinal)
+        public void MoveRight(string email, int columnOrdinal)
         {
             var res = service.MoveColumnRight(email, columnOrdinal);
             if (res.ErrorOccured)
@@ -69,7 +71,7 @@ namespace GUI
             }
 
         }
-        public void MoveLeft(Service service, string email, int columnOrdinal)
+        public void MoveLeft(string email, int columnOrdinal)
         {
             var res = service.MoveColumnLeft(email, columnOrdinal);
             if (res.ErrorOccured)
@@ -101,7 +103,7 @@ namespace GUI
                 RaisePropertyChanged("ColOrdinal");
             }
         }
-        public void AddColumn(Service service,string email,string colName,string colOrdinal)
+        public void AddColumn(string email,string colName,string colOrdinal)
         {
             int k = 0;
             if (!int.TryParse(colOrdinal, out k))
@@ -123,7 +125,7 @@ namespace GUI
                 MessageBox.Show("Column added successfully");
             }
         }
-        public void RemoveColumn(Service service,string email,int columnOrdinal)
+        public void RemoveColumn(string email,int columnOrdinal)
         {
             var res = service.RemoveColumn(email,columnOrdinal);
             if (res.ErrorOccured)
@@ -156,7 +158,7 @@ namespace GUI
                 RaisePropertyChanged("NewDescription");
             }
         }
-        private DateTime dueData = DateTime.MaxValue;
+        private DateTime dueData = DateTime.Now;
         public DateTime DueData
         {
             get { return dueData; }
@@ -166,7 +168,42 @@ namespace GUI
                 RaisePropertyChanged("DueData");
             }
         }
-        public void AddTask(Service service,string email,string title, string description,DateTime dueDate)
+        private string newLimit = "";
+        public string NewLimit
+        {
+            get { return newLimit; }
+            set
+            {
+                newLimit = value;
+                RaisePropertyChanged("NewLimit");
+            }
+        }
+        public void SetLimit(string email, int columnOrdinal, string limit)
+        {
+            int k = 0;
+            if (!int.TryParse(limit, out k))
+            {
+                ColOrdinal = "";
+                MessageBox.Show("Limit must be an integer.");
+                return;
+            }
+            var res = service.LimitColumnTasks(email, columnOrdinal, k);
+            if (res.ErrorOccured)
+            {
+                MessageBox.Show(res.ErrorMessage);
+            }
+            else
+            {
+                NewLimit = "";
+                if(k==-1)
+                    MessageBox.Show("The limit of your "+ColumnsNames.ElementAt<string>(columnOrdinal)+" column was disabled");
+                else
+                    MessageBox.Show("The limit of your " + ColumnsNames.ElementAt<string>(columnOrdinal) + " column was set to "+k);
+            }
+        }
+
+
+        public void AddTask(string email,string title, string description,DateTime dueDate)
         {
             var res = service.AddTask(email,title,description,dueDate);
             if (res.ErrorOccured)
@@ -175,8 +212,22 @@ namespace GUI
             }
             else
             {
-                ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
-                MessageBox.Show("Column removed successfully");
+                NewTaskTitle = "";
+                NewDescription = "";
+                DueData = DateTime.Now;
+                MessageBox.Show("Task " + res.Value.GetId() + " was added successfully to your " + ColumnsNames.First<string>());
+            }
+        }
+        public void GetColumn(string email,int columnOrdinal)
+        {
+            if (columnOrdinal >= 0 && columnOrdinal < ColumnsNames.Count)
+            {
+                var Column = new ColumnWindow(service, email, columnOrdinal);
+                Column.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Please select one of the columns in the list before clicking this botton.");
             }
         }
 

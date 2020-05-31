@@ -14,31 +14,17 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using IntroSE.Kanban.Backend.ServiceLayer;
 
-
-namespace GUI
+namespace Gui
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindowViewLogin vm;
+        Service service = new Service();
         public MainWindow()
         {
             InitializeComponent();
-            this.vm = new MainWindowViewLogin();
-            this.DataContext = vm;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            vm.Login(vm.Email, vm.Password);
-                      
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            vm.Register(vm.RegEmail, vm.RegPassword, vm.NickName, vm.Host);
         }
     }
 }
