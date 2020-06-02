@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,20 @@ namespace GUI.Model
         {
             string toString= "ID: " + TaskId + " Title: " + Title + " EmailAssignee: " + EmailAssignee;
             return toString;
+        }
+        public bool Overdue()
+        {
+            return !(DateTime.Compare(DueDate, DateTime.Now) > 0);
+        }
+        public bool NearDue()
+        {
+            double total = (DueDate - CreationDate).TotalDays;
+            double timePassed = (DateTime.Now - CreationDate).TotalDays;
+            return (!Overdue()) && (timePassed / total >= 0.75);
+        }
+        public bool IsAssignee(string email)
+        {
+            return this.EmailAssignee.Equals(email);
         }
     }
 }
