@@ -8,7 +8,7 @@ using IntroSE.Kanban.Backend.ServiceLayer;
 using System.Windows;
 
 
-namespace GUI
+namespace Presentation
 {
     class MainWindowViewLogin : INotifyPropertyChanged
     {

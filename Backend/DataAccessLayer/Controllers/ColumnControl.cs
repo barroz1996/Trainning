@@ -5,16 +5,16 @@ using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    internal class ColumnControl
+    internal class ColumnControl:DalController
     {
-        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly string _connectionString;
-        private readonly string _tableName;
-        public ColumnControl()
+        //private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private readonly string _connectionString;
+        //private readonly string _tableName;
+        public ColumnControl():base("Columns")
         {
-            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            _connectionString = $"Data Source={path}; Version=3;";
-            _tableName = "Columns";
+            //var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            //_connectionString = $"Data Source={path}; Version=3;";
+            //_tableName = "Columns";
         }
 
         public bool Update(int ColumnOrdinal, string attributeName, string attributeValue, string Email) //updates column with specific ordinal and name (attribute is string).
@@ -50,7 +50,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(int ColumnOrdinal, string attributeName, int attributeValue, string Email) //updates column with specific ordinal and name (attribute is int).
+        /*public bool Update(int ColumnOrdinal, string attributeName, int attributeValue, string Email) //updates column with specific ordinal and name (attribute is int).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -81,7 +81,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
             }
             return res > 0;
-        }
+        }*/
 
         public List<DTOs.ColumnDTO> SelectColumn(string Email) //Returns all columns with a specific email.
         {
@@ -115,7 +115,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return columnsList;
         }
-        public bool DeleteTable() //Deletes all columns.
+        /*public bool DeleteTable() //Deletes all columns.
         {
             int res = -1;
 
@@ -143,7 +143,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
             }
             return res > 0;
-        }
+        }*/
 
         public bool Delete(string email, int columnOrdinal) //Deletes a specific column (keys are email and ordinal).
         {

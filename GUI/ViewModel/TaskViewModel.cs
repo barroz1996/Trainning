@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.ServiceLayer;
-using GUI.Model;
+using Presentation.Model;
 using System.Windows;
 
-namespace GUI.ViewModel
+namespace Presentation.ViewModel
 {
     class TaskViewModel : INotifyPropertyChanged
     {

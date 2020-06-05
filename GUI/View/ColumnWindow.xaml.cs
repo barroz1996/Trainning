@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IntroSE.Kanban.Backend.ServiceLayer;
-using GUI.ViewModel;
+using Presentation.ViewModel;
 using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
 using System.Data;
 
 
-namespace GUI.View
+namespace Presentation.View
 {
     /// <summary>
     /// Interaction logic for ColumnWindow.xaml

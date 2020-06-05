@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IntroSE.Kanban.Backend.ServiceLayer;
 
-namespace GUI
+namespace Presentation
 {
     /// <summary>
     /// Interaction logic for BoardWindow.xaml

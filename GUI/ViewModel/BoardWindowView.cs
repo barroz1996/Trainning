@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using System.Windows;
-using GUI.View;
+using Presentation.View;
 
-namespace GUI
+namespace Presentation
 {
     class BoardWindowView : INotifyPropertyChanged
     {
@@ -25,6 +25,10 @@ namespace GUI
             this.Email = email;
             this.emailCreator = service.GetBoard(email).Value.emailCreator;
             this.columnsNames = service.GetBoard(email).Value.GetColumnsNames();
+        }
+        public string Welcome
+        {
+            get { return "Welcome "+Email; }
         }
         private string email;
         public string Email

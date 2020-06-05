@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
     internal class BoardController

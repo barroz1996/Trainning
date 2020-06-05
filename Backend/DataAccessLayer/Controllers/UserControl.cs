@@ -5,16 +5,16 @@ using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    internal class UserControl
+    internal class UserControl:DalController
     {
-        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly string _connectionString;
-        private readonly string _tableName;
-        public UserControl()
+        //private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private readonly string _connectionString;
+        //private readonly string _tableName;
+        public UserControl():base("Users")
         {
-            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            _connectionString = $"Data Source={path}; Version=3;";
-            _tableName = "Users";
+            //var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            //_connectionString = $"Data Source={path}; Version=3;";
+            //_tableName = "Users";
         }
 
         public bool Update(string Email, string attributeName, string attributeValue) //updates user with specific email (attribute is string).
@@ -81,7 +81,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool DeleteTable() //Deletes all users from the database.
+        /*public bool DeleteTable() //Deletes all users from the database.
         {
             int res = -1;
 
@@ -109,7 +109,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
             }
             return res > 0;
-        }
+        }*/
 
         public List<DTOs.UserDTO> Select() //Returns all users.
         {

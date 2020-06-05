@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.ServiceLayer;
-using GUI.Model;
+using Presentation.Model;
 using System.Windows;
-using GUI.View;
+using Presentation.View;
 
-namespace GUI.ViewModel
+namespace Presentation.ViewModel
 {
     class ColumnViewModel : INotifyPropertyChanged
     {

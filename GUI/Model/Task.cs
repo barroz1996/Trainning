@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.ServiceLayer;
 
-namespace GUI.Model
+namespace Presentation.Model
 {
     public struct Task
     {

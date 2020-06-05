@@ -8,16 +8,16 @@ using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    class BoardEmailsControl
+    class BoardEmailsControl:DalController
     {
-        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly string _connectionString;
-        private readonly string _tableName;
-        public BoardEmailsControl()
+        //private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private readonly string _connectionString;
+        //private readonly string _tableName;
+        public BoardEmailsControl():base("BoardEmails")
         {
-            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            _connectionString = $"Data Source={path}; Version=3;";
-            _tableName = "BoardEmails";
+            //var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            //_connectionString = $"Data Source={path}; Version=3;";
+            //_tableName = "BoardEmails";
         }
 
         public List<DTOs.BoardEmailsDTO> SelectBoard(string Host) //Returns all columns with a specific email.
@@ -55,7 +55,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         }
 
 
-        public bool DeleteTable() //Deletes all boards.
+        /*public bool DeleteTable() //Deletes all boards.
         {
             int res = -1;
 
@@ -83,7 +83,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
             }
             return res > 0;
-        }
+        }*/
         public bool Insert(DTOs.BoardEmailsDTO BoardEmail) //creates a new board in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))

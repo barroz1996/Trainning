@@ -459,11 +459,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 try
                 {
                     var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnName).GetTasks())
+                    foreach (var task in BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnName).GetTasks())
                     {
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(email, columnName).GetLimit());
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnName).GetLimit());
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -493,11 +493,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 try
                 {
                     var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
+                    foreach (var task in BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnOrdinal).GetTasks())
                     {
                         Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnOrdinal).GetColumnName(), BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnOrdinal).GetLimit());
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
