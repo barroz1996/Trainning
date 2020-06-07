@@ -25,6 +25,27 @@ namespace Presentation
             this.Email = email;
             this.emailCreator = service.GetBoard(email).Value.emailCreator;
             this.columnsNames = service.GetBoard(email).Value.GetColumnsNames();
+            List<Model.Column> temp = new List<Model.Column>();
+            foreach(var col in ColumnsNames)
+            {
+                temp.Add(new Model.Column(service.GetColumn(Email, col).Value));
+            }
+            Columns = temp;
+        }
+        public void Test()
+        {
+            Columns.ElementAt(0).Tasks
+        }
+        
+        private List<List<Model.Task>> tasks;
+        public List<List<Model.Task>> Tasks
+        {
+            get { return tasks; }
+            set
+            {
+                tasks = value;
+                RaisePropertyChanged("Tasks");
+            }
         }
         public string Welcome
         {
@@ -38,6 +59,16 @@ namespace Presentation
             {
                 email = value;
                 RaisePropertyChanged("Email");
+            }
+        }
+        private IReadOnlyCollection<Model.Column> columns;
+        public IReadOnlyCollection<Model.Column> Columns
+        {
+            get { return columns; }
+            set
+            {
+                columns = value;
+                RaisePropertyChanged("Columns");
             }
         }
         private IReadOnlyCollection<string> columnsNames;

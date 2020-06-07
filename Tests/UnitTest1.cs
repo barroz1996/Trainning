@@ -23,7 +23,7 @@ namespace Tests
         [Test]
         public void AddColumn()
         {
-            for (int i = 0; i < mocks.Count; i++)
+            for (int i = 0; i < b.GetColumns().Count; i++)
             {
                 mocks.Add(new Mock<IDalController>());
                 mocks[i].Setup(m => m.Update(i, IntroSE.Kanban.Backend.DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i + 1, "yakov@gmail.com")).Returns(true);
@@ -34,7 +34,7 @@ namespace Tests
         [Test]
         public void MoveColumn()
         {
-            for (int i = 0; i < mocks.Count; i++)
+            for (int i = 0; i < b.GetColumns().Count; i++)
             {
                 mocks.Add(new Mock<IDalController>());
                 mocks[i].Setup(m => m.Update(i, IntroSE.Kanban.Backend.DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i - 1, "yakov@gmail.com")).Returns(true);
@@ -48,7 +48,7 @@ namespace Tests
         [Test]
         public void RemoveColumn()
         {
-            for (int i = 0; i < mocks.Count; i++)
+            for (int i = 0; i < b.GetColumns().Count; i++)
             {
                 mocks.Add(new Mock<IDalController>());
                 mocks[i].Setup(m => m.Update(i, IntroSE.Kanban.Backend.DataAccessLayer.DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal, i - 1, "yakov@gmail.com")).Returns(true);
