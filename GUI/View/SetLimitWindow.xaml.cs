@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Presentation.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,26 +12,25 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Presentation.ViewModel;
 
 namespace Presentation.View
 {
     /// <summary>
-    /// Interaction logic for ReNameWindow.xaml
+    /// Interaction logic for SetLimitWindow.xaml
     /// </summary>
-    public partial class ReNameWindow : Window
+    public partial class SetLimitWindow : Window
     {
         private SetBoardWindowView vm;
-        public ReNameWindow(BackendController controller, string email,int ordinal,string name)
+        public SetLimitWindow(BackendController controller, string email, int ordinal, string limit)
         {
             InitializeComponent();
-            this.vm = new SetBoardWindowView(controller, email,ordinal,name);
+            this.vm = new SetBoardWindowView(controller, email, limit, ordinal);
             this.DataContext = vm;
         }
 
-        private void ChangeName_Click(object sender, RoutedEventArgs e)
+        private void SetLimit_Click(object sender, RoutedEventArgs e)
         {
-            vm.ChangeName(this);
+            vm.setLimit(this);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

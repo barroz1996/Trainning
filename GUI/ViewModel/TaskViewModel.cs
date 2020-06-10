@@ -12,26 +12,32 @@ namespace Presentation.ViewModel
 {
     class TaskViewModel : NotifiableObject
     {
-        private Service service;
-        public TaskViewModel(Service service,string email, int columnOrdinal,Model.Task task)
+        public BackendController Controller { get; private set; }
+        public TaskViewModel(BackendController controller, string email, Model.Task task)
         {
-            this.service = service;
-            Email = email;
+            this.Controller = controller;
+            this.Task = task;
+            /*Email = email;
             Id = task.TaskId;
             Title = task.Title;
             Description = task.Description;
             CreationDate = task.CreationDate;
             DueDate = task.DueDate;
             EmailAssignee = task.EmailAssignee;
-            ColumnOrdinal = columnOrdinal;
-            TaskName = "Task " + Id;
+            ColumnOrdinal = columnOrdinal;*/
+            TaskName = "Task " + Task.TaskId;
         }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string property)
+        private Model.Task task;
+        public Model.Task Task
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            get { return task; }
+            set
+            {
+                task = value;
+                RaisePropertyChanged("Task");
+            }
         }
+
         private string taskName;
         public string TaskName
         {
@@ -42,7 +48,7 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("TaskName");
             }
         }
-        private string email;
+        /*private string email;
         public string Email
         {
             get { return email; }
@@ -121,42 +127,55 @@ namespace Presentation.ViewModel
                 columnOrdinal = value;
                 RaisePropertyChanged("ColumnOrdinal");
             }
-        }
+        }*/
         public void UpdateTitle()
         {
-            var res = service.UpdateTaskTitle(email, ColumnOrdinal, Id, Title);
-            if (res.ErrorOccured)
+            try
             {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
+                Controller.UpdateTitle(Task);
                 MessageBox.Show("Title updated successfully");
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
             }
         }
         public void UpdateDescription()
         {
-            var res = service.UpdateTaskDescription(email, ColumnOrdinal, Id, Description);
-            if (res.ErrorOccured)
+            try
             {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
+                Controller.UpdateDescription(Task);
                 MessageBox.Show("Description updated successfully");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
             }
         }
         public void UpdateDueDate()
         {
-            var res = service.UpdateTaskDueDate(email, ColumnOrdinal, Id, DueDate);
-            if (res.ErrorOccured)
+            try
             {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
+                Controller.UpdateDueDate(Task);
                 MessageBox.Show("Due date updated successfully");
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
+        public void UpdateEmailAssignee()
+        {
+            try
+            {
+                Controller.AssignTask(task);
+                MessageBox.Show("Task Assigned to "+Task.userEmail);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
     }
 }

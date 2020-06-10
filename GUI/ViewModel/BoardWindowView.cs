@@ -33,6 +33,16 @@ namespace Presentation
                 RaisePropertyChanged("Email");
             }
         }
+        private Model.Task task;
+        public Model.Task Task
+        {
+            get { return task; }
+            set
+            {
+                task = value;
+                RaisePropertyChanged("Task");
+            }
+        }
         private Model.Board board;
         public Model.Board Board
         {
@@ -52,26 +62,26 @@ namespace Presentation
         {
             var newCol = new AddColumnWindow(Controller, Email);
             newCol.ShowDialog();
+            ReLoad();
         }
         public void ReLoad()
         {
             this.Board = new Model.Board(Controller, Email);
         }
-        public bool RemoveColumn(int ordinal)
+        public void RemoveColumn(int ordinal)
         {
             try
             {
                 Controller.RemoveColumn(Email, ordinal);
                 MessageBox.Show("Column removed successfully!");
-                return true;
+                ReLoad();
             }
             catch(Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
         }
-        public bool Move(int columnOrdinal,int direction)
+        public void Move(int columnOrdinal,int direction)
         {           
             try
             {
@@ -80,239 +90,50 @@ namespace Presentation
                    MessageBox.Show("Column moved right successfully!");
                 else
                    MessageBox.Show("Column moved left successfully!");
-                return true;
+                ReLoad();
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
         }
         public void AddTask()
         {
             var newTask = new AddTaskWindow(Controller, Email);
             newTask.ShowDialog();
+            ReLoad();
         }
-        public bool AdvanceTask(Model.Task task) {
+        public void AdvanceTask() {
             try
             {
-                Controller.AdvanceTask(task);
+                Controller.AdvanceTask(Task);
                 MessageBox.Show("Task Advanced successfully!");
-                return true;
+                ReLoad();
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
         }
-      /*
-        public void MoveRight(string email, int columnOrdinal)
+        public void ChangeName(int ordinal, string name)
         {
-            var res = service.MoveColumnRight(email, columnOrdinal);
-            if (res.ErrorOccured)
-            {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
-                ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
-            }
-
+            var col = new ReNameWindow(Controller, Email,ordinal,name);
+            col.ShowDialog();
+            ReLoad();
         }
-        public void MoveLeft(string email, int columnOrdinal)
+        public void SetLimit(int ordinal, int limit)
         {
-            var res = service.MoveColumnLeft(email, columnOrdinal);
-            if (res.ErrorOccured)
-            {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
-                ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
-            }
+            var col = new SetLimitWindow(Controller, Email, ordinal, limit.ToString());
+            col.ShowDialog();
+            ReLoad();
         }
-        private string newName = "";
-        public string NewName
+        public void OpenTask()
         {
-            get { return newName; }
-            set
-            {
-                newName = value;
-                RaisePropertyChanged("NewName");
-            }
+            var taskwindow = new TaskWindow(Controller, Email, Task);
+            taskwindow.ShowDialog();
+            ReLoad();
         }
-        private string newColName = "";
-        public string NewColName
-        {
-            get { return newColName; }
-            set
-            {
-                newColName = value;
-                RaisePropertyChanged("NewColName");
-            }
-        }
-
-
-        private string colOrdinal = "";
-        public string ColOrdinal
-        {
-            get { return colOrdinal; }
-            set
-            {              
-                colOrdinal = value;               
-                RaisePropertyChanged("ColOrdinal");
-            }
-        }
-        public void AddColumn(string email,string colName,string colOrdinal)
-        {
-            int k = 0;
-            if (!int.TryParse(colOrdinal, out k))
-            {
-                ColOrdinal = "";
-                MessageBox.Show("Column Ordinal must be an integer.");
-                return;
-            }
-            var res = service.AddColumn(email, k, colName);
-            if (res.ErrorOccured)
-            {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
-                ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
-                NewColName= "";
-                ColOrdinal = "";
-                MessageBox.Show("Column added successfully");
-            }
-        }
-        public void RemoveColumn(string email,int columnOrdinal)
-        {
-            var res = service.RemoveColumn(email,columnOrdinal);
-            if (res.ErrorOccured)
-            {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
-                ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
-                MessageBox.Show("Column removed successfully");
-            }
-        }
-        private string newTaskTitle= "";
-        public string NewTaskTitle
-        {
-            get { return newTaskTitle; }
-            set
-            {
-                newTaskTitle = value;
-                RaisePropertyChanged("NewTaskTitle");
-            }
-        }
-        private string newDescription = "";
-        public string NewDescription
-        {
-            get { return newDescription; }
-            set
-            {
-                newDescription = value;
-                RaisePropertyChanged("NewDescription");
-            }
-        }
-        private DateTime dueData = DateTime.Now;
-        public DateTime DueData
-        {
-            get { return dueData; }
-            set
-            {
-                dueData = value;
-                RaisePropertyChanged("DueData");
-            }
-        }
-        private string newLimit = "";
-        public string NewLimit
-        {
-            get { return newLimit; }
-            set
-            {
-                newLimit = value;
-                RaisePropertyChanged("NewLimit");
-            }
-        }
-        public void SetLimit(string email, int columnOrdinal, string limit)
-        {
-            int k = 0;
-            if (!int.TryParse(limit, out k))
-            {
-                ColOrdinal = "";
-                MessageBox.Show("Limit must be an integer.");
-                return;
-            }
-            var res = service.LimitColumnTasks(email, columnOrdinal, k);
-            if (res.ErrorOccured)
-            {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
-                NewLimit = "";
-                if(k==-1)
-                    MessageBox.Show("The limit of your "+ColumnsNames.ElementAt<string>(columnOrdinal)+" column was disabled");
-                else
-                    MessageBox.Show("The limit of your " + ColumnsNames.ElementAt<string>(columnOrdinal) + " column was set to "+k);
-            }
-        }
-
-
-        public void AddTask(string email,string title, string description,DateTime dueDate)
-        {
-            var res = service.AddTask(email,title,description,dueDate);
-            if (res.ErrorOccured)
-            {
-                MessageBox.Show(res.ErrorMessage);
-            }
-            else
-            {
-                NewTaskTitle = "";
-                NewDescription = "";
-                DueData = DateTime.Now;
-                MessageBox.Show("Task " + res.Value.GetId() + " was added successfully to your " + ColumnsNames.First<string>());
-            }
-        }
-        public void GetColumn(string email,int columnOrdinal)
-        {
-            if (columnOrdinal >= 0 && columnOrdinal < ColumnsNames.Count)
-            {
-                var Column = new ColumnWindow(service, email, columnOrdinal);
-                Column.ShowDialog();
-            }
-            else
-            {
-                MessageBox.Show("Please select one of the columns in the list before clicking this botton.");
-            }
-        }
-        public void ChangeColumnName(int columnOrdinal)
-        {
-            if (!(columnOrdinal >= 0 && columnOrdinal < ColumnsNames.Count))
-            {
-                MessageBox.Show("Please select one of the columns in the list before clicking this botton.");
-            }
-            else
-            {
-                var res = service.ChangeColumnName(Email, columnOrdinal, NewName);
-                if (!res.ErrorOccured)
-                {
-                    NewName = "";
-                    ColumnsNames = service.GetBoard(email).Value.GetColumnsNames();
-                }
-                else
-                {
-                    MessageBox.Show(res.ErrorMessage);
-                }
-            }
-        }
-
-    */
+      
     }
 
 }

@@ -70,11 +70,6 @@ namespace Presentation
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else // we need to check !!!
-            {
-              //  ColumnsNames = Service.GetBoard(email).Value.GetColumnsNames();
-            }
-
         }
         internal void AddColumn(string email, string colName, string colOrdinal)
         {
@@ -96,18 +91,12 @@ namespace Presentation
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else
-            {
-               // ColumnsNames = Service.GetBoard(email).Value.GetColumnsNames();
-               // MessageBox.Show("Column removed successfully");
-            }
         }
         internal void SetLimit(string email, int columnOrdinal, string limit)
         {
             int k = 0;
             if (!int.TryParse(limit, out k))
             {
-               // ColOrdinal = "";
                 throw new Exception("Limit must be an integer.");
             }
             var res = Service.LimitColumnTasks(email, columnOrdinal, k);
@@ -115,16 +104,6 @@ namespace Presentation
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else
-            {/*
-                NewLimit = "";
-                if (k == -1)
-                    MessageBox.Show("The limit of your " + ColumnsNames.ElementAt<string>(columnOrdinal) + " column was disabled");
-                else
-                    MessageBox.Show("The limit of your " + ColumnsNames.ElementAt<string>(columnOrdinal) + " column was set to " + k);
-           */
-                }
-
         }
         internal void AddTask(string email, string title, string description, DateTime dueDate)
         {
@@ -133,14 +112,6 @@ namespace Presentation
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else
-            {
-               /* NewTaskTitle = "";
-                NewDescription = "";
-                DueData = DateTime.Now;
-                MessageBox.Show("Task " + res.Value.GetId() + " was added successfully to your " + ColumnsNames.First<string>());
-            */
-              }
         }
         internal void ChangeColumnName(string email,int columnOrdinal,string newName)
         {
@@ -165,38 +136,13 @@ namespace Presentation
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else
-            {
-                /*
-                List<Model.Task> temp = new List<Model.Task>();
-                foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
-                {
-                    temp.Add(new Model.Task(task));
-                }
-                Tasks = temp;
-                MessageBox.Show("Task " + deltask.TaskId + " removed successfully");
-                */
-            }
         }
-        internal void AssignTask(Model.Task task1, string newEmail)
+        internal void AssignTask(Model.Task task1)
         {
-            var res = Service.AssignTask(task1.userEmail, task1.column, task1.TaskId, newEmail);
+            var res = Service.AssignTask(task1.userEmail, task1.column, task1.TaskId, task1.EmailAssignee);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
-            }
-            else
-            {
-                /*
-                List<Model.Task> temp = new List<Model.Task>();
-                foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
-                {
-                    temp.Add(new Model.Task(task));
-                }
-                Tasks = temp;
-                EmailAssignee = "";
-                MessageBox.Show("Task " + task1.TaskId + " was assigned to " + newEmail);
-                */
             }
         }
         public void AdvanceTask(Model.Task deltask)
@@ -206,54 +152,30 @@ namespace Presentation
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else
-            {
-                deltask.column++;
-                /*
-                List<Model.Task> temp = new List<Model.Task>();
-                foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
-                {
-                    temp.Add(new Model.Task(task));
-                }
-                Tasks = temp;
-                MessageBox.Show("Task " + deltask.TaskId + " was advanced to the next column.");
-                */
-            }
         }
-        public void UpdateTitle(Model.Task task, string title)
+        public void UpdateTitle(Model.Task task)
         {
-            var res = Service.UpdateTaskTitle(task.userEmail, task.column, task.TaskId, title);
+            var res = Service.UpdateTaskTitle(task.userEmail, task.column, task.TaskId, task.Title);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else
-            {
-               // MessageBox.Show("Title updated successfully");
-            }
         }
-        public void UpdateDescription(Model.Task task,string newdes)
+        public void UpdateDescription(Model.Task task)
         {
-            var res = Service.UpdateTaskDescription(task.userEmail, task.column, task.TaskId, newdes);
+            var res = Service.UpdateTaskDescription(task.userEmail, task.column, task.TaskId, task.Description);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
             }
-            else
-            {
-               // MessageBox.Show("Description updated successfully");
-            }
+            
         }
-        internal void UpdateDueDate(Model.Task task, DateTime newDue)
+        internal void UpdateDueDate(Model.Task task)
         {
-            var res = Service.UpdateTaskDueDate(task.userEmail, task.column, task.TaskId, newDue);
+            var res = Service.UpdateTaskDueDate(task.userEmail, task.column, task.TaskId, task.DueDate);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
-            }
-            else
-            {
-             //   MessageBox.Show("Due date updated successfully");
             }
         }
         internal IntroSE.Kanban.Backend.ServiceLayer.Task GetTask(string email, int column, int index)

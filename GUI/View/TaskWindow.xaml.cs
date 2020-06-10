@@ -22,10 +22,10 @@ namespace Presentation.View
     public partial class TaskWindow : Window
     {
         private TaskViewModel vm;
-        public TaskWindow(Service service, string email,int ColumnOrdinal, Model.Task task)
+        public TaskWindow(BackendController controller, string email,Model.Task task)
         {
             InitializeComponent();
-            vm = new TaskViewModel(service, email,ColumnOrdinal, task);
+            vm = new TaskViewModel(controller, email,task);
             this.DataContext = vm;
         }
 

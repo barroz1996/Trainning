@@ -37,50 +37,45 @@ namespace Presentation.View
         private void AddColumn_Click(object sender, RoutedEventArgs e)
         {
             vm.AddColumn();
-            vm.ReLoad();
         }
 
         private void RemoveColumn_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.RemoveColumn(ColumnList.SelectedIndex))
-            {
-                vm.ReLoad();
-            }
+            vm.RemoveColumn(ColumnList.SelectedIndex);
         }
 
         private void MoveRight_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.Move(ColumnList.SelectedIndex,1))
-            {
-                vm.ReLoad();
-            }
+            vm.Move(ColumnList.SelectedIndex, 1);
         }
 
         private void MoveLeft_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.Move(ColumnList.SelectedIndex, -1))
-            {
-                vm.ReLoad();
-            }
+            vm.Move(ColumnList.SelectedIndex, -1);
         }
 
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
             vm.AddTask();
-            vm.ReLoad();
         }
 
         private void AdvanceTask_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.AdvanceTask(Task))
-            {
-
-            }
+            vm.AdvanceTask();
         }
 
         private void RenameColumn_Click(object sender, RoutedEventArgs e)
         {
+            vm.ChangeName(ColumnList.SelectedIndex,((Model.Column)ColumnList.SelectedItem).Name);
+        }
 
+        private void SetLimit_Click(object sender, RoutedEventArgs e)
+        {
+            vm.SetLimit(ColumnList.SelectedIndex, ((Model.Column)ColumnList.SelectedItem).Limit);
+        }
+        private void TasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            vm.OpenTask();
         }
     }
 }

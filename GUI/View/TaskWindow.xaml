@@ -8,16 +8,16 @@
         Title="TaskWindow" Height="450" Width="800">
     <Grid>
         <Label Content="{Binding Path=TaskName}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,30,0,0" Height="23" Width="89"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="203,61,0,0" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Top" Width="160"/>
-        <TextBox HorizontalAlignment="Left" Height="194" Margin="203,161,0,0" TextWrapping="Wrap" Text="{Binding Description}" VerticalAlignment="Top" Width="160"/>
-        <Label Content="{Binding CreationDate}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="597,66,0,0" Height="23" Width="155"/>
-        <Label Content="{Binding EmailAssignee}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="527,317,0,0" Height="35" Width="195"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="203,61,0,0" TextWrapping="Wrap" Text="{Binding Task.Title}" VerticalAlignment="Top" Width="160"/>
+        <TextBox HorizontalAlignment="Left" Height="194" Margin="203,161,0,0" TextWrapping="Wrap" Text="{Binding Task.Description}" VerticalAlignment="Top" Width="160"/>
+        <Label Content="{Binding Task.CreationDate}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="597,66,0,0" Height="23" Width="155"/>
+        <Label Content="{Binding Task.EmailAssignee}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="527,317,0,0" Height="35" Width="195"/>
         <Label Content="Title: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,61,0,0" Height="23" Width="89"/>
         <Label Content="Description: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,160,0,0" Height="23" Width="89"/>
         <Label Content="Creation date:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="452,66,0,0" Height="23" Width="89"/>
         <Label Content="Due date:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="452,159,0,0" Height="23" Width="89"/>
         <Label Content="Assigned to:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="407,317,0,0" Height="35" Width="89"/>
-        <DatePicker HorizontalAlignment="Left" Margin="597,159,0,0" VerticalAlignment="Top" Width="155" SelectedDate="{Binding DueDate}"/>
+        <DatePicker HorizontalAlignment="Left" Margin="597,159,0,0" VerticalAlignment="Top" Width="155" SelectedDate="{Binding Task.DueDate}"/>
         <Button Content="Update title" HorizontalAlignment="Left" Margin="62,105,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button Content="Update description" HorizontalAlignment="Left" Margin="62,233,0,0" VerticalAlignment="Top" Width="108" Height="26" Click="Button_Click_1"/>
         <Button Content="Update due Date" HorizontalAlignment="Left" Margin="452,215,0,0" VerticalAlignment="Top" Width="108" Height="26" Click="Button_Click_2"/>

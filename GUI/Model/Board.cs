@@ -44,7 +44,6 @@ namespace Presentation.Model
         }
         private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //read more here: https://stackoverflow.com/questions/4279185/what-is-the-use-of-observablecollection-in-net/4279274#4279274
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 foreach (Column y in e.OldItems)

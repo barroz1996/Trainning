@@ -30,11 +30,7 @@ namespace Presentation.View
 
         private void AddColumn_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.AddColumn())
-            {
-                this.Close();
-            }
-            
+            vm.AddColumn(this);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

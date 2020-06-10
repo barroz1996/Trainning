@@ -30,10 +30,7 @@ namespace Presentation.View
 
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.AddTask())
-            {
-                this.Close();
-            }
+            vm.AddTask(this);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

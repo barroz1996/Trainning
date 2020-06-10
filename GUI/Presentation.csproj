@@ -123,6 +123,9 @@
     <Compile Include="View\ReNameWindow.xaml.cs">
       <DependentUpon>ReNameWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SetLimitWindow.xaml.cs">
+      <DependentUpon>SetLimitWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TaskWindow.xaml.cs">
       <DependentUpon>TaskWindow.xaml</DependentUpon>
     </Compile>
@@ -138,10 +141,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ColumnWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -154,14 +153,10 @@
     <Compile Include="Model\Column.cs" />
     <Compile Include="Model\Task.cs" />
     <Compile Include="Model\User.cs" />
-    <Compile Include="ViewModel\ColumnViewModel.cs" />
     <Compile Include="View\BoardWindow.xaml.cs">
       <DependentUpon>BoardWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\BoardWindowView.cs" />
-    <Compile Include="View\ColumnWindow.xaml.cs">
-      <DependentUpon>ColumnWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -171,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ReNameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SetLimitWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

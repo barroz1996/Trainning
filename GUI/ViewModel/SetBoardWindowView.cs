@@ -22,6 +22,7 @@ namespace Presentation.ViewModel
             this.Title = "";
             this.Description = "";
             this.dueDate = DateTime.Now;
+            this.Limit = "";
         }
         public SetBoardWindowView(BackendController controller, string email,int columnOrdinal,string name)
         {
@@ -33,7 +34,21 @@ namespace Presentation.ViewModel
             this.Title = "";
             this.Description = "";
             this.dueDate = DateTime.Now;
+            this.Limit = "";
         }
+        public SetBoardWindowView(BackendController controller, string email,string limit, int columnOrdinal)
+        {
+            this.Controller = controller;
+            this.Ordinal = columnOrdinal;
+            this.ColumnOrdinal = "";
+            this.Email = email;
+            this.Name = "";
+            this.Title = "";
+            this.Description = "";
+            this.dueDate = DateTime.Now;
+            this.Limit = limit;
+        }
+        
         private string name;
         public string Name
         {
@@ -84,6 +99,16 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("DueDate");
             }
         }
+        private string limit;
+        public string Limit
+        {
+            get { return limit; }
+            set
+            {
+                limit = value;
+                RaisePropertyChanged("Limit");
+            }
+        }
         private int ordinal;
         public int Ordinal
         {
@@ -104,47 +129,61 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("Email");
             }
         }
-        public bool AddColumn()
+        public void AddColumn(AddColumnWindow newCol)
         {            
             try
             {
                 Controller.AddColumn(Email, Name, ColumnOrdinal);
                 MessageBox.Show("Column added successfully!");
-                return true;
+                newCol.Close();
             }
             catch(Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
         }
-       public bool AddTask()
+       public void AddTask(AddTaskWindow newTask)
         {
             try
             {
                 Controller.AddTask(Email, Title, Description, DueDate);
                 MessageBox.Show("Task added successfully!");
-                return true;
+                newTask.Close();
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
         }
-        public bool ChangeName()
+        public void ChangeName(ReNameWindow rename)
         {
             try
             {
                 Controller.ChangeColumnName(Email,Ordinal,Name);
                 MessageBox.Show("Column name changed to "+Name);
-                return true;
+                rename.Close();
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
+        }
+        public void setLimit(SetLimitWindow setLimit)
+        {
+            try
+            {
+                Controller.SetLimit(Email, Ordinal, Limit);
+                if (Limit.Equals("-1"))
+                    MessageBox.Show("The limit of this column was disabled");
+                else
+                    MessageBox.Show("The limit of this column was set to "+Limit);
+                setLimit.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
         }
     }
 }

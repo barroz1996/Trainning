@@ -21,18 +21,17 @@ namespace Presentation.ViewModel
             this.NickName = "";
             this.Host = "";
         }
-        public bool Register()
+        public void Register(RegisterWindow register)
         {
             try
             {
                 Controller.Register(Email, Password, NickName, Host);
                 MessageBox.Show("User created successfully!");
-                return true;
+                register.Close();
             }
             catch(Exception e)
             {
                 MessageBox.Show(e.Message);
-                return false;
             }
 
         }

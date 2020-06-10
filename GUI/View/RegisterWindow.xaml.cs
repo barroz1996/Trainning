@@ -30,10 +30,7 @@ namespace Presentation.View
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.Register())
-            {
-                this.Close();
-            }
+            vm.Register(this);
         }
 
         private void Login_Click(object sender, RoutedEventArgs e)
