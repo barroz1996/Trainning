@@ -54,10 +54,7 @@ namespace Presentation.View
             vm.AdvanceTask((Model.Task)Tasks.SelectedItem);
         }
 
-        private void Button_Click_4(object sender, RoutedEventArgs e)
-        {
-           // this = vm.NextColumn;
-        }
+      
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
@@ -69,10 +66,7 @@ namespace Presentation.View
         {
             vm.ToFilter(vm.Filter);
         }
-        private void DrawItem(object sender, DrawItemEventArgs e)
-        {
-            
 
-        }
+      
     }
 }

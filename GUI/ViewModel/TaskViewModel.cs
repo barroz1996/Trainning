@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace Presentation.ViewModel
 {
-    class TaskViewModel : INotifyPropertyChanged
+    class TaskViewModel : NotifiableObject
     {
         private Service service;
         public TaskViewModel(Service service,string email, int columnOrdinal,Model.Task task)

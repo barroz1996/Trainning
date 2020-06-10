@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using IntroSE.Kanban.Backend.ServiceLayer;
+using Presentation.Model;
+using System.Windows;
+using Presentation.View;
+
+namespace Presentation.ViewModel
+{
+    class RegisterWindowView: NotifiableObject
+    {  
+        public RegisterWindowView(BackendController controller)
+        {
+            this.Controller = controller;
+            this.Email = "";
+            this.Password = "";
+            this.NickName = "";
+            this.Host = "";
+        }
+        public bool Register()
+        {
+            try
+            {
+                Controller.Register(Email, Password, NickName, Host);
+                MessageBox.Show("User created successfully!");
+                return true;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
+
+        }
+        public BackendController Controller { get; private set; }
+        private string email;
+        public string Email
+        {
+            get { return email; }
+            set
+            {
+                email = value;
+                RaisePropertyChanged("Email");
+            }
+        }
+        private string password;
+        public string Password
+        {
+            get { return password; }
+            set
+            {
+                password = value;
+                RaisePropertyChanged("Password");
+            }
+        }
+        private string nickName;
+        public string NickName
+        {
+            get { return nickName; }
+            set
+            {
+                nickName = value;
+                RaisePropertyChanged("NickName");
+            }
+        }
+        private string host;
+        public string Host
+        {
+            get { return host; }
+            set
+            {
+                host = value;
+                RaisePropertyChanged("Host");
+            }
+        }
+    }
+}

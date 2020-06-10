@@ -11,7 +11,7 @@ using Presentation.View;
 
 namespace Presentation.ViewModel
 {
-    class ColumnViewModel : INotifyPropertyChanged
+    class ColumnViewModel : NotifiableObject
     {
         private Service service;
         public ColumnViewModel(Service service,string email, int columnOrdinal)
@@ -22,7 +22,7 @@ namespace Presentation.ViewModel
             List<Model.Task> temp = new List<Model.Task>();
             foreach(var task in service.GetColumn(email, columnOrdinal).Value.Tasks)
             {
-                temp.Add(new Model.Task(task));
+               // temp.Add(new Model.Task(task));
             }
             Tasks = temp;
         }
@@ -36,12 +36,7 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("Tasks");
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
+       
 
         private string email;
         public string Email
@@ -85,7 +80,7 @@ namespace Presentation.ViewModel
                 List<Model.Task> temp = new List<Model.Task>();
                 foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
                 {
-                    temp.Add(new Model.Task(task));
+                  //  temp.Add(new Model.Task(task));
                 }
                 Tasks = temp;
                 MessageBox.Show("Task "+deltask.TaskId+" removed successfully");
@@ -113,7 +108,7 @@ namespace Presentation.ViewModel
                 List<Model.Task> temp = new List<Model.Task>();
                 foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
                 {
-                    temp.Add(new Model.Task(task));
+                   // temp.Add(new Model.Task(task));
                 }
                 Tasks = temp;
                 EmailAssignee = "";
@@ -132,7 +127,7 @@ namespace Presentation.ViewModel
                 List<Model.Task> temp = new List<Model.Task>();
                 foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
                 {
-                    temp.Add(new Model.Task(task));
+                  //  temp.Add(new Model.Task(task));
                 }
                 Tasks = temp;
                 MessageBox.Show("Task " + deltask.TaskId + " was advanced to the next column.");
@@ -157,7 +152,7 @@ namespace Presentation.ViewModel
                 List<Model.Task> temp = new List<Model.Task>();
                 foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
                 {
-                    temp.Add(new Model.Task(task));
+                    //temp.Add(new Model.Task(task));
                 }
                 Tasks = temp;
                 var Task = new TaskWindow(service, email,ColumnOrdinal, tasks[taskOrdinal]);
@@ -173,7 +168,7 @@ namespace Presentation.ViewModel
             List<Model.Task> temp = new List<Model.Task>();
             foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
             {
-                temp.Add(new Model.Task(task));
+               // temp.Add(new Model.Task(task));
             }
             Tasks = temp;
         }
@@ -182,8 +177,8 @@ namespace Presentation.ViewModel
             List<Model.Task> temp = new List<Model.Task>();
             foreach (var task in service.GetColumn(Email, columnOrdinal).Value.Tasks)
             {
-                if(task.Title.Contains(filter)|| task.Description.Contains(filter))
-                    temp.Add(new Model.Task(task));
+                //if(task.Title.Contains(filter)|| task.Description.Contains(filter))
+                  //  temp.Add(new Model.Task(task));
             }
             Tasks = temp;
         }

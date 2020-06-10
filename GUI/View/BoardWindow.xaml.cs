@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using IntroSE.Kanban.Backend.ServiceLayer;
 
-namespace Presentation
+namespace Presentation.View
 {
     /// <summary>
     /// Interaction logic for BoardWindow.xaml
@@ -21,57 +21,66 @@ namespace Presentation
     public partial class BoardWindow : Window
     {
         private BoardWindowView vm;
-        public BoardWindow(Service service,string email)
+        public BoardWindow(Model.User user)
         {
             InitializeComponent();
-            vm = new BoardWindowView(service, email);
+            this.vm = new BoardWindowView(user);
             this.DataContext = vm;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            vm.LogOut(vm.Email);
+            vm.Logout();
             this.Close();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void AddColumn_Click(object sender, RoutedEventArgs e)
         {
-            vm.MoveRight(vm.Email, ColList.SelectedIndex);
+            vm.AddColumn();
+            vm.ReLoad();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void RemoveColumn_Click(object sender, RoutedEventArgs e)
         {
-            vm.MoveLeft(vm.Email, ColList.SelectedIndex);
+            if (vm.RemoveColumn(ColumnList.SelectedIndex))
+            {
+                vm.ReLoad();
+            }
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void MoveRight_Click(object sender, RoutedEventArgs e)
         {
-            vm.AddColumn(vm.Email, vm.NewColName, vm.ColOrdinal);
+            if (vm.Move(ColumnList.SelectedIndex,1))
+            {
+                vm.ReLoad();
+            }
         }
 
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        private void MoveLeft_Click(object sender, RoutedEventArgs e)
         {
-            vm.RemoveColumn(vm.Email, ColList.SelectedIndex);
+            if (vm.Move(ColumnList.SelectedIndex, -1))
+            {
+                vm.ReLoad();
+            }
         }
 
-        private void Button_Click_5(object sender, RoutedEventArgs e)
+        private void AddTask_Click(object sender, RoutedEventArgs e)
         {
-            vm.AddTask(vm.Email, vm.NewTaskTitle, vm.NewDescription, vm.DueData);
+            vm.AddTask();
+            vm.ReLoad();
         }
 
-        private void Button_Click_6(object sender, RoutedEventArgs e)
+        private void AdvanceTask_Click(object sender, RoutedEventArgs e)
         {
-            vm.SetLimit(vm.Email, ColList.SelectedIndex, vm.NewLimit);
+            if (vm.AdvanceTask(Task))
+            {
+
+            }
         }
 
-        private void Button_Click_7(object sender, RoutedEventArgs e)
+        private void RenameColumn_Click(object sender, RoutedEventArgs e)
         {
-            vm.GetColumn(vm.Email, ColList.SelectedIndex);
-        }
 
-        private void Button_Click_8(object sender, RoutedEventArgs e)
-        {
-            vm.ChangeColumnName(ColList.SelectedIndex);
         }
     }
 }

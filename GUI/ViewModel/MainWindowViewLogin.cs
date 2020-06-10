@@ -6,24 +6,19 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using System.Windows;
+using Presentation.View;
 
 
 namespace Presentation
 {
-    class MainWindowViewLogin : INotifyPropertyChanged
+    class MainWindowViewLogin : NotifiableObject
     {
-        Service service;
+        public BackendController Controller { get; private set; }
         public MainWindowViewLogin()
         {
-            this.email = "";
-            this.password = "";
-            this.regEmail = "";
-            this.regPassword = "";
-            this.nickName = "";
-            this.host = "";
-            service = new Service();
-            service.LoadData();
-           
+            this.Controller=new BackendController();
+            this.Email = "";
+            this.Password = "";                               
         }
         private string email;
         public string Email
@@ -34,14 +29,6 @@ namespace Presentation
             }
         }
         private string password;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string property)
-        {
-            if(PropertyChanged!=null)
-               PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
-
         public string Password
         {
             get { return password; }
@@ -49,94 +36,25 @@ namespace Presentation
                 RaisePropertyChanged("Password");
             }
         }
-        public void Login(string email,string password)
+        public Model.User Login()
         {
-            Response<User> logUser = service.Login(email, password);
-            if (logUser.ErrorOccured)
+            try
             {
-                MessageBox.Show(logUser.ErrorMessage);
-               
+                var res= Controller.Login(Email, Password);
+                this.Email = "";
+                this.Password = "";
+                return res;
             }
-            else
+            catch (Exception e)
             {
-                
-                Email = "";
-                Password = "";
-                RegEmail = "";
-                RegPassword = "";
-                NickName = "";
-                Host = "";
-                var Board = new BoardWindow(service, email);
-                Board.ShowDialog();
-                         
+                MessageBox.Show(e.Message);
+                return null;
             }
-        }
-      
-        private string regEmail;
-        public string RegEmail
+        }    
+       public void Register()
         {
-            get { return regEmail; }
-            set
-            {
-                regEmail = value;
-                RaisePropertyChanged("RegEmail");
-            }
-        }
-        private string regPassword ;
-        public string RegPassword
-        {
-            get { return regPassword; }
-            set
-            {
-                regPassword = value;
-                RaisePropertyChanged("RegPassword");
-            }
-        }
-        private string nickName ;
-        public string NickName
-        {
-            get { return nickName; }
-            set
-            {
-                nickName = value;
-                RaisePropertyChanged("NickName");
-            }
-        }
-        private string host ;
-        public string Host
-        {
-            get { return host; }
-            set
-            {
-                host = value;
-                RaisePropertyChanged("Host");
-            }
-        }
-        public void Register(string email,string password,string nickName,string host)
-        {
-            Response reg;
-            if (string.IsNullOrWhiteSpace(host))
-            {
-               reg= service.Register(email, password, nickName);
-            }
-            else
-            {
-                reg = service.Register(email, password, nickName,host);
-            }
-            if (reg.ErrorOccured)
-            {
-                MessageBox.Show(reg.ErrorMessage);
-            }
-            else
-            {
-                Email = "";
-                Password = "";
-                RegEmail = "";
-                RegPassword = "";
-                NickName = "";
-                Host = "";               
-                MessageBox.Show(email+" registered successfully!");
-            }
+            RegisterWindow reg = new RegisterWindow(Controller);
+            reg.ShowDialog();
         }
         
 

@@ -22,7 +22,6 @@
         <Button Content="Assign" HorizontalAlignment="Left" Margin="189,169,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <Button Content="Return to board" HorizontalAlignment="Left" Margin="664,44,0,0" VerticalAlignment="Top" Width="93" Click="Button_Click_2"/>
         <Button Content="Advance" HorizontalAlignment="Left" Margin="87,117,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
-        <Button Content="Next Column" HorizontalAlignment="Left" Margin="536,44,0,0" VerticalAlignment="Top" Width="76" Click="Button_Click_4"/>
         <Button Content="View task" HorizontalAlignment="Left" Margin="189,225,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_5"/>
         <Button Content="Filter by text" HorizontalAlignment="Left" Margin="646,355,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_6"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="464,355,0,0" TextWrapping="Wrap" Text="{Binding Filter}" VerticalAlignment="Top" Width="120"/>

@@ -10,42 +10,14 @@ using Presentation.View;
 
 namespace Presentation
 {
-    class BoardWindowView : INotifyPropertyChanged
+    class BoardWindowView : NotifiableObject
     {
-        private readonly string emailCreator;
-        public string EmailCreator
-        {
-            get { return emailCreator; }
-
-        }
-        private Service service;
-        public BoardWindowView(Service service, string email)
-        {
-            this.service = service;
-            this.Email = email;
-            this.emailCreator = service.GetBoard(email).Value.emailCreator;
-            this.columnsNames = service.GetBoard(email).Value.GetColumnsNames();
-            List<Model.Column> temp = new List<Model.Column>();
-            foreach(var col in ColumnsNames)
-            {
-                temp.Add(new Model.Column(service.GetColumn(Email, col).Value));
-            }
-            Columns = temp;
-        }
-        public void Test()
-        {
-            Columns.ElementAt(0).Tasks
-        }
-        
-        private List<List<Model.Task>> tasks;
-        public List<List<Model.Task>> Tasks
-        {
-            get { return tasks; }
-            set
-            {
-                tasks = value;
-                RaisePropertyChanged("Tasks");
-            }
+        public BackendController Controller { get; private set; }
+        public BoardWindowView(Model.User user)
+        {           
+            this.Email = user.Email;
+            this.board = new Model.Board(user.Controller, user);
+            this.Controller = user.Controller;
         }
         public string Welcome
         {
@@ -61,38 +33,80 @@ namespace Presentation
                 RaisePropertyChanged("Email");
             }
         }
-        private IReadOnlyCollection<Model.Column> columns;
-        public IReadOnlyCollection<Model.Column> Columns
+        private Model.Board board;
+        public Model.Board Board
         {
-            get { return columns; }
+            get { return board; }
             set
             {
-                columns = value;
-                RaisePropertyChanged("Columns");
+                board = value;
+                RaisePropertyChanged("Board");
             }
         }
-        private IReadOnlyCollection<string> columnsNames;
-        public IReadOnlyCollection<string> ColumnsNames
+       
+        public void Logout()
         {
-            get { return columnsNames; }
-            set
+            Controller.LogOut(Email);
+        }
+        public void AddColumn()
+        {
+            var newCol = new AddColumnWindow(Controller, Email);
+            newCol.ShowDialog();
+        }
+        public void ReLoad()
+        {
+            this.Board = new Model.Board(Controller, Email);
+        }
+        public bool RemoveColumn(int ordinal)
+        {
+            try
             {
-                columnsNames = value;
-                RaisePropertyChanged("ColumnsNames");
+                Controller.RemoveColumn(Email, ordinal);
+                MessageBox.Show("Column removed successfully!");
+                return true;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged(string property)
+        public bool Move(int columnOrdinal,int direction)
+        {           
+            try
+            {
+                Controller.Move(Email, columnOrdinal, direction);
+                if(direction==1)
+                   MessageBox.Show("Column moved right successfully!");
+                else
+                   MessageBox.Show("Column moved left successfully!");
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
+        }
+        public void AddTask()
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            var newTask = new AddTaskWindow(Controller, Email);
+            newTask.ShowDialog();
         }
-        public void LogOut(string email) {
-            service.Logout(email);
-            ColOrdinal = "";
-            NewColName = "";
+        public bool AdvanceTask(Model.Task task) {
+            try
+            {
+                Controller.AdvanceTask(task);
+                MessageBox.Show("Task Advanced successfully!");
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return false;
+            }
         }
+      /*
         public void MoveRight(string email, int columnOrdinal)
         {
             var res = service.MoveColumnRight(email, columnOrdinal);
@@ -298,7 +312,7 @@ namespace Presentation
             }
         }
 
-
+    */
     }
 
 }

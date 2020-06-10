@@ -8,16 +8,25 @@ using IntroSE.Kanban.Backend.ServiceLayer;
 
 namespace Presentation.Model
 {
-    public struct Task
+    public class Task:NotifiableModelObject
     {
-        public readonly int TaskId;
-        public string Title;
-        public string Description;
-        public readonly DateTime CreationDate;
-        public DateTime DueDate;
-        public string EmailAssignee;
-        public Task(IntroSE.Kanban.Backend.ServiceLayer.Task task)
+        public string userEmail;
+        public int column;
+        public Task(BackendController controller,int column,string userEmail, int id, string title, string description, DateTime creationTime,DateTime dueDate,string emailAssignee) : base(controller)
         {
+            this.column = column;
+            this.userEmail = userEmail;
+            this.TaskId = id;
+            this.Title = title;
+            this.Description = description;
+            this.CreationDate = creationTime;
+            this.DueDate = dueDate;
+            this.EmailAssignee = emailAssignee;
+        }
+        public Task(BackendController controller,int column, string userEmail, IntroSE.Kanban.Backend.ServiceLayer.Task task): base(controller)
+        {
+            this.column = column;
+            this.userEmail = userEmail;
             this.TaskId = task.Id;
             this.Title = task.Title;
             this.Description = task.Description;
@@ -45,5 +54,66 @@ namespace Presentation.Model
         {
             return this.EmailAssignee.Equals(email);
         }
+        private int _taskId;
+        public int TaskId
+        {
+            get => _taskId;
+            set
+            {
+                _taskId = value;
+                RaisePropertyChanged("TaskId");
+            }
+        }
+        private string _title;
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                RaisePropertyChanged("Title");
+            }
+        }
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                RaisePropertyChanged("Description");
+            }
+        }
+        private DateTime _creationDate;
+        public DateTime  CreationDate
+
+        {
+            get => _creationDate;
+            set
+            {
+                _creationDate = value;
+                RaisePropertyChanged("CreationDate");
+            }
+        }
+        private DateTime _dueDate;
+        public DateTime DueDate
+        {
+            get => _dueDate;
+            set
+            {
+                _dueDate = value;
+                RaisePropertyChanged("DueDate");
+            }
+        }
+        private string _emailAssignee;
+        public string EmailAssignee
+        {
+            get => _emailAssignee;
+            set
+            {
+                _emailAssignee = value;
+                RaisePropertyChanged("EmailAssignee");
+            }
+        }     
     }
 }

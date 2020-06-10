@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using IntroSE.Kanban.Backend.ServiceLayer;
 
 
-namespace Presentation
+namespace Presentation.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,18 +27,24 @@ namespace Presentation
         {
             InitializeComponent();
             this.vm = new MainWindowViewLogin();
-            this.DataContext = vm;
+            this.DataContext = vm;           
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+    
+
+        private void Login_Click(object sender, RoutedEventArgs e)
         {
-            vm.Login(vm.Email, vm.Password);
-                      
+            Model.User u = vm.Login();
+            if (u != null)
+            {
+                BoardWindow boardView = new BoardWindow(u);
+                boardView.Show();              
+            }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Register_Click(object sender, RoutedEventArgs e)
         {
-            vm.Register(vm.RegEmail, vm.RegPassword, vm.NickName, vm.Host);
+            vm.Register();
         }
     }
 }
