@@ -192,14 +192,28 @@ namespace Presentation
             IReadOnlyCollection<string> col = Service.GetBoard(email).Value.ColumnsNames;
             return new List<string>(col);
         }
-        internal List<IntroSE.Kanban.Backend.ServiceLayer.Task> GetTasks(string email, int column)
-        {       
-            IReadOnlyCollection<IntroSE.Kanban.Backend.ServiceLayer.Task> tasks = Service.GetColumn(email,column).Value.Tasks;
-            return new List<IntroSE.Kanban.Backend.ServiceLayer.Task>(tasks);
+        internal List<IntroSE.Kanban.Backend.ServiceLayer.Task> GetTasks(string email, int column,string filter)
+        {
+            IReadOnlyCollection<IntroSE.Kanban.Backend.ServiceLayer.Task> tasks = Service.GetColumn(email, column).Value.Tasks;
+            if (string.IsNullOrWhiteSpace(filter))
+                return new List<IntroSE.Kanban.Backend.ServiceLayer.Task>(tasks);
+            else
+            {
+                var tasks1 = new List<IntroSE.Kanban.Backend.ServiceLayer.Task>();
+                foreach (var task in tasks)
+                {
+                    if (task.Description.Contains(filter) || task.Title.Contains(filter))
+                    {
+                        tasks1.Add(task);
+                    }
+                }
+                return tasks1;
+            }
         }
         internal IntroSE.Kanban.Backend.ServiceLayer.Column GetColumn(string email,int columnOrdinal)
         {
             return Service.GetColumn(email, columnOrdinal).Value;
         }
+
     }
 }

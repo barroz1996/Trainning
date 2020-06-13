@@ -7,6 +7,7 @@ using System.ComponentModel;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using System.Windows;
 using Presentation.View;
+using System.Windows.Media;
 
 namespace Presentation
 {
@@ -16,8 +17,20 @@ namespace Presentation
         public BoardWindowView(Model.User user)
         {           
             this.Email = user.Email;
-            this.board = new Model.Board(user.Controller, user);
+            this.Filter = "";
+            this.board = new Model.Board(user.Controller, user,Filter);
             this.Controller = user.Controller;
+        }
+     
+        private string filter;
+        public string Filter
+        {
+            get { return filter; }
+            set
+            {
+                filter = value;
+                RaisePropertyChanged("Filter");
+            }
         }
         public string Welcome
         {
@@ -43,6 +56,7 @@ namespace Presentation
                 RaisePropertyChanged("Task");
             }
         }
+        
         private Model.Board board;
         public Model.Board Board
         {
@@ -66,8 +80,9 @@ namespace Presentation
         }
         public void ReLoad()
         {
-            this.Board = new Model.Board(Controller, Email);
+            this.Board = new Model.Board(Controller, Email,Filter);
         }
+      
         public void RemoveColumn(int ordinal)
         {
             try
@@ -106,6 +121,8 @@ namespace Presentation
         public void AdvanceTask() {
             try
             {
+                if (Task == null)
+                    throw new Exception("No task selected!");
                 Controller.AdvanceTask(Task);
                 MessageBox.Show("Task Advanced successfully!");
                 ReLoad();
@@ -115,25 +132,51 @@ namespace Presentation
                 MessageBox.Show(e.Message);
             }
         }
-        public void ChangeName(int ordinal, string name)
+        public void ChangeName(int ordinal, Model.Column column)
         {
-            var col = new ReNameWindow(Controller, Email,ordinal,name);
-            col.ShowDialog();
-            ReLoad();
+            if (column != null)
+            {
+                var col = new ReNameWindow(Controller, Email, ordinal, column.Name);
+                col.ShowDialog();
+                ReLoad();
+            }
+            else
+                MessageBox.Show("Please select column!");
         }
-        public void SetLimit(int ordinal, int limit)
+        public void SetLimit(int ordinal, Model.Column column)
         {
-            var col = new SetLimitWindow(Controller, Email, ordinal, limit.ToString());
+            if (column != null) { 
+            var col = new SetLimitWindow(Controller, Email, ordinal, column.Limit.ToString());
             col.ShowDialog();
             ReLoad();
+            }
+          else
+             MessageBox.Show("Please select column!");
         }
         public void OpenTask()
         {
-            var taskwindow = new TaskWindow(Controller, Email, Task);
-            taskwindow.ShowDialog();
-            ReLoad();
+            if (Task != null) { 
+               var taskwindow = new TaskWindow(Controller, Email, Task);
+               taskwindow.ShowDialog();
+               ReLoad();
+           }
         }
-      
+        public void DeleteTask()
+        {
+            try
+            {
+                if (Task == null)
+                    throw new Exception("No task selected!");
+                Controller.DeleteTask(Task);
+                MessageBox.Show("Task removed successfully!");
+                ReLoad();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
     }
 
 }

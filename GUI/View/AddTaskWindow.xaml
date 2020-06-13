@@ -22,11 +22,11 @@
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <Label Content="Title" FontSize="16" Grid.Column="0" Grid.Row="0"/>
-                    <TextBox Text="{Binding Path=Title, Mode=TwoWay}" Width="200"  Grid.Column="1" Grid.Row="0" Margin="5"/>
+                <TextBox Text="{Binding Path=Title, Mode=TwoWay}" Width="200" MaxLength="50" Height="25" Grid.Column="1" Grid.Row="0" Margin="5"/>
                     <Label Content="Description" FontSize="16" Grid.Column="0" Grid.Row="1"/>
-                    <TextBox Text="{Binding Path=Description, Mode=TwoWay}" Width="200"  Grid.Column="1" Grid.Row="1" Margin="5"/>
+                <TextBox Text="{Binding Path=Description, Mode=TwoWay}" MaxLength="300" Width="200" Height="25"  Grid.Column="1" Grid.Row="1" Margin="5"/>
                     <Label Content="Due Date" FontSize="16" Grid.Column="0" Grid.Row="2"/>
-                <DatePicker HorizontalAlignment="Center"  VerticalAlignment="Center" Margin="5" Height="30" Width="200" Grid.Column="1" Grid.Row="2" SelectedDate="{Binding DueDate}"/>
+                <DatePicker HorizontalAlignment="Center"  VerticalAlignment="Center"  Margin="5" Height="25" Width="200" Grid.Column="1" Grid.Row="2" SelectedDate="{Binding DueDate}"/>
                
                 </Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

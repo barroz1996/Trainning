@@ -43,5 +43,15 @@ namespace Presentation.View
         {
             vm.UpdateDueDate();
         }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            vm.UpdateEmailAssignee();
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

@@ -4,14 +4,17 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using IntroSE.Kanban.Backend.ServiceLayer;
+using System.Windows;
+using Presentation.View;
 
 namespace Presentation.Model
 {
     public class Task:NotifiableModelObject
     {
-        public string userEmail;
-        public int column;
+        public string userEmail{ get; set; }
+        public int column { get; set; }
         public Task(BackendController controller,int column,string userEmail, int id, string title, string description, DateTime creationTime,DateTime dueDate,string emailAssignee) : base(controller)
         {
             this.column = column;
@@ -33,6 +36,27 @@ namespace Presentation.Model
             this.CreationDate = task.CreationTime;
             this.DueDate = task.DueDate;
             this.EmailAssignee = task.emailAssignee;
+          
+        }
+        public SolidColorBrush BackgroundColor
+        {
+            get
+            { 
+                if(Overdue())
+                    return new SolidColorBrush( Colors.Red);
+                if(NearDue())
+                    return new SolidColorBrush(Colors.Orange);
+                return new SolidColorBrush();
+            }
+        }
+        public SolidColorBrush BorderColor
+        {
+            get
+            {
+                if (IsAssignee(userEmail))
+                    return new SolidColorBrush(Colors.Blue);
+                return new SolidColorBrush(Colors.Black);
+            }
         }
         override
         public string ToString()
@@ -40,10 +64,14 @@ namespace Presentation.Model
             string toString= "ID: " + TaskId + " Title: " + Title + " EmailAssignee: " + EmailAssignee;
             return toString;
         }
+        
+
+        
         public bool Overdue()
         {
             return !(DateTime.Compare(DueDate, DateTime.Now) > 0);
         }
+        
         public bool NearDue()
         {
             double total = (DueDate - CreationDate).TotalDays;
@@ -54,6 +82,8 @@ namespace Presentation.Model
         {
             return this.EmailAssignee.Equals(email);
         }
+     
+
         private int _taskId;
         public int TaskId
         {

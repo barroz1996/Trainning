@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using Presentation.Model;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Presentation.ViewModel
 {
@@ -36,8 +37,7 @@ namespace Presentation.ViewModel
                 task = value;
                 RaisePropertyChanged("Task");
             }
-        }
-
+        }    
         private string taskName;
         public string TaskName
         {
@@ -48,86 +48,7 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("TaskName");
             }
         }
-        /*private string email;
-        public string Email
-        {
-            get { return email; }
-            set
-            {
-                email = value;
-                RaisePropertyChanged("Email");
-            }
-        }
-        private string emailAssignee;
-        public string EmailAssignee
-        {
-            get { return emailAssignee; }
-            set
-            {
-                emailAssignee = value;
-                RaisePropertyChanged("EmailAssignee");
-            }
-        }
-        private string title;
-        public string Title
-        {
-            get { return title; }
-            set
-            {
-                title = value;
-                RaisePropertyChanged("Title");
-            }
-        }
-        private string description;
-        public string Description
-        {
-            get { return description; }
-            set
-            {
-                description = value;
-                RaisePropertyChanged("Description");
-            }
-        }
-        private DateTime creationDate;
-        public DateTime CreationDate
-        {
-            get { return creationDate; }
-            set
-            {
-                creationDate = value;
-                RaisePropertyChanged("CreationDate");
-            }
-        }
-        private DateTime dueDate;
-        public DateTime DueDate
-        {
-            get { return dueDate; }
-            set
-            {
-                dueDate = value;
-                RaisePropertyChanged("DueDate");
-            }
-        }
-        private int id;
-        public int Id
-        {
-            get { return id; }
-            set
-            {
-                id = value;
-                RaisePropertyChanged("Id");
-            }
-        }
-        private int columnOrdinal;
-        public int ColumnOrdinal
-        {
-            get { return columnOrdinal; }
-            set
-            {
-                columnOrdinal = value;
-                RaisePropertyChanged("ColumnOrdinal");
-            }
-        }*/
+       
         public void UpdateTitle()
         {
             try

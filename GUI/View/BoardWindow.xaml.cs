@@ -66,16 +66,28 @@ namespace Presentation.View
 
         private void RenameColumn_Click(object sender, RoutedEventArgs e)
         {
-            vm.ChangeName(ColumnList.SelectedIndex,((Model.Column)ColumnList.SelectedItem).Name);
+            vm.ChangeName(ColumnList.SelectedIndex,((Model.Column)ColumnList.SelectedItem));
         }
 
         private void SetLimit_Click(object sender, RoutedEventArgs e)
         {
-            vm.SetLimit(ColumnList.SelectedIndex, ((Model.Column)ColumnList.SelectedItem).Limit);
+            vm.SetLimit(ColumnList.SelectedIndex, ((Model.Column)ColumnList.SelectedItem));
         }
         private void TasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             vm.OpenTask();
         }
+
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+            vm.ReLoad();
+        }
+
+        private void RemoveTask_Click(object sender, RoutedEventArgs e)
+        {
+            vm.DeleteTask();
+        }
+
+       
     }
 }

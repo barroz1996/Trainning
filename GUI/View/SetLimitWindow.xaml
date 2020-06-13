@@ -18,8 +18,8 @@
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
-                <Label Content="New Limit" FontSize="16"  Grid.Column="0" Grid.Row="0"/>
-                <TextBox Text="{Binding Path=Limit, Mode=TwoWay}" Width="200"  Grid.Column="1" Grid.Row="0" Margin="5"/>
+                <Label Content="New Limit" FontSize="16"   Grid.Column="0" Grid.Row="0"/>
+                <TextBox Text="{Binding Path=Limit, Mode=TwoWay}"  Height="20" Width="100"  Grid.Column="1" Grid.Row="0" Margin="5"/>
                 <Label Content="Type -1 to disable the limit" FontSize="16"  Grid.Column="1" Grid.Row="1"/>
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

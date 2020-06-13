@@ -19,7 +19,7 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <Label Content="New Name" FontSize="16"  Grid.Column="0" Grid.Row="0"/>
-                <TextBox Text="{Binding Path=Name, Mode=TwoWay}" Width="200"  Grid.Column="1" Grid.Row="0" Margin="5"/>
+                <TextBox Text="{Binding Path=Name, Mode=TwoWay}" Width="200" Height="20"  Grid.Column="1" Grid.Row="0" Margin="5"/>
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Change name" Name="ChangeName"  Margin="20" FontSize="16" Width="100" IsDefault="True" Click="ChangeName_Click"/>

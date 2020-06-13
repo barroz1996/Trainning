@@ -17,21 +17,21 @@ namespace Presentation.Model
             Columns.CollectionChanged += HandleChange;
         }
 
-        public Board(BackendController controller, User user) : base(controller)
+        public Board(BackendController controller, User user,string filter) : base(controller)
         {
             this.userEmail = user.Email;
             Columns = new ObservableCollection<Column>(controller.GetAllColumnNames(user.Email).
-                Select((c, i) => new Column(controller,i, controller.GetTasks(user.Email,i), controller.GetColumn(user.Email,i).Name, controller.GetColumn(user.Email, i).Limit, user.Email)).ToList());
+                Select((c, i) => new Column(controller,i, controller.GetTasks(user.Email,i,filter), controller.GetColumn(user.Email,i).Name, controller.GetColumn(user.Email, i).Limit, user.Email)).ToList());
             Columns.CollectionChanged += HandleChange;
         }
-        public Board(BackendController controller, string email) : base(controller)
+        public Board(BackendController controller, string email,string filter) : base(controller)
         {
             this.userEmail = email;
             Columns = new ObservableCollection<Column>(controller.GetAllColumnNames(email).
-                Select((c, i) => new Column(controller, i, controller.GetTasks(email, i), controller.GetColumn(email, i).Name, controller.GetColumn(email, i).Limit, email)).ToList());
+                Select((c, i) => new Column(controller, i, controller.GetTasks(email, i,filter), controller.GetColumn(email, i).Name, controller.GetColumn(email, i).Limit, email)).ToList());
             Columns.CollectionChanged += HandleChange;
         }
-        public string userEmail;
+        public string userEmail { get; set; }
         public ObservableCollection<Column> _columns;
         public ObservableCollection<Column> Columns
         {
