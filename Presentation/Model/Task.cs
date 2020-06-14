@@ -55,7 +55,7 @@ namespace Presentation.Model
             {
                 if (IsAssignee(userEmail))
                     return new SolidColorBrush(Colors.Blue);
-                return new SolidColorBrush(Colors.Black);
+                return new SolidColorBrush();
             }
         }
         override

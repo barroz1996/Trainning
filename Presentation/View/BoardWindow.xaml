@@ -5,17 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="BoardWindow" Height="600" Width="900">
+        Title="BoardWindow" Height="600" Width="900" Background="#FF119C87">
 
     <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="437*"/>
+        </Grid.ColumnDefinitions>
 
 
 
 
-       
 
 
-        <StackPanel Orientation="Vertical">
+
+        <StackPanel Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,0.333,-0.333" Background="#FFE18F8F">
             <Label Content="                                                              Kanban System"  FontSize="20"/>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -23,14 +27,14 @@
                     <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="170"/>
-                    
+
                     <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
-                    
+
                 </Grid.RowDefinitions>
                 <Button Content="Move Right" x:Name="MoveRight"  Grid.Column="1" Grid.Row="0" FontSize="16" Width="130" Height="30" IsDefault="True" Click="MoveRight_Click"/>
                 <Button Content="Search" x:Name="Search"  Grid.Column="1" Grid.Row="2" FontSize="16" Width="130" Height="30" IsDefault="True" Click="Search_Click" />
@@ -45,17 +49,17 @@
                 <Button Content="Set Limit" x:Name="SetLimit"  Grid.Column="0" Grid.Row="1"  FontSize="16" Width="130" Height="30" IsDefault="True" Click="SetLimit_Click"/>
                 <TextBox Text = "{Binding Filter}" Width="100" Height="25" Grid.Column="0" Grid.Row="2" />
             </Grid>
-            
-                
-            
+
+
+
             <Grid >
                 <StackPanel Orientation="Horizontal" />
                 <ListBox x:Name = "ColumnList" ItemsSource="{Binding Board.Columns}" HorizontalAlignment="Center"  ScrollViewer.VerticalScrollBarVisibility="Auto"  >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush = "Black" MinWidth="200" MaxWidth="200" MinHeight="300" MaxHeight="300" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                
-                                    <Grid >
+
+                                <Grid >
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="auto"/>
                                         <RowDefinition/>
@@ -77,8 +81,8 @@
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                 </Grid>
-                            
-                          </Border>
+
+                            </Border>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemsPanel >

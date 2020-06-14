@@ -10,14 +10,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
     class BoardEmailsControl:DalController
     {
-        //private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        //private readonly string _connectionString;
-        //private readonly string _tableName;
+      
         public BoardEmailsControl():base("BoardEmails")
         {
-            //var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            //_connectionString = $"Data Source={path}; Version=3;";
-            //_tableName = "BoardEmails";
+            
         }
 
         public List<DTOs.BoardEmailsDTO> SelectBoard(string Host) //Returns all columns with a specific email.
@@ -55,35 +51,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         }
 
 
-        /*public bool DeleteTable() //Deletes all boards.
-        {
-            int res = -1;
-
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"DELETE FROM {_tableName}"
-                };
-                try
-                {
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while trying to delete all boardEmails");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }*/
+       
         public bool Insert(DTOs.BoardEmailsDTO BoardEmail) //creates a new board in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))

@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private BusinessLayer.UserPackage.UserController UserController;
         private BusinessLayer.BoardPackage.BoardController BoardController;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private DataAccessLayer.Controllers.SQLCreator create;
+      
 
         /// <summary>
         /// Simple public constructor.
@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             this.UserController = new BusinessLayer.UserPackage.UserController();
             this.BoardController = new BusinessLayer.BoardPackage.BoardController();
-            this.create = new DataAccessLayer.Controllers.SQLCreator();
+          
         }
                
         /// <summary>        

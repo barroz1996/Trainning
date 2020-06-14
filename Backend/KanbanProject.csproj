@@ -128,7 +128,6 @@
     <Compile Include="DataAccessLayer\Controllers\ColumnControl.cs" />
     <Compile Include="DataAccessLayer\Controllers\DalController.cs" />
     <Compile Include="DataAccessLayer\Controllers\IDalController.cs" />
-    <Compile Include="DataAccessLayer\Controllers\sqlCreator.cs" />
     <Compile Include="DataAccessLayer\Controllers\TaskControl.cs" />
     <Compile Include="DataAccessLayer\Controllers\UserControl.cs" />
     <Compile Include="DataAccessLayer\DTOs\BoardDTO.cs" />

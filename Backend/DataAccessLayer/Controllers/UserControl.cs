@@ -7,15 +7,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
     internal class UserControl:DalController
     {
-        //private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        //private readonly string _connectionString;
-        //private readonly string _tableName;
+       
         public UserControl():base("Users")
         {
-            //var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            //_connectionString = $"Data Source={path}; Version=3;";
-            //_tableName = "Users";
+           
         }
+
 
         public bool Update(string Email, string attributeName, string attributeValue) //updates user with specific email (attribute is string).
         {
@@ -81,35 +78,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        /*public bool DeleteTable() //Deletes all users from the database.
-        {
-            int res = -1;
-
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"DELETE FROM {_tableName} "
-                };
-                try
-                {
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while deleting all users");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }*/
+       
 
         public List<DTOs.UserDTO> Select() //Returns all users.
         {
