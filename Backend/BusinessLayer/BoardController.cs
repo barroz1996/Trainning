@@ -53,7 +53,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void AddTask(string email, string title, string description, DateTime dueDate,string emailHost) //adds a new task to the first column.
         {
             GetBoard(emailHost).AddTask(totalTasks, title, description, dueDate, email); //After checking input legitimacy, creates a new task.);
-            GetColumn(emailHost, 0).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+            //GetColumn(emailHost, 0).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
             totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
         }
         public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
@@ -92,7 +92,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
 
                 GetColumn(emailHost, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
-                GetColumn(emailHost, columnOrdinal).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+                //GetColumn(emailHost, columnOrdinal).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                 TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDueDateColumnDueDate, dueDate);
                 log.Debug("Updated the due date of task " + taskId + ".");
             }
@@ -165,7 +165,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("This email is not the assignee of the task");
                 }
                 GetColumn(emailHost, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
-                GetColumn(emailHost, columnOrdinal+1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+                //GetColumn(emailHost, columnOrdinal+1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                 log.Debug("Task " + taskId + " was advanced from the " + GetColumn(emailHost, columnOrdinal).GetColumnName() + " column to the " + GetColumn(emailHost, columnOrdinal + 1).GetColumnName() + " column.");
                 TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal + 1);
             }
@@ -195,7 +195,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     {
                         newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationTime,tdal.EmailAssignee));
                     }
-                    newCol.GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+                    //newCol.GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                     if (colList.Count <= newCol.GetColumnOrdinal()) //if this is the last column so far, add it to the end of the list.
                     {
                         colList.Add(newCol);

@@ -88,6 +88,9 @@ namespace Presentation.View
             vm.DeleteTask();
         }
 
-       
+        private void SortedBy_Click(object sender, RoutedEventArgs e)
+        {
+            vm.ReOrganize();
+        }
     }
 }

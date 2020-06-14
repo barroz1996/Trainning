@@ -102,7 +102,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("Due date is required to be a futuristic date.");
             }
             GetColumn(0).AddTask(new Task(taskId, title, description, dueDate,emailAssignee));
-            GetColumn(0).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+            //GetColumn(0).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
             TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0, emailAssignee));
             log.Debug("Task " + (taskId) + " was created by user " + email + ".");
         }
@@ -210,7 +210,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("The next column cannot hold all the tasks!");
                 }
                 GetColumn(1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
-                GetColumn(1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+                //GetColumn(1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
             }
             else
             {
@@ -220,7 +220,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("The previous column cannot hold all the tasks!");
                 }
                 GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
-                GetColumn(columnOrdinal-1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+                //GetColumn(columnOrdinal-1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                 foreach (var tasks in GetColumn(columnOrdinal).GetTasks()) //updates ordinal for all tasks of the column in database (irrelevant if ordinal is 0 since they will stay at 0 post-removal.
                 {
                     TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal - 1);

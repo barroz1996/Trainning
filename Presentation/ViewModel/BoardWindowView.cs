@@ -8,6 +8,7 @@ using IntroSE.Kanban.Backend.ServiceLayer;
 using System.Windows;
 using Presentation.View;
 using System.Windows.Media;
+using System.Collections.ObjectModel;
 
 namespace Presentation
 {
@@ -20,6 +21,7 @@ namespace Presentation
             this.Filter = "";
             this.board = new Model.Board(user.Controller, user,Filter);
             this.Controller = user.Controller;
+            this.Sorted = "Due Date";
         }
      
         private string filter;
@@ -56,7 +58,17 @@ namespace Presentation
                 RaisePropertyChanged("Task");
             }
         }
-        
+        private string sorted;
+        public string Sorted
+        {
+            get { return sorted; }
+            set
+            {
+                sorted = value;
+                RaisePropertyChanged("Sorted");
+            }
+        }
+
         private Model.Board board;
         public Model.Board Board
         {
@@ -65,6 +77,31 @@ namespace Presentation
             {
                 board = value;
                 RaisePropertyChanged("Board");
+            }
+        }
+        public void ReOrganize()
+        {
+            if (Sorted.Equals("Due Date"))
+            {
+                for (int i = 0; i < Board.Columns.Count; i++)
+                {
+                    List<Model.Task> tasks = Board.Columns.ElementAt(i).Tasks.ToList();
+                    tasks.Sort((x, y) => DateTime.Compare(x.DueDate, y.DueDate));
+                    Board.Columns.ElementAt(i).Tasks = new ObservableCollection<Model.Task>(tasks.
+                   Select((c, j) => tasks[j]).ToList());
+                }
+                Sorted = "Creation Date";
+            }
+            else
+            {
+                for (int i = 0; i < Board.Columns.Count; i++)
+                {
+                    List<Model.Task> tasks = Board.Columns.ElementAt(i).Tasks.ToList();
+                    tasks.Sort((x, y) => DateTime.Compare(x.CreationDate, y.CreationDate));
+                    Board.Columns.ElementAt(i).Tasks = new ObservableCollection<Model.Task>(tasks.
+                   Select((c, j) => tasks[j]).ToList());
+                }
+                Sorted = "Due Date";
             }
         }
        
@@ -81,6 +118,16 @@ namespace Presentation
         public void ReLoad()
         {
             this.Board = new Model.Board(Controller, Email,Filter);
+            if (Sorted.Equals("Creation Date"))
+            {
+                for (int i = 0; i < Board.Columns.Count; i++)
+                {
+                    List<Model.Task> tasks = Board.Columns.ElementAt(i).Tasks.ToList();
+                    tasks.Sort((x, y) => DateTime.Compare(x.DueDate, y.DueDate));
+                    Board.Columns.ElementAt(i).Tasks = new ObservableCollection<Model.Task>(tasks.
+                   Select((c, j) => tasks[j]).ToList());
+                }
+            }
         }
       
         public void RemoveColumn(int ordinal)
