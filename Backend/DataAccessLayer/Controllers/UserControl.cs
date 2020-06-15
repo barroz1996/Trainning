@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    internal class UserControl
+    internal class UserControl : DalController
     {
-        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly string _connectionString;
-        private readonly string _tableName;
-        public UserControl()
+
+        public UserControl() : base("Users")
         {
-            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            _connectionString = $"Data Source={path}; Version=3;";
-            _tableName = "Users";
+
         }
+
 
         public bool Update(string Email, string attributeName, string attributeValue) //updates user with specific email (attribute is string).
         {
@@ -35,7 +31,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this user.");
                 }
@@ -67,7 +63,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting this user");
                 }
@@ -81,35 +77,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool DeleteTable() //Deletes all users from the database.
-        {
-            int res = -1;
 
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"DELETE FROM {_tableName} "
-                };
-                try
-                {
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while deleting all users");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }
 
         public List<DTOs.UserDTO> Select() //Returns all users.
         {
@@ -126,11 +94,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetBoolean(3)));
+                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetBoolean(3), dataReader.GetString(4)));
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all user.");
                 }
@@ -162,7 +130,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this user.");
                 }
@@ -184,18 +152,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.UserDTO.UsersEmailColumn} ,{DTOs.UserDTO.UsersNicknameColumn},{DTOs.UserDTO.UsersPasswordColumn},{DTOs.UserDTO.UsersLoggedInColumn}) " +
-                        $"VALUES (@emailVal,@nickNameVal,@passwordVal,@loggedInVal);";
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.UserDTO.UsersEmailColumn} ,{DTOs.UserDTO.UsersNicknameColumn},{DTOs.UserDTO.UsersPasswordColumn},{DTOs.UserDTO.UsersLoggedInColumn},{DTOs.UserDTO.UsersHostColumn}) " +
+                        $"VALUES (@emailVal,@nickNameVal,@passwordVal,@loggedInVal,@emailHostVal);";
 
                     command.Parameters.Add(new SQLiteParameter(@"emailVal", User.Email));
                     command.Parameters.Add(new SQLiteParameter(@"nickNameVal", User.Nickname));
                     command.Parameters.Add(new SQLiteParameter(@"passwordVal", User.Password));
                     command.Parameters.Add(new SQLiteParameter(@"loggedInVal", User.LoggedIn));
-
+                    command.Parameters.Add(new SQLiteParameter(@"emailHostVal", User.EmailHost));
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while creating this user.");
                 }

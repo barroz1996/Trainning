@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Tests")]
+
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
@@ -8,8 +12,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private DataAccessLayer.Controllers.ColumnControl ColumnCon = new DataAccessLayer.Controllers.ColumnControl();
         private DataAccessLayer.Controllers.TaskControl TaskCon = new DataAccessLayer.Controllers.TaskControl();
         private readonly string email;
+        private List<string> boardEmails;
         private List<Column> columns;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private int deletedTasks;
         public Board(string email)
         {
             this.email = email;
@@ -20,12 +26,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns.Add(backlog);
             columns.Add(in_progress);
             columns.Add(done);
+            boardEmails = new List<string>();
+            boardEmails.Add(email);
+            deletedTasks = 0;
         }
         public Board() { }
-        public Board(string email, List<Column> columns)
+        public List<string> GetBoardEmail()
+        {
+            return boardEmails;
+        }
+        public void SetDeletedTasks()
+        {
+            deletedTasks++;
+        }
+        public int GetDeletedTasks()
+        {
+            return deletedTasks;
+        }
+        public Board(string email, List<Column> columns, List<string> boardEmails, int deletedTasks)
         {
             this.email = email;
             this.columns = columns;
+            this.boardEmails = boardEmails;
+            this.deletedTasks = deletedTasks;
         }
         public String GetEmail() { return email; }
         public List<Column> GetColumns() { return columns; }
@@ -53,7 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             log.Debug("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
         }
-        public void AddTask(int taskId, String title, String description, DateTime dueDate)
+        public void AddTask(int taskId, String title, String description, DateTime dueDate, string emailAssignee)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -78,8 +101,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried adding new task with a non futuristic due date.");
                 throw new Exception("Due date is required to be a futuristic date.");
             }
-            GetColumn(0).AddTask(new Task(taskId, title, description, dueDate));
-            TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0));
+            GetColumn(0).AddTask(new Task(taskId, title, description, dueDate, emailAssignee));
+            TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0, emailAssignee));
             log.Debug("Task " + (taskId) + " was created by user " + email + ".");
         }
         public int TotalTask()
@@ -180,12 +203,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             checkOrdinal(columnOrdinal);
             if (columnOrdinal == 0)
             {
-                if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count && GetColumn(1).GetLimit() != -1) 
+                if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count && GetColumn(1).GetLimit() != -1)
                 { //checks if the next column has enough space for all the tasks from this one
                     log.Debug("error: there is not enough free space in the next column for all the tasks from this one");
                     throw new Exception("The next column cannot hold all the tasks!");
                 }
                 GetColumn(1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
+                //GetColumn(1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
             }
             else
             {
@@ -195,6 +219,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("The previous column cannot hold all the tasks!");
                 }
                 GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
+                //GetColumn(columnOrdinal-1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                 foreach (var tasks in GetColumn(columnOrdinal).GetTasks()) //updates ordinal for all tasks of the column in database (irrelevant if ordinal is 0 since they will stay at 0 post-removal.
                 {
                     TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal - 1);
@@ -211,6 +236,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, i);
                 }
             }
+        }
+        public void ChangeColumnName(int columnOrdinal, string Name)
+        {
+            if (GetColumn(columnOrdinal).GetColumnName().Equals(Name))
+            {
+                log.Debug("This column's name is already this name!");
+                throw new Exception("This column's name is already this name!");
+            }
+            if (string.IsNullOrWhiteSpace(Name) || Name.Length > 15)
+            {
+                log.Debug("Name out of bounds!");
+                throw new Exception("Name out of bounds!");
+            }
+            foreach (Column col in columns)
+            {
+                if (col.GetColumnName().Equals(Name))
+                {
+                    log.Debug("This column name already exists");
+                    throw new Exception("This column name already exists");
+                }
+            }
+            GetColumn(columnOrdinal).ChangeName(Name);
+            ColumnCon.Update(columnOrdinal, DataAccessLayer.DTOs.ColumnDTO.ColumnNameColumnName, Name, email);
         }
     }
 }

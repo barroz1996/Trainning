@@ -12,11 +12,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private bool HasLogged;
         private Dictionary<string, User> Users;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public bool GetHasLogged() { return HasLogged; }
         public UserController()
         {
             HasLogged = false;
             Users = new Dictionary<string, User>();
 
+        }
+        public Dictionary<string, User> GetUsers()
+        {
+            return Users;
         }
         public void LoadData() //Loads all the data while starting the program.
         {
@@ -24,7 +29,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             var dalUser = user.Select(); //Gets all users from the database.
             foreach (var dal in dalUser)
             {
-                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn));    //Adds all users to the users dictionary.
+                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn, dal.EmailHost));    //Adds all users to the users dictionary.
             }
             foreach (var entry in Users) //Checks if any of the users is logged in.
             {
@@ -48,7 +53,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
         }
 
-        public void Register(string email, string password, string nickname) //Adds a new user to the dictionary and creates a new json file for it.
+        public void Register(string email, string password, string nickname, string hostEmail) //Adds a new user to the dictionary and creates a new json file for it.
         {
 
             if (Users.ContainsKey(email)) //Checks if this email is unused by another user.
@@ -56,12 +61,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 log.Debug("Tried registering with an existing email.");
                 throw new Exception("email already in use.");
             }
+            if (!email.Equals(hostEmail))
+            {
+                if (!Users.ContainsKey(hostEmail))
+                {
+                    log.Debug("The host email not registerd in the system");
+                    throw new Exception("The host email not registerd in the system");
+                }
+                if (!GetUser(hostEmail).GetEmailHost().Equals(hostEmail))
+                {
+                    log.Debug("The host email is not host");
+                    throw new Exception("The host email is not host");
+                }
+            }
             if (!string.IsNullOrWhiteSpace(nickname))
             {
                 if (EmailVerify(email))
                 {
-                    Users.Add(email, new User(email, password, nickname));
-                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false)); //creates the new user in the database.
+                    Users.Add(email, new User(email, password, nickname, hostEmail));
+                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false, hostEmail)); //creates the new user in the database.
                     log.Debug("User " + email + " was created.");
                 }
                 else
@@ -75,6 +93,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 log.Debug("Error: nickName cant be empty");
                 throw new Exception("nickName cant be empty");
             }
+
         }
         public bool IsLogged(string email) //Checks if a specific user is logged in.
         {

@@ -14,21 +14,21 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     /// </summary>
     public class Service : IService
     {
-    	private BusinessLayer.UserPackage.UserController UserController;
+        private BusinessLayer.UserPackage.UserController UserController;
         private BusinessLayer.BoardPackage.BoardController BoardController;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private DataAccessLayer.Controllers.SQLCreator create;
+
+
         /// <summary>
         /// Simple public constructor.
         /// </summary>
         public Service()
         {
-           this.UserController = new BusinessLayer.UserPackage.UserController();
-           this.BoardController = new BusinessLayer.BoardPackage.BoardController();
-           create = new DataAccessLayer.Controllers.SQLCreator();
-           
+            UserController = new BusinessLayer.UserPackage.UserController();
+            BoardController = new BusinessLayer.BoardPackage.BoardController();
+
         }
-               
+
         /// <summary>        
         /// Loads the data. Intended be invoked only when the program starts
         /// </summary>
@@ -37,13 +37,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                DataAccessLayer.Controllers.SQLCreator create = new DataAccessLayer.Controllers.SQLCreator(); //creates new database if doesn't exist.
                 UserController.LoadData();
                 BoardController.LoadData();
                 log.Debug("Data loaded successfully");
                 return new Response();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new Response<Object>(ex.Message);
             }
@@ -64,23 +63,22 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 return new Response<Object>(ex.Message);
             }
-
         }
 
 
-    /// <summary>
-    /// Registers a new user
-    /// </summary>
-    /// <param name="email">The email address of the user to register</param>
-    /// <param name="password">The password of the user to register</param>
-    /// <param name="nickname">The nickname of the user to register</param>
-    /// <returns>A response object. The response should contain a error message in case of an error<returns>
-    public Response Register(string email, string password, string nickname)
+        /// <summary>
+        /// Registers a new user and creates a new board for him.
+        /// </summary>
+        /// <param name="email">The email address of the user to register</param>
+        /// <param name="password">The password of the user to register</param>
+        /// <param name="nickname">The nickname of the user to register</param>
+        /// <returns>A response object. The response should contain a error message in case of an error<returns>
+        public Response Register(string email, string password, string nickname)
         {
             try
             {
                 UserController.PasswordVerify(password);
-                UserController.Register(email, password, nickname);
+                UserController.Register(email, password, nickname, email);
                 BoardController.Register(email);
                 return new Response();
             }
@@ -91,6 +89,92 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
         }
 
+
+        /// <summary>
+        /// Registers a new user and joins the user to an existing board.
+        /// </summary>
+        /// <param name="email">The email address of the user to register</param>
+        /// <param name="password">The password of the user to register</param>
+        /// <param name="nickname">The nickname of the user to register</param>
+        /// <param name="emailHost">The email address of the host user which owns the board</param>
+        /// <returns>A response object. The response should contain a error message in case of an error<returns>
+        public Response Register(string email, string password, string nickname, string emailHost)
+        {
+            try
+            {
+                UserController.PasswordVerify(password);
+                UserController.Register(email, password, nickname, emailHost);
+                BoardController.AddToBoard(email, emailHost);
+                return new Response();
+            }
+            catch (Exception ex)
+            {
+                log.Debug(ex.Message);
+                return new Response<Object>(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Assigns a task to a user
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="taskId">The task to be updated identified task ID</param>        
+        /// <param name="emailAssignee">Email of the user to assign to task to</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            if (UserController.IsLogged(email))
+            {
+                try
+                {
+                    BoardController.AssignTask(email, columnOrdinal, taskId, emailAssignee, UserController.GetUser(email).GetEmailHost());
+                    return new Response();
+                }
+                catch (Exception ex)
+                {
+                    return new Response<Object>(ex.Message);
+                }
+            }
+            else
+            {
+                log.Debug("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
+        }
+
+        /// <summary>
+        /// Delete a task
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="taskId">The task to be updated identified task ID</param>        		
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response DeleteTask(string email, int columnOrdinal, int taskId)
+        {
+            if (UserController.IsLogged(email))
+            {
+                try
+                {
+                    BoardController.DeleteTask(email, columnOrdinal, taskId, UserController.GetUser(email).GetEmailHost());
+                    return new Response();
+                }
+                catch (Exception ex)
+                {
+                    return new Response<Object>(ex.Message);
+                }
+            }
+            else
+            {
+                log.Debug("This user is not logged in");
+                return new Response<Board>("This user is not logged in");
+            }
+        }
+
+
+
         /// <summary>
         /// Log in an existing user
         /// </summary>
@@ -99,7 +183,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
-             try
+            try
             {
                 UserController.Login(email, password);
                 var user = new User(email, UserController.GetUser(email).GetNickname());
@@ -118,7 +202,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-             try
+            try
             {
                 UserController.Logout(email);
                 return new Response();
@@ -141,11 +225,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 try
                 {
                     var ColumnsNames = new List<string>();
-                    foreach (var column in BoardController.GetBoard(email).GetColumns())
+                    foreach (var column in BoardController.GetBoard(UserController.GetUser(email).GetEmailHost()).GetColumns())
                     {
                         ColumnsNames.Add(column.GetColumnName());
                     }
-                    var board = new Board((IReadOnlyCollection<string>)ColumnsNames);
+                    var board = new Board((IReadOnlyCollection<string>)ColumnsNames, UserController.GetUser(email).GetEmailHost());
                     return new Response<Board>(board);
                 }
                 catch (Exception ex)
@@ -189,6 +273,35 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
+        /// Change the name of a specific column
+        /// </summary>
+        /// <param name="email">The email address of the user, must be logged in</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="newName">The new name.</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            if (UserController.IsLogged(email))
+            {
+                try
+                {
+                    BoardController.ChangeColumnName(email, columnOrdinal, newName);
+                    return new Response();
+                }
+                catch (Exception ex)
+                {
+                    return new Response<Object>(ex.Message);
+                }
+            }
+            else
+            {
+                log.Debug("This user is not logged in");
+                return new Response<Object>("This user is not logged in");
+            }
+        }
+
+
+        /// <summary>
         /// Add a new task.
         /// </summary>
         /// <param name="email">Email of the user. The user must be logged in.</param>
@@ -198,12 +311,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Task, instead the response should contain a error message in case of an error</returns>
         public Response<Task> AddTask(string email, string title, string description, DateTime dueDate)
         {
-              if (UserController.IsLogged(email))
+            if (UserController.IsLogged(email))
             {
                 try
                 {
-                    BoardController.AddTask(email, title, description, dueDate);
-                    return new Response<Task>(new Task(BoardController.GetTotalTasks() - 1, DateTime.Now, dueDate, title, description));
+                    BoardController.AddTask(email, title, description, dueDate, UserController.GetUser(email).GetEmailHost());
+                    return new Response<Task>(new Task(BoardController.GetTotalTasks() - 1, DateTime.Now, dueDate, title, description, email));
                 }
                 catch (Exception ex)
                 {
@@ -231,7 +344,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.UpdateTaskDueDate(email, columnOrdinal, taskId, dueDate);
+                    BoardController.UpdateTaskDueDate(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, dueDate);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -244,7 +357,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
-
         }
 
         /// <summary>
@@ -257,11 +369,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
-             if (UserController.IsLogged(email))
+            if (UserController.IsLogged(email))
             {
                 try
                 {
-                    BoardController.UpdateTaskTitle(email, columnOrdinal, taskId, title);
+                    BoardController.UpdateTaskTitle(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, title);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -286,11 +398,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
-             if (UserController.IsLogged(email))
+            if (UserController.IsLogged(email))
             {
                 try
                 {
-                    BoardController.UpdateTaskDescription(email, columnOrdinal, taskId, description);
+                    BoardController.UpdateTaskDescription(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId, description);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -318,7 +430,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.AdvanceTask(email, columnOrdinal, taskId);
+                    BoardController.AdvanceTask(email, UserController.GetUser(email).GetEmailHost(), columnOrdinal, taskId);
                     return new Response();
                 }
                 catch (Exception ex)
@@ -342,16 +454,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<Column> GetColumn(string email, string columnName)
         {
-           if (UserController.IsLogged(email))
+            if (UserController.IsLogged(email))
             {
                 try
                 {
                     var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnName).GetTasks())
+                    foreach (var task in BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnName).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(email, columnName).GetLimit());
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, columnName, BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnName).GetLimit());
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -381,11 +493,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 try
                 {
                     var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal).GetTasks())
+                    foreach (var task in BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnOrdinal).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnOrdinal).GetColumnName(), BoardController.GetColumn(UserController.GetUser(email).GetEmailHost(), columnOrdinal).GetLimit());
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -409,7 +521,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RemoveColumn(string email, int columnOrdinal)
         {
-
             if (UserController.IsLogged(email))
             {
                 try
@@ -442,11 +553,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (UserController.IsLogged(email))
             {
-                try { 
-                BoardController.AddColumn(email, columnOrdinal, Name);
+                try
+                {
+                    BoardController.AddColumn(email, columnOrdinal, Name);
                     var Tasks = new List<Task>();
                     var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal).GetColumnName(), BoardController.GetColumn(email, columnOrdinal).GetLimit());
-                    log.Debug("user " + email + " added " + Name + " column to his board as column number "+columnOrdinal);
+                    log.Debug("user " + email + " added " + Name + " column to his board as column number " + columnOrdinal);
                     return new Response<Column>(column);
                 }
                 catch (Exception ex)
@@ -475,13 +587,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 try
                 {
-                    BoardController.MoveColumn(email, columnOrdinal,1);
+                    BoardController.MoveColumn(email, columnOrdinal, 1);
                     var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal+1).GetTasks())
+                    foreach (var task in BoardController.GetColumn(email, columnOrdinal + 1).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal+1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal+1).GetLimit());
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal + 1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal + 1).GetLimit());
                     log.Debug("user " + email + " moved his " + column.Name + " column right.");
                     return new Response<Column>(column);
                 }
@@ -513,11 +625,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 {
                     BoardController.MoveColumn(email, columnOrdinal, -1);
                     var Tasks = new List<Task>();
-                    foreach (var task in BoardController.GetColumn(email, columnOrdinal-1).GetTasks())
+                    foreach (var task in BoardController.GetColumn(email, columnOrdinal - 1).GetTasks())
                     {
-                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
+                        Tasks.Add(new Task(task.GetTaskID(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                     }
-                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal-1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal-1).GetLimit());
+                    var column = new Column((IReadOnlyCollection<Task>)Tasks, BoardController.GetColumn(email, columnOrdinal - 1).GetColumnName(), BoardController.GetColumn(email, columnOrdinal - 1).GetLimit());
                     log.Debug("user " + email + " moved his " + column.Name + " column left.");
                     return new Response<Column>(column);
                 }
@@ -531,6 +643,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Debug("This user is not logged in");
                 return new Response<Column>("This user is not logged in");
             }
+
         }
 
     }

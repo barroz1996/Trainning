@@ -1,117 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
 
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    internal class TaskControl
+    internal class TaskControl : DalController
     {
-        private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly string _connectionString;
-        private readonly string _tableName;
-        public TaskControl()
+
+        public TaskControl() : base("Tasks")
         {
-            var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            _connectionString = $"Data Source={path}; Version=3;";
-            _tableName = "Tasks";
         }
 
-        public bool Update(int ID, string attributeName, string attributeValue) //updates a task with a specific ID (attribute is string).
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ID=@ID"
-                };
-                try
-                {
-                    connection.Open();
-                    command.Parameters.Add(new SQLiteParameter(@"ID", ID));
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
-                    command.Prepare();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while updating this task.");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
 
-            }
-            return res > 0;
-        }
-
-        public bool Update(int ID, string attributeName, int attributeValue) //updates a task with a specific ID (attribute is int).
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE ID=@ID"
-                };
-                try
-                {
-                    connection.Open();
-                    command.Parameters.Add(new SQLiteParameter(@"ID", ID));
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
-                    command.Prepare();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while updating this task.");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-
-                }
-
-            }
-            return res > 0;
-        }
-        public bool Update(int id, string attributeName, DateTime attributeValue) //updates a task with a specific ID (attribute is DateTime).
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@{attributeName} WHERE id={id}"
-                };
-                try
-                {
-
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while updating this task.");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }
 
         public List<DTOs.TaskDTO> SelectTasks(string email, int ColumnOridnal) //returns all tasks from the same column (same ordinal and email).
         {
@@ -130,10 +31,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.IsDBNull(2) ? null : dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal));
+                        taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.IsDBNull(2) ? null : dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal, dataReader.GetString(7)));
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all tasks from this board's column");
                 }
@@ -147,7 +48,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return taskList;
         }
 
-        public bool Delete(DTOs.TaskDTO DTOObj) //Deletes a specific task.
+        public bool Delete(int taskId) //Deletes a specific task.
         {
             int res = -1;
 
@@ -158,13 +59,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     Connection = connection,
                     CommandText = $"DELETE FROM {_tableName} WHERE [{DTOs.TaskDTO.TasksIdColumnId}]=@taskId"
                 };
-                command.Parameters.Add(new SQLiteParameter(@"taskId", DTOObj.TaskId));
+                command.Parameters.Add(new SQLiteParameter(@"taskId", taskId));
                 try
                 {
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting this task");
                 }
@@ -177,35 +78,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-        public bool DeleteTable() //Deletes all tasks from the database.
-        {
-            int res = -1;
 
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"DELETE FROM {_tableName} "
-                };
-                try
-                {
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while deleting all tasks.");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }
         public bool Insert(DTOs.TaskDTO Tasks) //Creates a new task in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -215,8 +88,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.TaskDTO.TasksIdColumnId} ,{DTOs.TaskDTO.TasksTitleColumnTitle},{DTOs.TaskDTO.TasksDescriptionColumnDescription},{DTOs.TaskDTO.TasksDueDateColumnDueDate},{DTOs.TaskDTO.TasksCreationDateColumnCreationDate},{DTOs.TaskDTO.TasksEmailColumnEmail},{DTOs.TaskDTO.TasksColumnIdColumnColumnId}) " +
-                        $"VALUES (@idVal,@titleVal,@descriptionVal,@dueDateTimeVal,@creationTimeVal,@emailVal,@columnOridnalVal);";
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.TaskDTO.TasksIdColumnId} ,{DTOs.TaskDTO.TasksTitleColumnTitle},{DTOs.TaskDTO.TasksDescriptionColumnDescription},{DTOs.TaskDTO.TasksDueDateColumnDueDate},{DTOs.TaskDTO.TasksCreationDateColumnCreationDate},{DTOs.TaskDTO.TasksEmailColumnEmail},{DTOs.TaskDTO.TasksColumnIdColumnColumnId},{DTOs.TaskDTO.TasksEmailAssigneeColumn}) " +
+                        $"VALUES (@idVal,@titleVal,@descriptionVal,@dueDateTimeVal,@creationTimeVal,@emailVal,@columnOridnalVal,@emailAssigneeVal);";
 
                     var idParam = new SQLiteParameter(@"idVal", Tasks.TaskId);
                     var titleParam = new SQLiteParameter(@"titleVal", Tasks.Title);
@@ -225,6 +98,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     var creationTimeParam = new SQLiteParameter(@"creationTimeVal", Tasks.CreationTime);
                     var emailParam = new SQLiteParameter(@"emailVal", Tasks.Email);
                     var columnOridnalParam = new SQLiteParameter(@"columnOridnalVal", Tasks.ColumnOridnal);
+                    var emailAssigneeParam = new SQLiteParameter(@"emailAssigneeVal", Tasks.EmailAssignee);
 
                     command.Parameters.Add(idParam);
                     command.Parameters.Add(titleParam);
@@ -233,10 +107,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Parameters.Add(creationTimeParam);
                     command.Parameters.Add(emailParam);
                     command.Parameters.Add(columnOridnalParam);
+                    command.Parameters.Add(emailAssigneeParam);
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while creating this task.");
                 }

@@ -6,14 +6,16 @@
         public const string UsersNicknameColumn = "Nickname";
         public const string UsersPasswordColumn = "Password";
         public const string UsersLoggedInColumn = "LoggedIn";
+        public const string UsersHostColumn = "EmailHost";
         private readonly Controllers.UserControl _controller;
 
-        public UserDTO(string email, string nickName, string password, bool loggedIn)
+        public UserDTO(string email, string nickName, string password, bool loggedIn, string emailHost)
         {
             Email = email;
             Nickname = nickName;
             Password = password;
             LoggedIn = loggedIn;
+            EmailHost = emailHost;
             _controller = new Controllers.UserControl();
 
         }
@@ -22,5 +24,6 @@
         public string Nickname { get; set; }
         public string Password { get; set; }
         public bool LoggedIn { get; set; }
+        public string EmailHost { get; set; }
     }
 }

@@ -9,6 +9,5 @@
             Email = email;
             Nickname = nickname;
         }
-
     }
 }
