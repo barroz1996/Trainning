@@ -32,7 +32,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this column.");
                 }
@@ -67,7 +67,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                         columnsList.Add(new DTOs.ColumnDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.GetInt32(2), Email));
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all columns from this board.");
                 }
@@ -102,7 +102,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting this column.");
                 }
@@ -141,7 +141,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while inserting a new column");
                 }

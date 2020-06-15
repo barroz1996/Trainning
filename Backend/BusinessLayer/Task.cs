@@ -11,7 +11,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private DateTime dueDate;
         private string emailAssignee;
         public Task() { }
-        public Task(int taskId, string title, string description, DateTime dueDate,string emailAssignee)
+        public Task(int taskId, string title, string description, DateTime dueDate, string emailAssignee) //default ctor
         {
             this.taskId = taskId;
             this.title = title;
@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.dueDate = dueDate;
             this.emailAssignee = emailAssignee;
         }
-        public Task(int taskId, string title, string description, DateTime dueDate, DateTime creationDate,string emailAssignee)
+        public Task(int taskId, string title, string description, DateTime dueDate, DateTime creationDate, string emailAssignee) //ctor for added creation date constrain
         {
             this.taskId = taskId;
             this.title = title;
@@ -39,7 +39,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public string GetTitle() { return title; }
         public string GetDescription() { return description; }
         public DateTime GetDueDate() { return dueDate; }
-        public void SetEmailAssignee (string emailAssignee) { this.emailAssignee = emailAssignee; }
+        public void SetEmailAssignee(string emailAssignee) { this.emailAssignee = emailAssignee; }
 
 
 

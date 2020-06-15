@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    internal class UserControl:DalController
+    internal class UserControl : DalController
     {
-       
-        public UserControl():base("Users")
+
+        public UserControl() : base("Users")
         {
-           
+
         }
 
 
@@ -32,7 +31,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this user.");
                 }
@@ -64,7 +63,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting this user");
                 }
@@ -78,7 +77,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-       
+
 
         public List<DTOs.UserDTO> Select() //Returns all users.
         {
@@ -99,7 +98,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all user.");
                 }
@@ -131,7 +130,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this user.");
                 }
@@ -164,7 +163,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while creating this user.");
                 }

@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using IntroSE.Kanban.Backend.ServiceLayer;
-using System.Windows;
+﻿using IntroSE.Kanban.Backend.ServiceLayer;
 using Presentation.View;
-using System.Windows.Media;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace Presentation
 {
-    class BoardWindowView : NotifiableObject
+    internal class BoardWindowView : NotifiableObject
     {
         public BackendController Controller { get; private set; }
-        public BoardWindowView(Model.User user)
-        {           
-            this.Email = user.Email;
-            this.Filter = "";
-            this.board = new Model.Board(user.Controller, user,Filter);
-            this.Controller = user.Controller;
-            this.Sorted = "Due Date";
+        public BoardWindowView(Model.User user) //default ctor
+        {
+            Email = user.Email;
+            Filter = "";
+            board = new Model.Board(user.Controller, user, Filter);
+            Controller = user.Controller;
+            Sorted = "Due Date";
         }
-     
+
         private string filter;
-        public string Filter
+        public string Filter //binding with filter textbox
         {
             get { return filter; }
             set
@@ -36,7 +31,7 @@ namespace Presentation
         }
         public string Welcome
         {
-            get { return "Welcome "+Email; }
+            get { return "Welcome " + Email; }
         }
         private string email;
         public string Email
@@ -48,8 +43,8 @@ namespace Presentation
                 RaisePropertyChanged("Email");
             }
         }
-        private Model.Task task;
-        public Model.Task Task
+        private Model.Task task; 
+        public Model.Task Task //binding with selected task
         {
             get { return task; }
             set
@@ -59,7 +54,7 @@ namespace Presentation
             }
         }
         private string sorted;
-        public string Sorted
+        public string Sorted //changes between creation date and duedate
         {
             get { return sorted; }
             set
@@ -70,7 +65,7 @@ namespace Presentation
         }
 
         private Model.Board board;
-        public Model.Board Board
+        public Model.Board Board 
         {
             get { return board; }
             set
@@ -79,13 +74,13 @@ namespace Presentation
                 RaisePropertyChanged("Board");
             }
         }
-        public void ReOrganize()
+        public void ReOrganize() //sort the task by either duedate or creation date
         {
             if (Sorted.Equals("Due Date"))
             {
                 for (int i = 0; i < Board.Columns.Count; i++)
                 {
-                    List<Model.Task> tasks = Board.Columns.ElementAt(i).Tasks.ToList();
+                    var tasks = Board.Columns.ElementAt(i).Tasks.ToList();
                     tasks.Sort((x, y) => DateTime.Compare(x.DueDate, y.DueDate));
                     Board.Columns.ElementAt(i).Tasks = new ObservableCollection<Model.Task>(tasks.
                    Select((c, j) => tasks[j]).ToList());
@@ -96,7 +91,7 @@ namespace Presentation
             {
                 for (int i = 0; i < Board.Columns.Count; i++)
                 {
-                    List<Model.Task> tasks = Board.Columns.ElementAt(i).Tasks.ToList();
+                    var tasks = Board.Columns.ElementAt(i).Tasks.ToList();
                     tasks.Sort((x, y) => DateTime.Compare(x.CreationDate, y.CreationDate));
                     Board.Columns.ElementAt(i).Tasks = new ObservableCollection<Model.Task>(tasks.
                    Select((c, j) => tasks[j]).ToList());
@@ -104,7 +99,7 @@ namespace Presentation
                 Sorted = "Due Date";
             }
         }
-       
+
         public void Logout()
         {
             Controller.LogOut(Email);
@@ -115,21 +110,21 @@ namespace Presentation
             newCol.ShowDialog();
             ReLoad();
         }
-        public void ReLoad()
+        public void ReLoad() //update the display board after changes
         {
-            this.Board = new Model.Board(Controller, Email,Filter);
+            Board = new Model.Board(Controller, Email, Filter);
             if (Sorted.Equals("Creation Date"))
             {
                 for (int i = 0; i < Board.Columns.Count; i++)
                 {
-                    List<Model.Task> tasks = Board.Columns.ElementAt(i).Tasks.ToList();
+                    var tasks = Board.Columns.ElementAt(i).Tasks.ToList();
                     tasks.Sort((x, y) => DateTime.Compare(x.DueDate, y.DueDate));
                     Board.Columns.ElementAt(i).Tasks = new ObservableCollection<Model.Task>(tasks.
                    Select((c, j) => tasks[j]).ToList());
                 }
             }
         }
-      
+
         public void RemoveColumn(int ordinal)
         {
             try
@@ -138,20 +133,25 @@ namespace Presentation
                 MessageBox.Show("Column removed successfully!");
                 ReLoad();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
         }
-        public void Move(int columnOrdinal,int direction)
-        {           
+        public void Move(int columnOrdinal, int direction)
+        {
             try
             {
                 Controller.Move(Email, columnOrdinal, direction);
-                if(direction==1)
-                   MessageBox.Show("Column moved right successfully!");
+                if (direction == 1)
+                {
+                    MessageBox.Show("Column moved right successfully!");
+                }
                 else
-                   MessageBox.Show("Column moved left successfully!");
+                {
+                    MessageBox.Show("Column moved left successfully!");
+                }
+
                 ReLoad();
             }
             catch (Exception e)
@@ -165,11 +165,15 @@ namespace Presentation
             newTask.ShowDialog();
             ReLoad();
         }
-        public void AdvanceTask() {
+        public void AdvanceTask()
+        {
             try
             {
                 if (Task == null)
+                {
                     throw new Exception("No task selected!");
+                }
+
                 Controller.AdvanceTask(Task);
                 MessageBox.Show("Task Advanced successfully!");
                 ReLoad();
@@ -188,32 +192,41 @@ namespace Presentation
                 ReLoad();
             }
             else
+            {
                 MessageBox.Show("Please select column!");
+            }
         }
         public void SetLimit(int ordinal, Model.Column column)
         {
-            if (column != null) { 
-            var col = new SetLimitWindow(Controller, Email, ordinal, column.Limit.ToString());
-            col.ShowDialog();
-            ReLoad();
+            if (column != null)
+            {
+                var col = new SetLimitWindow(Controller, Email, ordinal, column.Limit.ToString());
+                col.ShowDialog();
+                ReLoad();
             }
-          else
-             MessageBox.Show("Please select column!");
+            else
+            {
+                MessageBox.Show("Please select column!");
+            }
         }
-        public void OpenTask()
+        public void OpenTask() //open task window for selected task
         {
-            if (Task != null) { 
-               var taskwindow = new TaskWindow(Controller, Email, Task);
-               taskwindow.ShowDialog();
-               ReLoad();
-           }
+            if (Task != null)
+            {
+                var taskwindow = new TaskWindow(Controller, Email, Task);
+                taskwindow.ShowDialog();
+                ReLoad();
+            }
         }
         public void DeleteTask()
         {
             try
             {
                 if (Task == null)
+                {
                     throw new Exception("No task selected!");
+                }
+
                 Controller.DeleteTask(Task);
                 MessageBox.Show("Task removed successfully!");
                 ReLoad();

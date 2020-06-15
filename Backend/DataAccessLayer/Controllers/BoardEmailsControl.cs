@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
-using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    class BoardEmailsControl:DalController
+    internal class BoardEmailsControl : DalController
     {
-      
-        public BoardEmailsControl():base("BoardEmails")
+
+        public BoardEmailsControl() : base("BoardEmails") //default ctor
         {
-            
+
         }
 
         public List<DTOs.BoardEmailsDTO> SelectBoard(string Host) //Returns all columns with a specific email.
@@ -35,10 +31,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                         emailList.Add(new DTOs.BoardEmailsDTO(dataReader.GetString(0), Host));
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all emails from this board");
-                    //have to check if put exception
                 }
                 finally
                 {
@@ -51,7 +46,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
         }
 
 
-       
+
         public bool Insert(DTOs.BoardEmailsDTO BoardEmail) //creates a new board in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -71,7 +66,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while inserting a new boardEmail");
                 }

@@ -1,5 +1,4 @@
-﻿using IntroSE.Kanban.Backend.BusinessLayer;
-namespace IntroSE.Kanban.Backend.ServiceLayer
+﻿namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public struct User
     {
@@ -10,23 +9,5 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Email = email;
             Nickname = nickname;
         }
-        /*
-        public string GetLogUser()
-        {
-            var UserController = new BusinessLayer.UserPackage.UserController();
-            UserController.LoadData();
-            if (UserController.GetHasLogged())
-            {
-                foreach(var user in UserController.GetUsers())
-                {
-                    if (user.Value.GetLoggedIn())
-                    {
-                        return user.Value.GetEmail();
-                    }
-                }
-            }
-            return null;
-        }
-        */
     }
 }

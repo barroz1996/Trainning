@@ -1,41 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.Linq;
 
 namespace Presentation.Model
 {
-    public class Column:NotifiableModelObject
+    public class Column : NotifiableModelObject
     {
 
 
         public readonly string UserEmail;
-        public Column(BackendController controller,int ordinal, List<IntroSE.Kanban.Backend.ServiceLayer.Task> tasks,string name,int limit,string userEmail) : base(controller)
-        {       
-            Tasks = new ObservableCollection<Task>(tasks.
-               Select((c, i) => new Task(controller, ordinal, userEmail, tasks[i])).ToList());
-            this.UserEmail = userEmail;
-            this.Name = name;
-            this.Limit = limit;
-            this.ColumnOrdinal = ordinal;
-            Tasks.CollectionChanged += HandleChange;
-        }
-        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
+        public Column(BackendController controller, int ordinal, List<IntroSE.Kanban.Backend.ServiceLayer.Task> tasks, string name, int limit, string userEmail) : base(controller)
         {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (Task y in e.OldItems)
-                {
-                    Controller.DeleteTask(y);
-                }
-            }
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (Task y in e.NewItems)
-                {
-                    Controller.AddTask(y.userEmail,y.Title,y.Description,y.DueDate);
-                }
-            }
+            Tasks = new ObservableCollection<Task>(tasks.
+            Select((c, i) => new Task(controller, ordinal, userEmail, tasks[i])).ToList());
+            UserEmail = userEmail;
+            Name = name;
+            Limit = limit;
+            ColumnOrdinal = ordinal;
         }
         private ObservableCollection<Task> _tasks;
         public ObservableCollection<Task> Tasks

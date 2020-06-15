@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using IntroSE.Kanban.Backend.ServiceLayer;
 
 namespace Presentation.View
 {
@@ -24,14 +12,14 @@ namespace Presentation.View
         public BoardWindow(Model.User user)
         {
             InitializeComponent();
-            this.vm = new BoardWindowView(user);
-            this.DataContext = vm;
+            vm = new BoardWindowView(user);
+            DataContext = vm;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             vm.Logout();
-            this.Close();
+            Close();
         }
 
         private void AddColumn_Click(object sender, RoutedEventArgs e)
@@ -66,7 +54,7 @@ namespace Presentation.View
 
         private void RenameColumn_Click(object sender, RoutedEventArgs e)
         {
-            vm.ChangeName(ColumnList.SelectedIndex,((Model.Column)ColumnList.SelectedItem));
+            vm.ChangeName(ColumnList.SelectedIndex, ((Model.Column)ColumnList.SelectedItem));
         }
 
         private void SetLimit_Click(object sender, RoutedEventArgs e)

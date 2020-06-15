@@ -9,10 +9,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private readonly string nickname;
         private readonly string password;
         private bool LoggedIn;
-        private string host;
+        private readonly string host;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public User() { }
-        public User(string email, string password, string nickname,string host)
+        public User(string email, string password, string nickname, string host) //default ctor
         {
             this.email = email;
             this.password = password;
@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             LoggedIn = false;
             this.host = host;
         }
-        public User(string email, string password, string nickname, bool LoggedIn,string host)
+        public User(string email, string password, string nickname, bool LoggedIn, string host) //ctor for logged in user
         {
             this.email = email;
             this.password = password;

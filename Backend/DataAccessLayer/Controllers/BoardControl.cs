@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    internal class BoardControl:DalController
+    internal class BoardControl : DalController
     {
-        public BoardControl():base("Boards")
+        public BoardControl() : base("Boards") //default ctor
         {
-           
+
         }
-      
+
 
         public List<DTOs.BoardDTO> Select() //Returns all boards.
         {
@@ -32,10 +31,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all boards");
-                    //have to check if put exception
                 }
                 finally
                 {
@@ -67,7 +65,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting this board");
                 }
@@ -80,7 +78,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-      
+
         public bool Insert(DTOs.BoardDTO Board) //creates a new board in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -102,7 +100,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while inserting a new board");
                 }

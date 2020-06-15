@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
+﻿namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
 {
-    class BoardEmailsDTO
+    internal class BoardEmailsDTO
     {
 
         public const string EmailColumn = "Email";
         public const string HostColumn = "Host";
         private readonly Controllers.BoardEmailsControl _controller;
-        public BoardEmailsDTO(string email,string host)
+        public BoardEmailsDTO(string email, string host)
         {
             Email = email;
             Host = host;

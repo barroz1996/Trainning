@@ -9,7 +9,7 @@
         public const string UsersHostColumn = "EmailHost";
         private readonly Controllers.UserControl _controller;
 
-        public UserDTO(string email, string nickName, string password, bool loggedIn,string emailHost)
+        public UserDTO(string email, string nickName, string password, bool loggedIn, string emailHost)
         {
             Email = email;
             Nickname = nickName;

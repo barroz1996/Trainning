@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
-    abstract class DalController
+    internal abstract class DalController
     {
         protected readonly string _connectionString;
         protected readonly string _tableName;
@@ -50,6 +49,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     catch (Exception ex)
                     {
                         log.Debug(ex.Message);
+                        throw new Exception(ex.Message);
                     }
                     finally
                     {
@@ -60,7 +60,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
             }
         }
-            public bool Update(int ID, string attributeName, string attributeValue) //updates a task with a specific ID (attribute is string).
+        public bool Update(int ID, string attributeName, string attributeValue) //updates a task with a specific ID (attribute is string).
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -78,7 +78,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this task.");
                 }
@@ -109,7 +109,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this task.");
                 }
@@ -140,7 +140,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this task.");
                 }
@@ -169,7 +169,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting all tasks.");
                 }
@@ -200,7 +200,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this task.");
                 }
@@ -233,7 +233,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this column.");
                 }

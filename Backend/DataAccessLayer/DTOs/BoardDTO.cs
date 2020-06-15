@@ -5,7 +5,7 @@
         public const string BoardEmailColumnEmail = "Email";
         public const string BoardDeletedTaskColumn = "DeletedTasks";
         private readonly Controllers.BoardControl _controller;
-        public BoardDTO(string email,int deletedTasks)
+        public BoardDTO(string email, int deletedTasks)
         {
             Email = email;
             DeletedTasks = deletedTasks;

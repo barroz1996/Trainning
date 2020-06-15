@@ -1,25 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IntroSE.Kanban.Backend.ServiceLayer;
-using Presentation.Model;
+﻿using Presentation.View;
+using System;
 using System.Windows;
-using Presentation.View;
 
 namespace Presentation.ViewModel
 {
-    class RegisterWindowView: NotifiableObject
-    {  
-        public RegisterWindowView(BackendController controller)
+    internal class RegisterWindowView : NotifiableObject
+    {
+        public RegisterWindowView(BackendController controller) //default ctor
         {
-            this.Controller = controller;
-            this.Email = "";
-            this.Password = "";
-            this.NickName = "";
-            this.Host = "";
+            Controller = controller;
+            Email = "";
+            Password = "";
+            NickName = "";
+            Host = "";
         }
         public void Register(RegisterWindow register)
         {
@@ -29,7 +22,7 @@ namespace Presentation.ViewModel
                 MessageBox.Show("User created successfully!");
                 register.Close();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }

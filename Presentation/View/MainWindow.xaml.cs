@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using IntroSE.Kanban.Backend.ServiceLayer;
+﻿using System.Windows;
 
 
 namespace Presentation.View
@@ -26,20 +12,22 @@ namespace Presentation.View
         public MainWindow()
         {
             InitializeComponent();
-            this.vm = new MainWindowViewLogin();
-            this.DataContext = vm;           
+            vm = new MainWindowViewLogin();
+            DataContext = vm;
         }
 
-    
+
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             Model.User u = vm.Login();
             if (u != null)
             {
-                BoardWindow boardView = new BoardWindow(u);
-                boardView.Show();              
+                var boardView = new BoardWindow(u);
+                boardView.ShowDialog();
+                vm.SafeLogout();
             }
+
         }
 
         private void Register_Click(object sender, RoutedEventArgs e)

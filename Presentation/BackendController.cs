@@ -1,25 +1,22 @@
-﻿using System;
+﻿using IntroSE.Kanban.Backend.ServiceLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IntroSE.Kanban.Backend.ServiceLayer;
-using Presentation.Model;
 
 
 namespace Presentation
 {
-   public class BackendController
+    public class BackendController
     {
         public IService Service { get; private set; }
-        public BackendController(IService service)
+        public BackendController(IService service) //default ctor
         {
-            this.Service = service;
+            Service = service;
         }
 
         public BackendController()
         {
-            this.Service = new Service();
+            Service = new Service();
             Service.LoadData();
         }
         internal void LogOut(string email)
@@ -37,7 +34,7 @@ namespace Presentation
             {
                 throw new Exception(user.ErrorMessage);
             }
-            return new Model.User(this, email,user.Value.Nickname);
+            return new Model.User(this, email, user.Value.Nickname);
         }
         internal void Register(string email, string password, string nickName, string host)
         {
@@ -55,12 +52,12 @@ namespace Presentation
                 throw new Exception(reg.ErrorMessage);
             }
         }
-        internal void Move(string email, int columnOrdinal,int direction)
+        internal void Move(string email, int columnOrdinal, int direction)
         {
             Response res;
             if (direction == 1)
             {
-                 res = Service.MoveColumnRight(email, columnOrdinal);
+                res = Service.MoveColumnRight(email, columnOrdinal);
             }
             else
             {
@@ -75,7 +72,7 @@ namespace Presentation
         {
             int k = 0;
             if (!int.TryParse(colOrdinal, out k))
-            { 
+            {
                 throw new Exception("Column Ordinal must be an integer.");
             }
             var res = Service.AddColumn(email, k, colName);
@@ -113,7 +110,7 @@ namespace Presentation
                 throw new Exception(res.ErrorMessage);
             }
         }
-        internal void ChangeColumnName(string email,int columnOrdinal,string newName)
+        internal void ChangeColumnName(string email, int columnOrdinal, string newName)
         {
             if (!(columnOrdinal >= 0 && columnOrdinal < Service.GetBoard(email).Value.ColumnsNames.Count))
             {
@@ -127,7 +124,7 @@ namespace Presentation
                     throw new Exception(res.ErrorMessage);
                 }
             }
-            
+
         }
         internal void DeleteTask(Model.Task deltask)
         {
@@ -168,7 +165,7 @@ namespace Presentation
             {
                 throw new Exception(res.ErrorMessage);
             }
-            
+
         }
         internal void UpdateDueDate(Model.Task task)
         {
@@ -178,7 +175,7 @@ namespace Presentation
                 throw new Exception(res.ErrorMessage);
             }
         }
-        internal IntroSE.Kanban.Backend.ServiceLayer.Task GetTask(string email, int column, int index)
+        internal Task GetTask(string email, int column, int index)
         {
             var res = Service.GetColumn(email, column);
             if (res.ErrorOccured)
@@ -189,17 +186,20 @@ namespace Presentation
         }
         internal List<string> GetAllColumnNames(string email)
         {
-            IReadOnlyCollection<string> col = Service.GetBoard(email).Value.ColumnsNames;
+            var col = Service.GetBoard(email).Value.ColumnsNames;
             return new List<string>(col);
         }
-        internal List<IntroSE.Kanban.Backend.ServiceLayer.Task> GetTasks(string email, int column,string filter)
+        internal List<Task> GetTasks(string email, int column, string filter) 
         {
-            IReadOnlyCollection<IntroSE.Kanban.Backend.ServiceLayer.Task> tasks = Service.GetColumn(email, column).Value.Tasks;
+            var tasks = Service.GetColumn(email, column).Value.Tasks;
             if (string.IsNullOrWhiteSpace(filter))
-                return new List<IntroSE.Kanban.Backend.ServiceLayer.Task>(tasks);
-            else
             {
-                var tasks1 = new List<IntroSE.Kanban.Backend.ServiceLayer.Task>();
+                return new List<Task>(tasks);
+            }
+            else
+            //if the filter is not empty , the return list<tasks> will inculde only tasks that contain the filter
+            {
+                var tasks1 = new List<Task>();
                 foreach (var task in tasks)
                 {
                     if (task.Description.Contains(filter) || task.Title.Contains(filter))
@@ -210,7 +210,7 @@ namespace Presentation
                 return tasks1;
             }
         }
-        internal IntroSE.Kanban.Backend.ServiceLayer.Column GetColumn(string email,int columnOrdinal)
+        internal Column GetColumn(string email, int columnOrdinal)
         {
             return Service.GetColumn(email, columnOrdinal).Value;
         }

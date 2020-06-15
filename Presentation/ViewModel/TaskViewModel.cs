@@ -1,31 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IntroSE.Kanban.Backend.ServiceLayer;
+﻿using IntroSE.Kanban.Backend.ServiceLayer;
 using Presentation.Model;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace Presentation.ViewModel
 {
-    class TaskViewModel : NotifiableObject
+    internal class TaskViewModel : NotifiableObject
     {
         public BackendController Controller { get; private set; }
         public TaskViewModel(BackendController controller, string email, Model.Task task)
         {
-            this.Controller = controller;
-            this.Task = task;
-            /*Email = email;
-            Id = task.TaskId;
-            Title = task.Title;
-            Description = task.Description;
-            CreationDate = task.CreationDate;
-            DueDate = task.DueDate;
-            EmailAssignee = task.EmailAssignee;
-            ColumnOrdinal = columnOrdinal;*/
+            Controller = controller;
+            Task = task;
             TaskName = "Task " + Task.TaskId;
         }
         private Model.Task task;
@@ -37,7 +24,7 @@ namespace Presentation.ViewModel
                 task = value;
                 RaisePropertyChanged("Task");
             }
-        }    
+        }
         private string taskName;
         public string TaskName
         {
@@ -48,7 +35,7 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("TaskName");
             }
         }
-       
+
         public void UpdateTitle()
         {
             try
@@ -56,9 +43,9 @@ namespace Presentation.ViewModel
                 Controller.UpdateTitle(Task);
                 MessageBox.Show("Title updated successfully");
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
         }
         public void UpdateDescription()
@@ -68,9 +55,9 @@ namespace Presentation.ViewModel
                 Controller.UpdateDescription(Task);
                 MessageBox.Show("Description updated successfully");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
         }
         public void UpdateDueDate()
@@ -80,9 +67,9 @@ namespace Presentation.ViewModel
                 Controller.UpdateDueDate(Task);
                 MessageBox.Show("Due date updated successfully");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
         }
         public void UpdateEmailAssignee()
@@ -90,11 +77,11 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.AssignTask(task);
-                MessageBox.Show("Task Assigned to "+Task.userEmail);
+                MessageBox.Show("Task Assigned to " + Task.userEmail);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 

@@ -1,54 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using IntroSE.Kanban.Backend.ServiceLayer;
+﻿using Presentation.View;
+using System;
 using System.Windows;
-using Presentation.View;
 
 namespace Presentation.ViewModel
 {
-    class SetBoardWindowView : NotifiableObject
+    internal class SetBoardWindowView : NotifiableObject //helper viewModel for board update windows
     {
         public BackendController Controller { get; private set; }
-        public SetBoardWindowView(BackendController controller,string email)
+        public SetBoardWindowView(BackendController controller, string email) //default ctor for AddTaskWindow and AddColumnWindow
         {
-            this.Controller = controller;
-            this.Email = email;
-            this.Name = "";
-            this.ColumnOrdinal = "";
-            this.Title = "";
-            this.Description = "";
-            this.dueDate = DateTime.Now;
-            this.Limit = "";
+            Controller = controller;
+            Email = email;
+            Name = "";
+            ColumnOrdinal = "";
+            Title = "";
+            Description = "";
+            dueDate = DateTime.Now;
+            Limit = "";
         }
-        public SetBoardWindowView(BackendController controller, string email,int columnOrdinal,string name)
+        public SetBoardWindowView(BackendController controller, string email, int columnOrdinal, string name) //default ctor for ReNameWindow
         {
-            this.Controller = controller;
-            this.Ordinal = columnOrdinal;
-            this.ColumnOrdinal = "";
-            this.Email = email;
-            this.Name = name;
-            this.Title = "";
-            this.Description = "";
-            this.dueDate = DateTime.Now;
-            this.Limit = "";
+            Controller = controller;
+            Ordinal = columnOrdinal;
+            ColumnOrdinal = "";
+            Email = email;
+            Name = name;
+            Title = "";
+            Description = "";
+            dueDate = DateTime.Now;
+            Limit = "";
         }
-        public SetBoardWindowView(BackendController controller, string email,string limit, int columnOrdinal)
+        public SetBoardWindowView(BackendController controller, string email, string limit, int columnOrdinal) //default ctor for SetLimitWindow
         {
-            this.Controller = controller;
-            this.Ordinal = columnOrdinal;
-            this.ColumnOrdinal = "";
-            this.Email = email;
-            this.Name = "";
-            this.Title = "";
-            this.Description = "";
-            this.dueDate = DateTime.Now;
-            this.Limit = limit;
+            Controller = controller;
+            Ordinal = columnOrdinal;
+            ColumnOrdinal = "";
+            Email = email;
+            Name = "";
+            Title = "";
+            Description = "";
+            dueDate = DateTime.Now;
+            Limit = limit;
         }
-        
+
         private string name;
         public string Name
         {
@@ -129,20 +123,20 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("Email");
             }
         }
-        public void AddColumn(AddColumnWindow newCol)
-        {            
+        public void AddColumn(AddColumnWindow newCol) //action for AddColumnWindow
+        {
             try
             {
                 Controller.AddColumn(Email, Name, ColumnOrdinal);
                 MessageBox.Show("Column added successfully!");
                 newCol.Close();
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
         }
-       public void AddTask(AddTaskWindow newTask)
+        public void AddTask(AddTaskWindow newTask) //action for AddTaskWindow
         {
             try
             {
@@ -150,38 +144,43 @@ namespace Presentation.ViewModel
                 MessageBox.Show("Task added successfully!");
                 newTask.Close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
         }
-        public void ChangeName(ReNameWindow rename)
+        public void ChangeName(ReNameWindow rename) //action for ReNameWindow
         {
             try
             {
-                Controller.ChangeColumnName(Email,Ordinal,Name);
-                MessageBox.Show("Column name changed to "+Name);
+                Controller.ChangeColumnName(Email, Ordinal, Name);
+                MessageBox.Show("Column name changed to " + Name);
                 rename.Close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
         }
-        public void setLimit(SetLimitWindow setLimit)
+        public void setLimit(SetLimitWindow setLimit) //action for SetLimitWindow
         {
             try
             {
                 Controller.SetLimit(Email, Ordinal, Limit);
                 if (Limit.Equals("-1"))
+                {
                     MessageBox.Show("The limit of this column was disabled");
+                }
                 else
-                    MessageBox.Show("The limit of this column was set to "+Limit);
+                {
+                    MessageBox.Show("The limit of this column was set to " + Limit);
+                }
+
                 setLimit.Close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
             }
 
         }

@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Presentation.Model
+﻿namespace Presentation.Model
 {
     public class User : NotifiableModelObject
     {
-        public User(BackendController controller, string email,string nickName) : base(controller)
+        public User(BackendController controller, string email, string nickName) : base(controller) //default ctor
         {
-            this.Email = email;
-            this.NickName = nickName;
+            Email = email;
+            NickName = nickName;
         }
         private string _email;
         public string Email

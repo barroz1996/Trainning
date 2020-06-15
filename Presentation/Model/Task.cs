@@ -1,77 +1,78 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
-using IntroSE.Kanban.Backend.ServiceLayer;
-using System.Windows;
-using Presentation.View;
 
 namespace Presentation.Model
 {
-    public class Task:NotifiableModelObject
+    public class Task : NotifiableModelObject
     {
-        public string userEmail{ get; set; }
+        public string userEmail { get; set; }
         public int column { get; set; }
-        public Task(BackendController controller,int column,string userEmail, int id, string title, string description, DateTime creationTime,DateTime dueDate,string emailAssignee) : base(controller)
+        public Task(BackendController controller, int column, string userEmail, int id, string title, string description, DateTime creationTime, DateTime dueDate, string emailAssignee) : base(controller) //default ctor
         {
             this.column = column;
             this.userEmail = userEmail;
-            this.TaskId = id;
-            this.Title = title;
-            this.Description = description;
-            this.CreationDate = creationTime;
-            this.DueDate = dueDate;
-            this.EmailAssignee = emailAssignee;
+            TaskId = id;
+            Title = title;
+            Description = description;
+            CreationDate = creationTime;
+            DueDate = dueDate;
+            EmailAssignee = emailAssignee;
         }
-        public Task(BackendController controller,int column, string userEmail, IntroSE.Kanban.Backend.ServiceLayer.Task task): base(controller)
+        public Task(BackendController controller, int column, string userEmail, IntroSE.Kanban.Backend.ServiceLayer.Task task) : base(controller) //ctor for input of task from service and convert him into model task
         {
             this.column = column;
             this.userEmail = userEmail;
-            this.TaskId = task.Id;
-            this.Title = task.Title;
-            this.Description = task.Description;
-            this.CreationDate = task.CreationTime;
-            this.DueDate = task.DueDate;
-            this.EmailAssignee = task.emailAssignee;
-          
+            TaskId = task.Id;
+            Title = task.Title;
+            Description = task.Description;
+            CreationDate = task.CreationTime;
+            DueDate = task.DueDate;
+            EmailAssignee = task.emailAssignee;
+
         }
-        public SolidColorBrush BackgroundColor
+        public SolidColorBrush BackgroundColor //background color
         {
             get
-            { 
-                if(Overdue())
-                    return new SolidColorBrush( Colors.Red);
-                if(NearDue())
+            {
+                if (Overdue())
+                {
+                    return new SolidColorBrush(Colors.Red);
+                }
+
+                if (NearDue())
+                {
                     return new SolidColorBrush(Colors.Orange);
+                }
+
                 return new SolidColorBrush();
             }
         }
-        public SolidColorBrush BorderColor
+        public SolidColorBrush BorderColor //border color
         {
             get
             {
                 if (IsAssignee(userEmail))
+                {
                     return new SolidColorBrush(Colors.Blue);
+                }
+
                 return new SolidColorBrush();
             }
         }
-        override
-        public string ToString()
+        public
+        override string ToString()
         {
-            string toString= "ID: " + TaskId + " Title: " + Title + " EmailAssignee: " + EmailAssignee;
+            string toString = "ID: " + TaskId + " Title: " + Title + " EmailAssignee: " + EmailAssignee;
             return toString;
         }
-        
 
-        
+
+
         public bool Overdue()
         {
             return !(DateTime.Compare(DueDate, DateTime.Now) > 0);
         }
-        
+
         public bool NearDue()
         {
             double total = (DueDate - CreationDate).TotalDays;
@@ -80,9 +81,9 @@ namespace Presentation.Model
         }
         public bool IsAssignee(string email)
         {
-            return this.EmailAssignee.Equals(email);
+            return EmailAssignee.Equals(email);
         }
-     
+
 
         private int _taskId;
         public int TaskId
@@ -115,7 +116,7 @@ namespace Presentation.Model
             }
         }
         private DateTime _creationDate;
-        public DateTime  CreationDate
+        public DateTime CreationDate
 
         {
             get => _creationDate;
@@ -144,6 +145,6 @@ namespace Presentation.Model
                 _emailAssignee = value;
                 RaisePropertyChanged("EmailAssignee");
             }
-        }     
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             columns.Add(done);
             boardEmails = new List<string>();
             boardEmails.Add(email);
-            this.deletedTasks = 0;
+            deletedTasks = 0;
         }
         public Board() { }
         public List<string> GetBoardEmail()
@@ -37,13 +37,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void SetDeletedTasks()
         {
-            this.deletedTasks++;
+            deletedTasks++;
         }
         public int GetDeletedTasks()
         {
             return deletedTasks;
         }
-        public Board(string email, List<Column> columns,List<string> boardEmails,int deletedTasks)
+        public Board(string email, List<Column> columns, List<string> boardEmails, int deletedTasks)
         {
             this.email = email;
             this.columns = columns;
@@ -76,7 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             log.Debug("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
         }
-        public void AddTask(int taskId, String title, String description, DateTime dueDate,string emailAssignee)
+        public void AddTask(int taskId, String title, String description, DateTime dueDate, string emailAssignee)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -101,8 +101,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried adding new task with a non futuristic due date.");
                 throw new Exception("Due date is required to be a futuristic date.");
             }
-            GetColumn(0).AddTask(new Task(taskId, title, description, dueDate,emailAssignee));
-            //GetColumn(0).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+            GetColumn(0).AddTask(new Task(taskId, title, description, dueDate, emailAssignee));
             TaskCon.Insert(new DataAccessLayer.DTOs.TaskDTO(taskId, title, description, dueDate, GetColumn(0).GetTask(taskId).GetCreationDate(), email, 0, emailAssignee));
             log.Debug("Task " + (taskId) + " was created by user " + email + ".");
         }
@@ -204,7 +203,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             checkOrdinal(columnOrdinal);
             if (columnOrdinal == 0)
             {
-                if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count && GetColumn(1).GetLimit() != -1) 
+                if (GetColumn(1).GetLimit() < GetColumn(1).GetTasks().Count + GetColumn(0).GetTasks().Count && GetColumn(1).GetLimit() != -1)
                 { //checks if the next column has enough space for all the tasks from this one
                     log.Debug("error: there is not enough free space in the next column for all the tasks from this one");
                     throw new Exception("The next column cannot hold all the tasks!");
@@ -238,7 +237,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
         }
-        public void ChangeColumnName(int columnOrdinal,string Name)
+        public void ChangeColumnName(int columnOrdinal, string Name)
         {
             if (GetColumn(columnOrdinal).GetColumnName().Equals(Name))
             {

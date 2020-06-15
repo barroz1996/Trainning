@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using IntroSE.Kanban.Backend.ServiceLayer;
+﻿using Presentation.View;
+using System;
 using System.Windows;
-using Presentation.View;
 
 
 namespace Presentation
 {
-    class MainWindowViewLogin : NotifiableObject
+    internal class MainWindowViewLogin : NotifiableObject
     {
         public BackendController Controller { get; private set; }
-        public MainWindowViewLogin()
+        public MainWindowViewLogin() //default ctor
         {
-            this.Controller=new BackendController();
-            this.Email = "";
-            this.Password = "";                               
+            Controller = new BackendController();
+            Email = "";
+            Password = "";
         }
         private string email;
         public string Email
         {
             get { return email; }
-            set { email = value;
+            set
+            {
+                email = value;
                 RaisePropertyChanged("Email");
             }
         }
@@ -32,7 +28,9 @@ namespace Presentation
         public string Password
         {
             get { return password; }
-            set { password = value;
+            set
+            {
+                password = value;
                 RaisePropertyChanged("Password");
             }
         }
@@ -40,24 +38,33 @@ namespace Presentation
         {
             try
             {
-                var res= Controller.Login(Email, Password);
-                this.Email = "";
-                this.Password = "";
+                var res = Controller.Login(Email, Password);
                 return res;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
                 return null;
             }
-        }    
-       public void Register()
+        }
+        public void Register()
         {
-            RegisterWindow reg = new RegisterWindow(Controller);
+            var reg = new RegisterWindow(Controller);
             reg.ShowDialog();
         }
-        
+        public void SafeLogout()
+        {
+            try
+            {
+                Controller.LogOut(Email);
+                Email = "";
+                Password = "";
+            }
 
-
+            catch (Exception) {
+                Email = "";
+                Password = "";
+            }
+        }
     }
 }

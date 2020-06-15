@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
 
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
     internal class TaskControl : DalController
     {
-       
-        public TaskControl():base("Tasks")
-        {            
+
+        public TaskControl() : base("Tasks")
+        {
         }
 
-       
+
 
         public List<DTOs.TaskDTO> SelectTasks(string email, int ColumnOridnal) //returns all tasks from the same column (same ordinal and email).
         {
@@ -35,7 +34,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                         taskList.Add(new DTOs.TaskDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.IsDBNull(2) ? null : dataReader.GetString(2), dataReader.GetDateTime(3), dataReader.GetDateTime(4), email, ColumnOridnal, dataReader.GetString(7)));
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all tasks from this board's column");
                 }
@@ -66,7 +65,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting this task");
                 }
@@ -79,7 +78,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return res > 0;
         }
-     
+
         public bool Insert(DTOs.TaskDTO Tasks) //Creates a new task in the database.
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -112,7 +111,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while creating this task.");
                 }

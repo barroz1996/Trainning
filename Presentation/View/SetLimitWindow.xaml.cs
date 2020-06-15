@@ -1,17 +1,5 @@
 ﻿using Presentation.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Presentation.View
 {
@@ -24,8 +12,8 @@ namespace Presentation.View
         public SetLimitWindow(BackendController controller, string email, int ordinal, string limit)
         {
             InitializeComponent();
-            this.vm = new SetBoardWindowView(controller, email, limit, ordinal);
-            this.DataContext = vm;
+            vm = new SetBoardWindowView(controller, email, limit, ordinal);
+            DataContext = vm;
         }
 
         private void SetLimit_Click(object sender, RoutedEventArgs e)
@@ -35,7 +23,7 @@ namespace Presentation.View
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }
