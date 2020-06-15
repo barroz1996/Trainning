@@ -11,7 +11,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private List<Task> tasks;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public Column() { }
-        public Column(int columnOrdinal, string columnName)
+        public Column(int columnOrdinal, string columnName) //default ctor
         {
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
@@ -19,7 +19,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             tasks = new List<Task>();
 
         }
-        public Column(int columnOrdinal, string columnName, int limit)
+        public Column(int columnOrdinal, string columnName, int limit) //ctor for limit constrain
         {
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
@@ -28,7 +28,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void ChangeName(string newName)
         {
-            this.columnName = newName;
+            columnName = newName;
         }
 
         public int GetColumnOrdinal() { return columnOrdinal; }
@@ -41,8 +41,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried setting an illegal limit");
                 throw new Exception("Illegal limit.");  //legal limit values are >=-1.
             }
-            if ((limit < tasks.Count) && (limit > -1))
-            { //the column's limit can't be lower than the current number of tasks the column holds.
+            if ((limit < tasks.Count) && (limit > -1)) //the column's limit can't be lower than the current number of tasks the column holds.
+            {
                 log.Debug("Tried setting a limit lower than the current number of tasks to the current column.");
                 throw new Exception("This column currently holds more tasks than the limit.");
             }
@@ -83,7 +83,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             log.Debug("Task " + taskId + " does not exist in the current column.");
             throw new Exception("The task doesn't exist in this column.");
         }
-        public void SetTasks(List<Task> task)
+        public void SetTasks(List<Task> task) //add task to list
         {
             foreach (var newTask in task)
             {

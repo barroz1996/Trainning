@@ -17,18 +17,18 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private BusinessLayer.UserPackage.UserController UserController;
         private BusinessLayer.BoardPackage.BoardController BoardController;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private DataAccessLayer.Controllers.SQLCreator create;
+
 
         /// <summary>
         /// Simple public constructor.
         /// </summary>
         public Service()
         {
-            this.UserController = new BusinessLayer.UserPackage.UserController();
-            this.BoardController = new BusinessLayer.BoardPackage.BoardController();
-            this.create = new DataAccessLayer.Controllers.SQLCreator();
+            UserController = new BusinessLayer.UserPackage.UserController();
+            BoardController = new BusinessLayer.BoardPackage.BoardController();
+
         }
-               
+
         /// <summary>        
         /// Loads the data. Intended be invoked only when the program starts
         /// </summary>
@@ -66,14 +66,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
 
-		/// <summary>
-			/// Registers a new user and creates a new board for him.
-		/// </summary>
-		/// <param name="email">The email address of the user to register</param>
-		/// <param name="password">The password of the user to register</param>
-		/// <param name="nickname">The nickname of the user to register</param>
-		/// <returns>A response object. The response should contain a error message in case of an error<returns>
-		public Response Register(string email, string password, string nickname)
+        /// <summary>
+        /// Registers a new user and creates a new board for him.
+        /// </summary>
+        /// <param name="email">The email address of the user to register</param>
+        /// <param name="password">The password of the user to register</param>
+        /// <param name="nickname">The nickname of the user to register</param>
+        /// <returns>A response object. The response should contain a error message in case of an error<returns>
+        public Response Register(string email, string password, string nickname)
         {
             try
             {
@@ -88,17 +88,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return new Response<Object>(ex.Message);
             }
         }
-		
 
-		/// <summary>
-		/// Registers a new user and joins the user to an existing board.
-		/// </summary>
-		/// <param name="email">The email address of the user to register</param>
-		/// <param name="password">The password of the user to register</param>
-		/// <param name="nickname">The nickname of the user to register</param>
-		/// <param name="emailHost">The email address of the host user which owns the board</param>
-		/// <returns>A response object. The response should contain a error message in case of an error<returns>
-		public Response Register(string email, string password, string nickname, string emailHost)
+
+        /// <summary>
+        /// Registers a new user and joins the user to an existing board.
+        /// </summary>
+        /// <param name="email">The email address of the user to register</param>
+        /// <param name="password">The password of the user to register</param>
+        /// <param name="nickname">The nickname of the user to register</param>
+        /// <param name="emailHost">The email address of the host user which owns the board</param>
+        /// <returns>A response object. The response should contain a error message in case of an error<returns>
+        public Response Register(string email, string password, string nickname, string emailHost)
         {
             try
             {
@@ -113,16 +113,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return new Response<Object>(ex.Message);
             }
         }
-				
 
-		
-		/// <summary>
+
+
+        /// <summary>
         /// Assigns a task to a user
         /// </summary>
         /// <param name="email">Email of the user. Must be logged in</param>
         /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
         /// <param name="taskId">The task to be updated identified task ID</param>        
-		/// <param name="emailAssignee">Email of the user to assign to task to</param>
+        /// <param name="emailAssignee">Email of the user to assign to task to</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
@@ -143,9 +143,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Debug("This user is not logged in");
                 return new Response<Object>("This user is not logged in");
             }
-        }		
-		
-		/// <summary>
+        }
+
+        /// <summary>
         /// Delete a task
         /// </summary>
         /// <param name="email">Email of the user. Must be logged in</param>
@@ -171,8 +171,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Debug("This user is not logged in");
                 return new Response<Board>("This user is not logged in");
             }
-        }		
-		
+        }
+
 
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="newName">The new name.</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response ChangeColumnName(string email, int columnOrdinal, string newName)
-		{
+        {
             if (UserController.IsLogged(email))
             {
                 try

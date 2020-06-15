@@ -14,7 +14,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
         public const string TasksEmailAssigneeColumn = "EmailAssignee";
         private readonly Controllers.TaskControl _controller;
 
-        public TaskDTO(int taskId, string title, string description, DateTime dueDate, DateTime creationTime, string email, int columnOridnal,string emailAssignee)
+        public TaskDTO(int taskId, string title, string description, DateTime dueDate, DateTime creationTime, string email, int columnOridnal, string emailAssignee)
         {
             TaskId = taskId;
             Title = title;
@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTOs
         public DateTime CreationTime { get; set; }
         public string Email { get; set; }
         public int ColumnOridnal { get; set; }
-         public string EmailAssignee { get; set; }
+        public string EmailAssignee { get; set; }
 
     }
 }

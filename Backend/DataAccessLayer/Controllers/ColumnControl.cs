@@ -7,14 +7,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 {
     internal class ColumnControl:DalController
     {
-        //private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        //private readonly string _connectionString;
-        //private readonly string _tableName;
+      
         public ColumnControl():base("Columns")
         {
-            //var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            //_connectionString = $"Data Source={path}; Version=3;";
-            //_tableName = "Columns";
+           
         }
 
         public bool Update(int ColumnOrdinal, string attributeName, string attributeValue, string Email) //updates column with specific ordinal and name (attribute is string).
@@ -36,7 +32,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while updating this column.");
                 }
@@ -50,38 +46,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        /*public bool Update(int ColumnOrdinal, string attributeName, int attributeValue, string Email) //updates column with specific ordinal and name (attribute is int).
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET [{attributeName}]=@attributeName WHERE [{DTOs.ColumnDTO.ColumnEmailColumnEmail}]=@Email AND [{DTOs.ColumnDTO.ColumnOrdinalColumnOrdinal}]=@ColumnOrdinal"
-                };
-                try
-                {
-                    connection.Open();
-                    command.Parameters.Add(new SQLiteParameter(@"attributeName", attributeValue));
-                    command.Parameters.Add(new SQLiteParameter(@"ColumnOrdinal", ColumnOrdinal));
-                    command.Parameters.Add(new SQLiteParameter(@"Email", Email));
-                    command.Prepare();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while updating this column.");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }*/
+       
 
         public List<DTOs.ColumnDTO> SelectColumn(string Email) //Returns all columns with a specific email.
         {
@@ -102,7 +67,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                         columnsList.Add(new DTOs.ColumnDTO(dataReader.GetInt32(0), dataReader.GetString(1), dataReader.GetInt32(2), Email));
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while getting all columns from this board.");
                 }
@@ -115,35 +80,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             }
             return columnsList;
         }
-        /*public bool DeleteTable() //Deletes all columns.
-        {
-            int res = -1;
-
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"DELETE FROM {_tableName} "
-                };
-                try
-                {
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    log.Debug("an error occured while deleting all columns");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }*/
+       
 
         public bool Delete(string email, int columnOrdinal) //Deletes a specific column (keys are email and ordinal).
         {
@@ -165,7 +102,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while deleting this column.");
                 }
@@ -204,7 +141,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     log.Debug("an error occured while inserting a new column");
                 }

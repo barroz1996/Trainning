@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             var newBoard = new Board(email);
             Boards.Add(email, newBoard);
-            BoardCon.Insert(new DataAccessLayer.DTOs.BoardDTO(email,0)); //inserts the new board to the database.
+            BoardCon.Insert(new DataAccessLayer.DTOs.BoardDTO(email, 0)); //inserts the new board to the database.
             BoardEmail.Insert(new DataAccessLayer.DTOs.BoardEmailsDTO(email, email));
             foreach (Column col in GetBoard(email).GetColumns())
             {
@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             else
             {
-                log.Debug("This email " + email+" is not the host!" );
+                log.Debug("This email " + email + " is not the host!");
                 throw new Exception("This email is not the host!.");
             }
         }
@@ -50,10 +50,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             return GetBoard(email).GetColumn(columnOrdinal);
         }
-        public void AddTask(string email, string title, string description, DateTime dueDate,string emailHost) //adds a new task to the first column.
+        public void AddTask(string email, string title, string description, DateTime dueDate, string emailHost) //adds a new task to the first column.
         {
             GetBoard(emailHost).AddTask(totalTasks, title, description, dueDate, email); //After checking input legitimacy, creates a new task.);
-            GetColumn(emailHost, 0).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
             totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
         }
         public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
@@ -72,7 +71,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 ColumnCon.Update(columnOrdinal, DataAccessLayer.DTOs.ColumnDTO.ColumnLimitColumnLimit, limit, email);
             }
         }
-        public void UpdateTaskDueDate(string email,string emailHost, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
+        public void UpdateTaskDueDate(string email, string emailHost, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
         {
             if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
             {
@@ -86,18 +85,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             else
             {
-                if(!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee())){
+                if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
+                {
                     log.Debug("This email is not the assignee of the task");
                     throw new Exception("This email is not the assignee of the task");
                 }
 
                 GetColumn(emailHost, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
-                GetColumn(emailHost, columnOrdinal).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                 TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDueDateColumnDueDate, dueDate);
                 log.Debug("Updated the due date of task " + taskId + ".");
             }
         }
-        public void UpdateTaskDescription(string email,string emailHost, int columnOrdinal, int taskId, string description)//Update a specific task's description.
+        public void UpdateTaskDescription(string email, string emailHost, int columnOrdinal, int taskId, string description)//Update a specific task's description.
         {
             if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
             {
@@ -112,7 +111,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("Description can't be longer than 300 characters.");
                 }
             }
-            if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee())){
+            if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
+            {
                 log.Debug("This email is not the assignee of the task");
                 throw new Exception("This email is not the assignee of the task");
             }
@@ -120,7 +120,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDescriptionColumnDescription, description);
             log.Debug("Updated the description of task " + taskId + ".");
         }
-        public void UpdateTaskTitle(string email,string emailHost, int columnOrdinal, int taskId, string title)//Update a specific task's title.
+        public void UpdateTaskTitle(string email, string emailHost, int columnOrdinal, int taskId, string title)//Update a specific task's title.
         {
             if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
             {
@@ -141,7 +141,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
                 else
                 {
-                    if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee())){
+                    if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
+                    {
                         log.Debug("This email is not the assignee of the task");
                         throw new Exception("This email is not the assignee of the task");
                     }
@@ -151,7 +152,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
         }
-        public void AdvanceTask(string email,string emailHost, int columnOrdinal, int taskId) //advances a task to the next column.
+        public void AdvanceTask(string email, string emailHost, int columnOrdinal, int taskId) //advances a task to the next column.
         {
             if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
             {
@@ -160,12 +161,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             if (GetColumn(emailHost, (columnOrdinal + 1)).GetLimit() > (GetColumn(emailHost, (columnOrdinal + 1)).GetTasks().Count) || ((GetColumn(emailHost, (columnOrdinal + 1)).GetLimit() == -1)))
             {
-                if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee())){
+                if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
+                {
                     log.Debug("This email is not the assignee of the task");
                     throw new Exception("This email is not the assignee of the task");
                 }
                 GetColumn(emailHost, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
-                GetColumn(emailHost, columnOrdinal+1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                 log.Debug("Task " + taskId + " was advanced from the " + GetColumn(emailHost, columnOrdinal).GetColumnName() + " column to the " + GetColumn(emailHost, columnOrdinal + 1).GetColumnName() + " column.");
                 TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal + 1);
             }
@@ -182,20 +183,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void LoadData()
         {
-            var dalboard = BoardCon.Select(); 
+            var dalboard = BoardCon.Select();
             foreach (var dal in dalboard)
             {
                 var colList = new List<Column>();
-                var dalCol = ColumnCon.SelectColumn(dal.Email); 
+                var dalCol = ColumnCon.SelectColumn(dal.Email);
                 foreach (var cdal in dalCol)
                 {
                     var newCol = new Column(cdal.ColumnOrdinal, cdal.ColumnName, cdal.Limit);
                     var dalTask = TaskCon.SelectTasks(dal.Email, cdal.ColumnOrdinal);
                     foreach (var tdal in dalTask)
                     {
-                        newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationTime,tdal.EmailAssignee));
+                        newCol.AddTask(new Task(tdal.TaskId, tdal.Title, tdal.Description, tdal.DueDate, tdal.CreationTime, tdal.EmailAssignee));
                     }
-                    newCol.GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                     if (colList.Count <= newCol.GetColumnOrdinal()) //if this is the last column so far, add it to the end of the list.
                     {
                         colList.Add(newCol);
@@ -206,18 +206,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     }
 
                 }
-                var boardEmailList =new List<string>();
+                var boardEmailList = new List<string>();
                 var dalBoardEmail = BoardEmail.SelectBoard(dal.Email);
                 foreach (var email in dalBoardEmail)
                 {
                     boardEmailList.Add(email.Email);
                 }
-                Boards.Add(dal.Email, new Board(dal.Email, colList,boardEmailList,dal.DeletedTasks));              
-                   
+                Boards.Add(dal.Email, new Board(dal.Email, colList, boardEmailList, dal.DeletedTasks));
+
             }
-            foreach (var entry in Boards) 
-            {// we need to change the name of totaltasks to > nextId
-                totalTasks = totalTasks + entry.Value.TotalTask()+entry.Value.GetDeletedTasks();
+            foreach (var entry in Boards) // we need to change the name of totaltasks to > nextId
+            {
+
+                totalTasks = totalTasks + entry.Value.TotalTask() + entry.Value.GetDeletedTasks();
             }
         }
         public Column AddColumn(string email, int columnOrdinal, string Name)
@@ -237,7 +238,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             else
             {
-                GetColumn(email, columnOrdinal-1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
+                GetColumn(email, columnOrdinal - 1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
             }
         }
         public void Delete() //deletes all data from businesslayer based tables, clears the dictionary and sets the total tasks to 0.
@@ -249,7 +250,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Boards.Clear();
             totalTasks = 0;
         }
-        public void DeleteTask(string email, int columnOrdinal, int taskId,string emailHost)
+        public void DeleteTask(string email, int columnOrdinal, int taskId, string emailHost) //check the constraines and delete the required task
         {
 
             if (!email.Equals(GetBoard(emailHost).GetColumn(columnOrdinal).GetTask(taskId).GetEmailAssignee()))
@@ -268,7 +269,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             BoardCon.Update(emailHost, DataAccessLayer.DTOs.BoardDTO.BoardDeletedTaskColumn, GetBoard(emailHost).GetDeletedTasks());
             TaskCon.Delete(taskId);
         }
-        public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee,string emailHost)
+        public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee, string emailHost) //check the input correct and assign the requested task for the email provided
         {
             if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
             {
@@ -296,12 +297,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksEmailAssigneeColumn, emailAssignee);
 
         }
-        public void AddToBoard(string email,string host)
+        public void AddToBoard(string email, string host) //add email to the host board
         {
             GetBoard(host).GetBoardEmail().Add(email);
             BoardEmail.Insert(new DataAccessLayer.DTOs.BoardEmailsDTO(email, host));
         }
-        public void ChangeColumnName(string email,int columnOrdinal,string newName)
+        public void ChangeColumnName(string email, int columnOrdinal, string newName) //change the column name
         {
             GetBoard(email).ChangeColumnName(columnOrdinal, newName);
         }
