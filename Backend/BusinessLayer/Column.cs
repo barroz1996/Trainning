@@ -10,12 +10,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private int limit;
         private List<Task> tasks;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private const int DefaultLimit = 100;
         public Column() { }
         public Column(int columnOrdinal, string columnName) //default ctor
         {
             this.columnOrdinal = columnOrdinal;
             this.columnName = columnName;
-            limit = 100;
+            limit = DefaultLimit;
             tasks = new List<Task>();
 
         }

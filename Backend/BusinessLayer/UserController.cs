@@ -12,6 +12,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private bool HasLogged;
         private Dictionary<string, User> Users;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private const int MaxPasswordLength = 25;
+        private const int MinPasswordLength = 5;
         public bool GetHasLogged() { return HasLogged; }
         public UserController()
         {
@@ -195,7 +197,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 }
                 else
                 {
-                    if (password.Length < 5 || password.Length > 25) //checks if it fits the required length.
+                    if (password.Length < MinPasswordLength || password.Length > MaxPasswordLength) //checks if it fits the required length.
                     {
                         log.Debug("Register password out of bounds.");
                         throw new Exception("Password should not be lesser than 4 or greater than 20 characters.");
