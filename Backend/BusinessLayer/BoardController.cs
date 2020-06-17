@@ -105,7 +105,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             if (description != null)
             {
-                if (description.Length > 300)
+                if (description.Length > GetBoard(email).MaxDescription1())
                 {
                     log.Debug("Tried setting the description of task " + taskId + " to a description longer than 300 characters.");
                     throw new Exception("Description can't be longer than 300 characters.");
@@ -134,7 +134,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             else
             {
-                if (title.Length > 50)
+                if (title.Length > GetBoard(email).MaxTitle1())
                 {
                     log.Debug("Tried setting the title of task " + taskId + " to a title longer than 50 characters.");
                     throw new Exception("Title can't be longer than 50 characters.");

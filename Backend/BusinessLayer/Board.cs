@@ -14,8 +14,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private readonly string email;
         private List<string> boardEmails;
         private List<Column> columns;
+        private const int MaxTitle = 50;
+        private const int MaxDescription = 300;
+        private const int MinColumn = 2;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private int deletedTasks;
+
         public Board(string email)
         {
             this.email = email;
@@ -35,10 +39,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             return boardEmails;
         }
+        public int MaxDescription1()
+        {
+            return MaxDescription;
+        }
+        public int MaxTitle1()
+        {
+            return MaxTitle;
+        }
         public void SetDeletedTasks()
         {
             deletedTasks++;
         }
+
         public int GetDeletedTasks()
         {
             return deletedTasks;
@@ -76,21 +89,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             log.Debug("Tried getting an illegal column name.");
             throw new Exception("Column Name is illegal");
         }
-        public void AddTask(int taskId, String title, String description, DateTime dueDate, string emailAssignee)
+        public void AddTask(int taskId, string title, string description, DateTime dueDate, string emailAssignee)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
                 log.Debug("Tried adding new task with an empty title");
                 throw new Exception("Title can't be empty.");
             }
-            if (title.Length > 50)
+            if (title.Length > MaxTitle)
             {
                 log.Debug("Tried adding new task with an title longer than 50 characters.");
                 throw new Exception("Title can't be longer than 50 characters.");
             }
             if (description != null)
             {
-                if (description.Length > 300)
+                if (description.Length > MaxDescription)
                 {
                     log.Debug("Tried adding new task with an description longer than 300 characters.");
                     throw new Exception("Description can't be longer than 300 characters.");
@@ -195,7 +208,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void RemoveColumn(int columnOrdinal) //removes column from db.
         {
-            if (columns.Count <= 2)
+            if (columns.Count <= MinColumn)
             {
                 log.Debug("error: a board cannot have less than 2 columns");
                 throw new Exception("Cannot have less than 2 columns!");
