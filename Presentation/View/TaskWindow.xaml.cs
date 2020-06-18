@@ -16,27 +16,27 @@ namespace Presentation.View
             DataContext = vm;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Title_Button_Click(object sender, RoutedEventArgs e)
         {
             vm.UpdateTitle();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Description_Button_Click(object sender, RoutedEventArgs e)
         {
             vm.UpdateDescription();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void DueDate_Button_Click(object sender, RoutedEventArgs e)
         {
             vm.UpdateDueDate();
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Assignee_Button_Click(object sender, RoutedEventArgs e)
         {
             vm.UpdateEmailAssignee();
         }
 
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        private void Back_Button_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }

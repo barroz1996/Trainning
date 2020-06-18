@@ -31,14 +31,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             var dalUser = user.Select(); //Gets all users from the database.
             foreach (var dal in dalUser)
             {
-                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.LoggedIn, dal.EmailHost));    //Adds all users to the users dictionary.
-            }
-            foreach (var entry in Users) //Checks if any of the users is logged in.
-            {
-                if (entry.Value.GetLoggedIn())
-                {
-                    HasLogged = true;
-                }
+                Users.Add(dal.Email, new User(dal.Email, dal.Password, dal.Nickname, dal.EmailHost));    //Adds all users to the users dictionary.
             }
         }
         public User GetUser(string email) //Gets a specific user from the dictionary.
@@ -81,7 +74,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 if (EmailVerify(email))
                 {
                     Users.Add(email, new User(email, password, nickname, hostEmail));
-                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, false, hostEmail)); //creates the new user in the database.
+                    newUser.Insert(new DataAccessLayer.DTOs.UserDTO(email, nickname, password, hostEmail)); //creates the new user in the database.
                     log.Debug("User " + email + " was created.");
                 }
                 else

@@ -13,7 +13,7 @@
             <ColumnDefinition Width="437*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,0.333,-0.333">
-            <Label Content="                                                              Kanban System"  FontSize="20"/>
+            <Label Content="{Binding Welcome}" HorizontalAlignment="Center" FontSize="20"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="170"/>

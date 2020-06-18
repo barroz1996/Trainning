@@ -20,14 +20,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             LoggedIn = false;
             this.host = host;
         }
-        public User(string email, string password, string nickname, bool LoggedIn, string host) //ctor for logged in user
-        {
-            this.email = email;
-            this.password = password;
-            this.nickname = nickname;
-            this.LoggedIn = LoggedIn;
-            this.host = host;
-        }
         public string GetEmailHost() { return host; }
         public string GetEmail() { return email; }
         public string GetNickname() { return nickname; }
@@ -39,7 +31,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             if (this.password.Equals(password))  //verify if the password matches the user's.
             {
                 LoggedIn = true;
-                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, true);  //sets the logged in status of the user to true in the database.
                 log.Debug("User " + email + " has logged in.");
             }
             else
@@ -53,7 +44,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             if (GetLoggedIn()) //checks if the user is logged in, else throws an exception.
             {
                 LoggedIn = false;
-                newUser.Update(email, DataAccessLayer.DTOs.UserDTO.UsersLoggedInColumn, false); //sets the logged in status of the user to false in the database.
                 log.Debug("User " + email + " has logged out.");
             }
             else

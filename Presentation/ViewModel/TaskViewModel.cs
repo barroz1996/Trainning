@@ -77,7 +77,7 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.AssignTask(task);
-                MessageBox.Show("Task Assigned to " + Task.userEmail);
+                MessageBox.Show("Task Assigned to " + Task.EmailAssignee);
             }
             catch (Exception ex)
             {
