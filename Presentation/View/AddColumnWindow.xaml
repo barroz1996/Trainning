@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="AddColumnWindow" Height="250" Width="400">
     
-        <Grid Margin="10">
+        <Grid Margin="10" HorizontalAlignment="Center">
             <StackPanel Orientation="Vertical">
                 <Label Content="Kanban System" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
-                <Grid>
+                <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150"/>
                         <ColumnDefinition/>

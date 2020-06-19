@@ -48,27 +48,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
         }
 
-        public void Register(string email, string password, string nickname, string hostEmail) //Adds a new user to the dictionary and creates a new json file for it.
+        public void Register(string email, string password, string nickname, string hostEmail) //Adds a new user to the dictionary and inserts it to the database.
         {
-
-            if (Users.ContainsKey(email)) //Checks if this email is unused by another user.
-            {
-                log.Debug("Tried registering with an existing email.");
-                throw new Exception("email already in use.");
-            }
-            if (!email.Equals(hostEmail))
-            {
-                if (!Users.ContainsKey(hostEmail))
-                {
-                    log.Debug("The host email not registerd in the system");
-                    throw new Exception("The host email not registerd in the system");
-                }
-                if (!GetUser(hostEmail).GetEmailHost().Equals(hostEmail))
-                {
-                    log.Debug("The host email is not host");
-                    throw new Exception("The host email is not host");
-                }
-            }
+            RegisterHelper(email, hostEmail);
             if (!string.IsNullOrWhiteSpace(nickname))
             {
                 if (EmailVerify(email))
@@ -89,6 +71,27 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 throw new Exception("nickName cant be empty");
             }
 
+        }
+        private void RegisterHelper (string email,string hostEmail)
+        {
+            if (Users.ContainsKey(email)) //Checks if this email is unused by another user.
+            {
+                log.Debug("Tried registering with an existing email.");
+                throw new Exception("email already in use.");
+            }
+            if (!email.Equals(hostEmail))
+            {
+                if (!Users.ContainsKey(hostEmail))
+                {
+                    log.Debug("The host email not registerd in the system");
+                    throw new Exception("The host email is not registerd in the system");
+                }
+                if (!GetUser(hostEmail).GetEmailHost().Equals(hostEmail))
+                {
+                    log.Debug("The host email is not host");
+                    throw new Exception("The host email is not host");
+                }
+            }
         }
         public bool IsLogged(string email) //Checks if a specific user is logged in.
         {
