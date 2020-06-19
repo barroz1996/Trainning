@@ -14,8 +14,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private readonly string email;
         private List<string> boardEmails;
         private List<Column> columns;
-        private const int MaxTitle = 50;
-        private const int MaxDescription = 300;
         private const int MinColumn = 2;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private int deletedTasks;
@@ -38,14 +36,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public List<string> GetBoardEmail()
         {
             return boardEmails;
-        }
-        public int MaxDescription1()
-        {
-            return MaxDescription;
-        }
-        public int MaxTitle1()
-        {
-            return MaxTitle;
         }
         public void SetDeletedTasks()
         {
@@ -96,14 +86,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 log.Debug("Tried adding new task with an empty title");
                 throw new Exception("Title can't be empty.");
             }
-            if (title.Length > MaxTitle)
+            if (title.Length > 50)
             {
                 log.Debug("Tried adding new task with an title longer than 50 characters.");
                 throw new Exception("Title can't be longer than 50 characters.");
             }
             if (description != null)
             {
-                if (description.Length > MaxDescription)
+                if (description.Length > 300)
                 {
                     log.Debug("Tried adding new task with an description longer than 300 characters.");
                     throw new Exception("Description can't be longer than 300 characters.");
@@ -222,7 +212,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("The next column cannot hold all the tasks!");
                 }
                 GetColumn(1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
-                //GetColumn(1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
             }
             else
             {
@@ -232,7 +221,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                     throw new Exception("The previous column cannot hold all the tasks!");
                 }
                 GetColumn(columnOrdinal - 1).GetTasks().AddRange(GetColumn(columnOrdinal).GetTasks());
-                //GetColumn(columnOrdinal-1).GetTasks().Sort((x, y) => DateTime.Compare(x.GetDueDate(), y.GetDueDate()));
                 foreach (var tasks in GetColumn(columnOrdinal).GetTasks()) //updates ordinal for all tasks of the column in database (irrelevant if ordinal is 0 since they will stay at 0 post-removal.
                 {
                     TaskCon.Update(tasks.GetTaskID(), DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal - 1);

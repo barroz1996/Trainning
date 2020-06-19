@@ -45,39 +45,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
             return res > 0;
         }
 
-        public bool Update(string Email, string attributeName, bool attributeValue) //updates user with specific email (attribute is boolean).
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"UPDATE {_tableName}  SET [{attributeName}]=@{attributeName} WHERE Email=@Email "
-                };
-                try
-                {
-                    connection.Open();
-                    command.Parameters.Add(new SQLiteParameter(@"Email", Email));
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
-                    command.Prepare();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    log.Debug("an error occured while deleting this user");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-
-                }
-
-            }
-            return res > 0;
-        }
-
 
         public List<DTOs.UserDTO> Select() //Returns all users.
         {
@@ -94,7 +61,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
 
                     while (dataReader.Read())
                     {
-                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetBoolean(3), dataReader.GetString(4)));
+                        userList.Add(new DTOs.UserDTO(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetString(3)));
                     }
 
                 }
@@ -152,13 +119,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.Controllers
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.UserDTO.UsersEmailColumn} ,{DTOs.UserDTO.UsersNicknameColumn},{DTOs.UserDTO.UsersPasswordColumn},{DTOs.UserDTO.UsersLoggedInColumn},{DTOs.UserDTO.UsersHostColumn}) " +
-                        $"VALUES (@emailVal,@nickNameVal,@passwordVal,@loggedInVal,@emailHostVal);";
+                    command.CommandText = $"INSERT INTO {_tableName}  ({DTOs.UserDTO.UsersEmailColumn} ,{DTOs.UserDTO.UsersNicknameColumn},{DTOs.UserDTO.UsersPasswordColumn},{DTOs.UserDTO.UsersHostColumn}) " +
+                        $"VALUES (@emailVal,@nickNameVal,@passwordVal,@emailHostVal);";
 
                     command.Parameters.Add(new SQLiteParameter(@"emailVal", User.Email));
                     command.Parameters.Add(new SQLiteParameter(@"nickNameVal", User.Nickname));
                     command.Parameters.Add(new SQLiteParameter(@"passwordVal", User.Password));
-                    command.Parameters.Add(new SQLiteParameter(@"loggedInVal", User.LoggedIn));
                     command.Parameters.Add(new SQLiteParameter(@"emailHostVal", User.EmailHost));
                     command.Prepare();
                     res = command.ExecuteNonQuery();

@@ -102,6 +102,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                if (email.Equals(emailHost))
+                    throw new Exception("The host email cannot be identical to your email");
                 UserController.PasswordVerify(password);
                 UserController.Register(email, password, nickname, emailHost);
                 BoardController.AddToBoard(email, emailHost);

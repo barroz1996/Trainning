@@ -59,14 +59,6 @@ namespace Presentation.Model
                 return new SolidColorBrush();
             }
         }
-        public
-        override string ToString()
-        {
-            string toString = "ID: " + TaskId + " Title: " + Title + " EmailAssignee: " + EmailAssignee;
-            return toString;
-        }
-
-
 
         public bool Overdue()
         {

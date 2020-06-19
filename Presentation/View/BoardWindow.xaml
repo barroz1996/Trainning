@@ -12,10 +12,11 @@
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="437*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,0.333,-0.333">
-            <Label Content="                                                              Kanban System"  FontSize="20"/>
-            <Grid>
+        <StackPanel Orientation="Vertical" Grid.ColumnSpan="5" Margin="0,0,0.333,-0.333">
+            <Label Content="{Binding Welcome}" HorizontalAlignment="Center" FontSize="20"/>
+            <Grid HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="170"/>

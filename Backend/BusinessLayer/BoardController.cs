@@ -10,6 +10,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private DataAccessLayer.Controllers.ColumnControl ColumnCon = new DataAccessLayer.Controllers.ColumnControl();
         private DataAccessLayer.Controllers.TaskControl TaskCon = new DataAccessLayer.Controllers.TaskControl();
         private DataAccessLayer.Controllers.BoardEmailsControl BoardEmail = new DataAccessLayer.Controllers.BoardEmailsControl();
+        private const int MaxTitle = 50;
+        private const int MaxDescription = 300;
         private Dictionary<string, Board> Boards;
         private int totalTasks;
         private readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -39,7 +41,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             else
             {
                 log.Debug("This email " + email + " is not the host!");
-                throw new Exception("This email is not the host!.");
+                throw new Exception("You are not the host of this board");
             }
         }
         public Column GetColumn(string email, string columnName) //Returns a specific column based on it's name.
@@ -52,7 +54,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void AddTask(string email, string title, string description, DateTime dueDate, string emailHost) //adds a new task to the first column.
         {
-            GetBoard(emailHost).AddTask(totalTasks, title, description, dueDate, email); //After checking input legitimacy, creates a new task.);
+            GetBoard(emailHost).AddTask(totalTasks, title, description, dueDate, email); //After checking input legitimacy, creates a new task.
             totalTasks++;  //Total tasks serves as an input for new tasks' ids and grows by one every time a new task is created by any user.
         }
         public void LimitColumnTasks(string email, int columnOrdinal, int limit) //Updates a limit on a specific column.
@@ -73,99 +75,37 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void UpdateTaskDueDate(string email, string emailHost, int columnOrdinal, int taskId, DateTime dueDate) //Update a specific task's due date.
         {
-            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
-            {
-                log.Debug("Tried update task a task from the last column.");
-                throw new Exception("Cannot update a task in the last column.");
-            }
-            if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
-            {
-                log.Debug("Tried setting the due date of task " + taskId + " to a non futuristic due date.");
-                throw new Exception("Due date is required to be a futuristic date.");
-            }
-            else
-            {
-                if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
-                {
-                    log.Debug("This email is not the assignee of the task");
-                    throw new Exception("This email is not the assignee of the task");
-                }
-
-                GetColumn(emailHost, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
-                TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDueDateColumnDueDate, dueDate);
-                log.Debug("Updated the due date of task " + taskId + ".");
-            }
+            ValidAssignee(email, emailHost, columnOrdinal, taskId);
+            NotLastColumn(emailHost, columnOrdinal);
+            DueDateValidation(dueDate);
+            GetColumn(emailHost, columnOrdinal).GetTask(taskId).EditTaskDueDate(dueDate);
+            TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDueDateColumnDueDate, dueDate);
+            log.Debug("Updated the due date of task " + taskId + ".");
         }
         public void UpdateTaskDescription(string email, string emailHost, int columnOrdinal, int taskId, string description)//Update a specific task's description.
         {
-            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
-            {
-                log.Debug("Tried update task a task from the last column.");
-                throw new Exception("Cannot update a task in the last column.");
-            }
-            if (description != null)
-            {
-                if (description.Length > GetBoard(email).MaxDescription1())
-                {
-                    log.Debug("Tried setting the description of task " + taskId + " to a description longer than 300 characters.");
-                    throw new Exception("Description can't be longer than 300 characters.");
-                }
-            }
-            if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
-            {
-                log.Debug("This email is not the assignee of the task");
-                throw new Exception("This email is not the assignee of the task");
-            }
+            ValidAssignee(email, emailHost, columnOrdinal, taskId);
+            DescriptionValidation(description);
+            NotLastColumn(emailHost, columnOrdinal);
             GetColumn(emailHost, columnOrdinal).GetTask(taskId).EditTaskDescription(description);
             TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksDescriptionColumnDescription, description);
             log.Debug("Updated the description of task " + taskId + ".");
         }
         public void UpdateTaskTitle(string email, string emailHost, int columnOrdinal, int taskId, string title)//Update a specific task's title.
         {
-            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
-            {
-                log.Debug("Tried update task a task from the last column.");
-                throw new Exception("Cannot update a task in the last column.");
-            }
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                log.Debug("Tried setting the title of task " + taskId + " to an empty title");
-                throw new Exception("Title can't be empty.");
-            }
-            else
-            {
-                if (title.Length > GetBoard(email).MaxTitle1())
-                {
-                    log.Debug("Tried setting the title of task " + taskId + " to a title longer than 50 characters.");
-                    throw new Exception("Title can't be longer than 50 characters.");
-                }
-                else
-                {
-                    if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
-                    {
-                        log.Debug("This email is not the assignee of the task");
-                        throw new Exception("This email is not the assignee of the task");
-                    }
-                    GetColumn(emailHost, columnOrdinal).GetTask(taskId).EditTaskTitle(title);
-                    TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksTitleColumnTitle, title);
-                    log.Debug("Updated the description of task " + taskId + ".");
-                }
-            }
+            ValidAssignee(email, emailHost, columnOrdinal, taskId);
+            TitleValidation(title);
+            NotLastColumn(emailHost, columnOrdinal);
+            GetColumn(emailHost, columnOrdinal).GetTask(taskId).EditTaskTitle(title);
+            TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksTitleColumnTitle, title);
+            log.Debug("Updated the description of task " + taskId + ".");
         }
         public void AdvanceTask(string email, string emailHost, int columnOrdinal, int taskId) //advances a task to the next column.
         {
-            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
-            {
-                log.Debug("Tried advancing task " + taskId + " from the last column.");
-                throw new Exception("Cannot advance a task in the last column.");
-            }
+            NotLastColumn(emailHost, columnOrdinal);
             if (GetColumn(emailHost, (columnOrdinal + 1)).GetLimit() > (GetColumn(emailHost, (columnOrdinal + 1)).GetTasks().Count) || ((GetColumn(emailHost, (columnOrdinal + 1)).GetLimit() == -1)))
             {
-                if (!email.Equals(GetColumn(emailHost, columnOrdinal).GetTask(taskId).GetEmailAssignee()))
-                {
-                    log.Debug("This email is not the assignee of the task");
-                    throw new Exception("This email is not the assignee of the task");
-                }
+                ValidAssignee(email, emailHost, columnOrdinal, taskId);
                 GetColumn(emailHost, (columnOrdinal + 1)).AddTask(GetColumn(email, columnOrdinal).RemoveTask(taskId));  //Removes a task from the current column and adds it to the next one.
                 log.Debug("Task " + taskId + " was advanced from the " + GetColumn(emailHost, columnOrdinal).GetColumnName() + " column to the " + GetColumn(emailHost, columnOrdinal + 1).GetColumnName() + " column.");
                 TaskCon.Update(taskId, DataAccessLayer.DTOs.TaskDTO.TasksColumnIdColumnColumnId, columnOrdinal + 1);
@@ -252,18 +192,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void DeleteTask(string email, int columnOrdinal, int taskId, string emailHost) //check the constraines and delete the required task
         {
-
-            if (!email.Equals(GetBoard(emailHost).GetColumn(columnOrdinal).GetTask(taskId).GetEmailAssignee()))
-            {
-                log.Debug("This email is not the assignee of the task");
-                throw new Exception("This email is not the assignee of the task");
-
-            }
-            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
-            {
-                log.Debug("Tried deleting task " + taskId + " from the last column.");
-                throw new Exception("Cannot delete a task from the last column.");
-            }
+            ValidAssignee(email, emailHost, columnOrdinal, taskId);
+            NotLastColumn(emailHost, columnOrdinal);
             GetBoard(emailHost).GetColumn(columnOrdinal).GetTasks().Remove(GetBoard(emailHost).GetColumn(columnOrdinal).GetTask(taskId));
             GetBoard(emailHost).SetDeletedTasks();
             BoardCon.Update(emailHost, DataAccessLayer.DTOs.BoardDTO.BoardDeletedTaskColumn, GetBoard(emailHost).GetDeletedTasks());
@@ -271,26 +201,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee, string emailHost) //check the input correct and assign the requested task for the email provided
         {
-            if (columnOrdinal == GetBoard(emailHost).GetColumns().Count - 1)
-            {
-                log.Debug("Tried assigning task " + taskId + " from the last column.");
-                throw new Exception("Cannot assign a task from the last column.");
-            }
+            ValidAssignee(email, emailHost, columnOrdinal, taskId);
+            NotLastColumn(emailHost, columnOrdinal);
             if (!GetBoard(emailHost).GetBoardEmail().Contains(emailAssignee))
             {
                 log.Debug("This email is not the assigned to this board");
                 throw new Exception("This email is not the assigned to this board");
             }
-            if (!email.Equals(GetBoard(emailHost).GetColumn(columnOrdinal).GetTask(taskId).GetEmailAssignee()))
-            {
-                log.Debug("This email is not the assignee of the task");
-                throw new Exception("This email is not the assignee of the task");
-
-            }
             if (emailAssignee.Equals(email))
             {
                 log.Debug("The emailAssignee is similar to the current assignee");
-                throw new Exception("The emailAssignee is similar to the current assignee");
+                throw new Exception("You are already assigned to this task");
 
             }
             GetBoard(emailHost).GetColumn(columnOrdinal).GetTask(taskId).SetEmailAssignee(emailAssignee);
@@ -306,6 +227,54 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             GetBoard(email).ChangeColumnName(columnOrdinal, newName);
         }
+        private void TitleValidation( string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                log.Debug("Tried setting an empty title");
+                throw new Exception("Title can't be empty.");
+            }
+            if (title.Length > MaxTitle)
+            {
+                log.Debug("Tried setting a title longer than 50 characters.");
+                throw new Exception("Title can't be longer than 50 characters.");
+            }
+        }
+        private void DescriptionValidation(string description)
+        {
+            if (description != null)
+            {
+                if (description.Length > MaxDescription)
+                {
+                    log.Debug("Tried setting a description longer than 300 characters.");
+                    throw new Exception("Description can't be longer than 300 characters.");
+                }
+            }
+        }
+        private void NotLastColumn(string host, int ordinal)
+        {
+            if (ordinal == GetBoard(host).GetColumns().Count - 1)
+            {
+                log.Debug("Tried changing a task from the last column.");
+                throw new Exception("You can't make changes to tasks from the last column.");
+            }
+        }
+        private void DueDateValidation(DateTime dueDate)
+        {
+            if (!(DateTime.Compare(dueDate, DateTime.Now) > 0))
+            {
+                log.Debug("Tried setting a non futuristic due date.");
+                throw new Exception("Due date is required to be a futuristic date.");
+            }
+        }
+        private void ValidAssignee(string email,string host,int ordinal,int taskId)
+        {
+            if (!email.Equals(GetBoard(host).GetColumn(ordinal).GetTask(taskId).GetEmailAssignee()))
+            {
+                log.Debug("This email is not the assignee of the task");
+                throw new Exception("You are are not assigned to this task and can't make changes to it");
 
+            }
+        }
     }
 }

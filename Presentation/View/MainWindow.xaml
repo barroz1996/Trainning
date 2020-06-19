@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="500">
-    <Grid Margin="10">
+    <Grid Margin="10" HorizontalAlignment="Center">
         <StackPanel Orientation="Vertical">
             <Label Content="Kanban System" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
-            <Grid>
+            <Grid HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition/>

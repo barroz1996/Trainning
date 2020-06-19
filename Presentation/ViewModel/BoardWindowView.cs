@@ -17,6 +17,8 @@ namespace Presentation
             board = new Model.Board(user.Controller, user, Filter);
             Controller = user.Controller;
             Sorted = "Due Date";
+            Welcome = "Hello " + user.NickName;
+            IsHost = Controller.IsHost(Email);
         }
 
         private string filter;
@@ -29,9 +31,15 @@ namespace Presentation
                 RaisePropertyChanged("Filter");
             }
         }
+        public string welcome;
         public string Welcome
         {
-            get { return "Welcome " + Email; }
+            get { return welcome; }
+            set
+            {
+                welcome = value;
+                RaisePropertyChanged("Welcome");
+            }
         }
         private string email;
         public string Email
@@ -63,6 +71,17 @@ namespace Presentation
                 RaisePropertyChanged("Sorted");
             }
         }
+        private bool isHost;
+        public bool IsHost //changes between creation date and duedate
+        {
+            get { return isHost; }
+            set
+            {
+                isHost = value;
+                RaisePropertyChanged("IsHost");
+            }
+        }
+
 
         private Model.Board board;
         public Model.Board Board 
@@ -106,9 +125,16 @@ namespace Presentation
         }
         public void AddColumn()
         {
-            var newCol = new AddColumnWindow(Controller, Email);
-            newCol.ShowDialog();
-            ReLoad();
+            if (IsHost)
+            {
+                var newCol = new AddColumnWindow(Controller, Email);
+                newCol.ShowDialog();
+                ReLoad();
+            }
+            else
+            {
+                MessageBox.Show("You are not the host of this board!");
+            }
         }
         public void ReLoad() //update the display board after changes
         {
@@ -185,28 +211,42 @@ namespace Presentation
         }
         public void ChangeName(int ordinal, Model.Column column)
         {
-            if (column != null)
+            if (IsHost)
             {
-                var col = new ReNameWindow(Controller, Email, ordinal, column.Name);
-                col.ShowDialog();
-                ReLoad();
+                if (column != null)
+                {
+                    var col = new ReNameWindow(Controller, Email, ordinal, column.Name);
+                    col.ShowDialog();
+                    ReLoad();
+                }
+                else
+                {
+                    MessageBox.Show("Please select column!");
+                }
             }
             else
             {
-                MessageBox.Show("Please select column!");
+                MessageBox.Show("You are not the host of this board!");
             }
         }
         public void SetLimit(int ordinal, Model.Column column)
         {
-            if (column != null)
+            if (IsHost)
             {
-                var col = new SetLimitWindow(Controller, Email, ordinal, column.Limit.ToString());
-                col.ShowDialog();
-                ReLoad();
+                if (column != null)
+                {
+                    var col = new SetLimitWindow(Controller, Email, ordinal, column.Limit.ToString());
+                    col.ShowDialog();
+                    ReLoad();
+                }
+                else
+                {
+                    MessageBox.Show("Please select column!");
+                }
             }
             else
             {
-                MessageBox.Show("Please select column!");
+                MessageBox.Show("You are not the host of this board!");
             }
         }
         public void OpenTask() //open task window for selected task

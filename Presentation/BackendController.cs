@@ -214,6 +214,10 @@ namespace Presentation
         {
             return Service.GetColumn(email, columnOrdinal).Value;
         }
+        internal bool IsHost(string email)
+        {
+            return email.Equals(Service.GetBoard(email).Value.emailCreator);
+        }
 
     }
 }
