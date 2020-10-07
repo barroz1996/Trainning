@@ -1,2 +1,2 @@
 # Trainning
-train
+traind
